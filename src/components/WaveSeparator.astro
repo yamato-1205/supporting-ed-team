@@ -1,0 +1,33 @@
+---
+interface Props {
+  fromColor?: string;
+  toColor?: string;
+  wide?: boolean; // true → 波の間隔を広くする（3サイクル）
+}
+const { fromColor = '#cde9f7', toColor = '#ffffff', wide = false } = Astro.props;
+
+// 通常: 4サイクル（360px間隔）
+const normalPath =
+  'M0,0 L1440,0 L1440,28 C1320,52 1200,10 1080,28 C960,46 840,8 720,28 C600,48 480,8 360,28 C240,48 120,10 0,28 Z';
+
+// 広め: 3サイクル（480px間隔）
+const widePath =
+  'M0,0 L1440,0 L1440,28 C1320,52 1200,4 960,28 C840,52 720,4 480,28 C360,52 240,4 0,28 Z';
+---
+
+<!--
+  セクション間の波形区切り
+  fromColor（上のセクションの背景色）→ toColor（下のセクションの背景色）
+  wide={true} で波の間隔を広く
+-->
+<div class="w-full leading-[0] overflow-hidden" style={`background-color: ${toColor};`}>
+  <svg
+    viewBox="0 0 1440 56"
+    preserveAspectRatio="none"
+    xmlns="http://www.w3.org/2000/svg"
+    class={`w-full block ${wide ? 'h-16 md:h-24' : 'h-10 md:h-14'}`}
+    aria-hidden="true"
+  >
+    <path d={wide ? widePath : normalPath} fill={fromColor} />
+  </svg>
+</div>

@@ -1,0 +1,139 @@
+---
+import SnsButton  from './SnsButton.astro';
+import SectionBubbles from './SectionBubbles.astro';
+import fuukaImg   from '../assets/メンバーアイコン/ふうか.png';
+import { bubble1, bubble2, bubble3, bubble4 } from '../data/bubbles';
+import { pickSnsLinks } from '../data/sns';
+
+const snsLinks = pickSnsLinks(['x', 'instagram', 'note']);
+---
+
+<section
+  id="about"
+  class="py-16 md:py-24 relative overflow-hidden bg-[var(--color-background)]"
+>
+
+  <!-- 左右のシャボン玉装飾 -->
+  <SectionBubbles variant="representative" />
+
+  <!-- 活動内容と同じ max-w-4xl を使用 -->
+  <div class="section-container">
+
+    <!--
+      h2 の下余白:
+        写真(144px)の上端がカード上辺より96px上に出る → 見出しと写真の間に余裕を持たせる
+    -->
+    <h2 class="section-heading mb-32">代表の思い</h2>
+
+    <!--
+      写真とカードが重なる構造:
+        写真 w-36 h-36 = 144px
+        -top-24 = -96px → 写真上端がカード上辺より96px上
+        写真下端 = -96 + 144 = +48px → 48px がカード内にオーバーラップ
+    -->
+    <div class="relative">
+
+      <!-- ── プロフィール写真 ── -->
+      <div class="absolute -top-24 left-1/2 -translate-x-1/2 z-20">
+        <!--
+          入れ子構造:
+          1. 顔写真 (rounded-full で円形)
+          2. シャボン玉を同じ円形・同じサイズでクリップし
+             mix-blend-mode: overlay で写真の上に溶け込ませる
+          3. 写真の周囲に小さなシャボン玉を装飾として散りばめる
+        -->
+        <div class="relative w-36 h-36">
+          <!-- 顔写真 -->
+          <img
+            src={fuukaImg.src}
+            alt="代表ふうか"
+            class="w-full h-full rounded-full object-cover"
+          />
+          <!-- 写真内シャボン玉オーバーレイ -->
+          <img
+            src={bubble1.src}
+            alt=""
+            aria-hidden="true"
+            class="pointer-events-none select-none absolute inset-0 w-full h-full rounded-full object-cover"
+            style="mix-blend-mode: overlay; opacity: 0.65;"
+          />
+
+          <!-- 周囲の装飾バブル（参照画像に合わせ4つ） -->
+          <!-- 左下・大 (7時方向) -->
+          <img src={bubble3.src} alt="" aria-hidden="true"
+            class="pointer-events-none select-none absolute w-8 h-8 opacity-80"
+            style="bottom: 2px; left: -18px;" />
+          <!-- 左下・小 (8時方向) -->
+          <img src={bubble4.src} alt="" aria-hidden="true"
+            class="pointer-events-none select-none absolute w-5 h-5 opacity-70"
+            style="bottom: 20px; left: -34px;" />
+          <!-- 右下・大 (4時方向) -->
+          <img src={bubble2.src} alt="" aria-hidden="true"
+            class="pointer-events-none select-none absolute w-10 h-10 opacity-75"
+            style="bottom: 0px; right: -24px;" />
+          <!-- 右・小 (3時方向) -->
+          <img src={bubble3.src} alt="" aria-hidden="true"
+            class="pointer-events-none select-none absolute w-5 h-5 opacity-65"
+            style="bottom: 22px; right: -40px;" />
+        </div>
+      </div>
+
+      <!-- ── ホワイトカード ── -->
+      <div class="bg-white rounded-2xl relative overflow-hidden">
+
+        <!-- SNSボタン（カード右上）＋ 左隣にグレー三角 -->
+        <div class="absolute top-3 right-3 flex items-center z-10">
+          <span class="flex gap-1.5 mr-2 opacity-40" aria-hidden="true">
+            <span class="border-y-[7px] border-y-transparent border-l-[11px] border-l-gray-500"></span>
+            <span class="border-y-[7px] border-y-transparent border-l-[11px] border-l-gray-500"></span>
+            <span class="border-y-[7px] border-y-transparent border-l-[11px] border-l-gray-500"></span>
+          </span>
+          {snsLinks.map((sns) => (
+            <SnsButton href="#" icon={sns.icon.src} label={sns.label} isX={sns.id === 'x'} />
+          ))}
+        </div>
+
+        <!--
+          pt-16 (64px) > 48px オーバーラップ
+          → 写真直下に「代表：ふうか」が来る
+        -->
+        <div class="px-8 pt-16 pb-10 md:px-12">
+
+          <!-- 写真の真下・中央揃えで名前 -->
+          <p class="text-center mb-5">代表：ふうか</p>
+
+          <!-- イントロ文 -->
+          <p class="mb-5">
+            社会に貢献したい意思があるけど、急にしんどくなる時がある。<br />
+            自分でもどうにも頑張れない時期＝障害が現れるときは、誰にでもある。<br />
+            さぽちむは、そんな「誰もが抱える/抱えうる痛みや弱さを認め合い、支え合う社会」を目指します。
+          </p>
+
+          <!-- 見出し1 -->
+          <h3 class="text-base md:text-lg font-bold text-center mt-5 mb-3">
+            凸凹をもったままで、社会に貢献したい
+          </h3>
+
+          <p class="mb-5">
+            自分自身にはどうにもならない特性や環境、病を抱える人は、意外と多く存在しています。<br />
+            私自身も、鬱や発達傾向を持ちながら、パラレルワーカーや社会人大学院生など、面白い生き方をしています！<br />
+            ひとりひとりの状態に合わせ、スピードもタスクも柔軟に変化させ、チームで補う体制を表現する。<br />
+            そして、凸凹を抱えている人でも社会に貢献する方法があることを実験し続け、証明します。
+          </p>
+
+          <!-- 見出し2 -->
+          <h3 class="text-base md:text-lg font-bold text-center mt-5 mb-3">
+            頑張るとき、休むときの居場所をつなぐ
+          </h3>
+
+          <p>
+            頑張りすぎて、疲れちゃう人。頑張りたいのに、頑張れるチャンスがない人。<br />
+            そんなメンバーに、多様な働き方や社会貢献の姿を表現することで、ひとりひとりの幸せをじっくり考え、選び、悩み、深化する過程を応援し合うコミュニティをデザインします。<br />
+            たくさんの団体とコラボすることで、さぽちむ自体をハブとして、自分に合った居場所に、できるだけたくさん出会うことを目指します。
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

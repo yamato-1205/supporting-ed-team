@@ -1,0 +1,30 @@
+---
+import { fetchInstagramEmbed } from "../library/socialEmbed";
+import { INSTAGRAM_PROFILE_URL } from "../data/socialLinks";
+
+interface Props {
+  postUrl: string;
+}
+
+const { postUrl } = Astro.props;
+const embed = await fetchInstagramEmbed(postUrl);
+---
+
+<div class="w-full max-w-sm mx-auto">
+  {
+    embed ? (
+      <Fragment set:html={embed.html} />
+    ) : (
+      <a
+        href={INSTAGRAM_PROFILE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center justify-center h-40 rounded-2xl border border-gray-200 bg-white text-sm hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] transition-colors"
+      >
+        Instagramで最新の投稿を見る ↗
+      </a>
+    )
+  }
+</div>
+
+<script async src="https://www.instagram.com/embed.js"></script>

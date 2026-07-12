@@ -1,46 +1,50 @@
-# Astro Starter Kit: Basics
+# さぽちむ HP
 
-```sh
-npm create astro@latest -- --template basics
-```
+任意団体「さぽちむ（Supporting/ed TEAM）」公式サイトです。
+[Astro](https://astro.build) + [Tailwind CSS](https://tailwindcss.com) + [microCMS](https://microcms.io) で構築しています。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## 🚀 プロジェクト構成
 
 ```text
 /
-├── public/
-│   └── favicon.svg
+├── public/                # そのまま配信される静的ファイル
 ├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+│   ├── assets/             # 画像（Astroのビルドパイプラインで最適化される）
+│   ├── components/         # ページを構成するUIコンポーネント
+│   ├── data/                # ナビゲーション・SNSリンク・装飾など、複数コンポーネントで共有するデータ
+│   ├── layouts/             # 全ページ共通のレイアウト（Header/Footer/背景を含む）
+│   ├── library/             # microCMS・note RSS 連携や日付フォーマットなどのロジック
+│   ├── pages/                # ルーティングされるページ（index.astro がトップページ）
+│   └── styles/               # グローバルCSS（Tailwindのテーマ・共通ユーティリティ）
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🔧 セットアップ
 
-## 🧞 Commands
+microCMS のお知らせ機能を使う場合は `.env.example` を `.env` にコピーし、APIキーを設定してください。
 
-All commands are run from the root of the project, from a terminal:
+```sh
+cp .env.example .env
+# .env を開き、MICROCMS_API_KEY に microCMS 管理画面の API キーを設定
+```
 
-| Command                   | Action                                           |
+> **注意:** `.env` は Git に含めません（`.gitignore` で除外済み）。  
+> GitHub Actions など CI でビルドする場合は、リポジトリの **Secrets** に `MICROCMS_API_KEY` を登録してください。
+
+## 🧞 コマンド
+
+すべてプロジェクトルートで実行します：
+
+| コマンド                  | 内容                                             |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm install`             | 依存パッケージのインストール                      |
+| `npm run dev`             | 開発サーバーを起動（`localhost:4321`）             |
+| `npm run build`           | 本番用に `./dist/` へビルド                        |
+| `npm run preview`         | ビルド結果をローカルでプレビュー                   |
+| `npm run astro ...`       | Astro CLI コマンドの実行                           |
 
-## 👀 Want to learn more?
+## 👀 参考
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [Astro ドキュメント](https://docs.astro.build)
+- [Tailwind CSS ドキュメント](https://tailwindcss.com/docs)
+- [microCMS ドキュメント](https://document.microcms.io)

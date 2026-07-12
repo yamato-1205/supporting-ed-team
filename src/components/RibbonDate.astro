@@ -1,0 +1,30 @@
+---
+import ribbonImg from "../assets/リボン.png";
+
+interface Props {
+  year: string;
+  monthDay: string;
+  /** リボン画像＋日付を包む要素の位置指定クラス（カードごとに配置が異なるため可変） */
+  wrapperClass?: string;
+  /** リボン画像自体のサイズクラス */
+  ribbonClass?: string;
+}
+
+const {
+  year,
+  monthDay,
+  wrapperClass = "relative self-start shrink-0",
+  ribbonClass = "h-11 w-14 block",
+} = Astro.props;
+---
+
+<div class={wrapperClass}>
+  <img src={ribbonImg.src} alt="" aria-hidden="true" class={ribbonClass} />
+  <div
+    class="absolute inset-0 flex flex-col items-center justify-center leading-snug"
+    aria-label={`${year}年${monthDay}`}
+  >
+    <span class="text-small">{year}</span>
+    <span class="text-small">{monthDay}</span>
+  </div>
+</div>

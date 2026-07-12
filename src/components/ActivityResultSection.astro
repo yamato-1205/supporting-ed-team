@@ -1,0 +1,188 @@
+---
+import BubbleButton from "./BubbleButton.astro";
+import SectionBubbles from "./SectionBubbles.astro";
+import RibbonDate from "./RibbonDate.astro";
+import frameImg from "../assets/活動実績.png";
+import reportCardImg from "../assets/お知らせ.png";
+import { fetchNoteArticles, stripHtml } from "../library/note";
+import { splitDate } from "../library/date";
+import { client } from "../library/microcms";
+import type { ExternalReport } from "../library/microcms";
+import XPostEmbed from "./XPostEmbed.astro";
+import InstagramPostEmbed from "./InstagramPostEmbed.astro";
+import {
+  FEATURED_X_POST_URL,
+  FEATURED_INSTAGRAM_POST_URL,
+} from "../data/socialLinks";
+
+const items = await fetchNoteArticles("sapochimu", 10);
+
+// microCMS から外部レポート（他団体・大学等の掲載記事）を取得
+let exReports: ExternalReport[] = [];
+try {
+  const res = await client.getList<ExternalReport>({
+    endpoint: "ex_report",
+    queries: { orders: "-date", limit: 20 },
+  });
+  exReports = res.contents;
+} catch (e) {
+  console.warn("[ActivityResultSection] 外部レポートの取得に失敗しました:", e);
+}
+---
+
+<section
+  id="results"
+  class="py-14 md:py-20 relative overflow-hidden bg-[var(--color-background)]"
+>
+  <!-- 左右のシャボン玉装飾 -->
+  <SectionBubbles variant="results" />
+
+  <div class="section-container">
+    <!-- セクション見出し -->
+    <h2 class="section-heading mb-1">活動実績</h2>
+    <p class="mb-8 pl-0.5">内部レポート</p>
+
+    {
+      items.length === 0 ? (
+        <p class="text-gray-500 text-center py-8">現在活動実績はありません。</p>
+      ) : (
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:-mx-8 md:px-8">
+          {items.map((item) => {
+            const { year, monthDay } = splitDate(item.pubDate);
+            const plainDesc = stripHtml(item.description);
+            return (
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="snap-start shrink-0 relative block w-[320px] md:w-[320px] hover:opacity-85 transition-opacity"
+                aria-label={item.title}
+              >
+                {/* フレーム画像（自然サイズ維持・カードの高さを決める） */}
+                <img
+                  src={frameImg.src}
+                  alt=""
+                  aria-hidden="true"
+                  class="w-full h-auto block"
+                />
+
+                {/* コンテンツ（絶対配置・フレームに合わせてクリップ） */}
+                <div class="absolute inset-0 z-10 px-3.5 flex flex-col overflow-hidden">
+                  {/* サムネイル（最上部配置）＋リボンを左上に重ねる */}
+                  <div class="relative shrink-0">
+                    {item.thumbnail && (
+                      <img
+                        src={item.thumbnail}
+                        alt=""
+                        aria-hidden="true"
+                        class="w-[291px] h-[167px] object-cover block"
+                        style="margin-top: 44px;"
+                      />
+                    )}
+                    {/* 日付バッジ（リボン）をサムネイル左上に重ねる */}
+                    <RibbonDate
+                      year={year}
+                      monthDay={monthDay}
+                      wrapperClass="absolute top-0 left-0 z-20"
+                      ribbonClass="h-18 w-14 block"
+                    />
+                  </div>
+
+                  {/* テキストラッパー（フレックス内でのクリップを確実に） */}
+                  <div class="flex-1 min-h-0 overflow-hidden flex flex-col">
+                    {/* タイトル（2行・超過時は…） */}
+                    <div
+                      class="shrink-0 overflow-hidden pt-2 pb-1"
+                      style="max-height: calc(2 * 1.375rem + 0.5rem + 0.25rem);"
+                    >
+                      <p class="font-bold leading-snug line-clamp-2">
+                        {item.title}
+                      </p>
+                    </div>
+
+                    {/* 説明文（4行・超過時は…） */}
+                    <div
+                      class="overflow-hidden pb-2"
+                      style="max-height: calc(4 * 1.375rem + 0.5rem);"
+                    >
+                      <p class="leading-snug line-clamp-4 text-gray-700">
+                        {plainDesc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )
+    }
+
+    <!-- もっと見るボタン -->
+    <div class="mt-10 flex justify-center">
+      <BubbleButton
+        href="https://note.com/sapochimu"
+        label="もっと見る ↗"
+        external
+      />
+    </div>
+
+    <!-- 外部レポート -->
+    <p class="mt-14 mb-8 pl-0.5">外部レポート</p>
+
+    {
+      exReports.length === 0 ? (
+        <p class="text-gray-500 text-center py-8">
+          現在外部レポートはありません。
+        </p>
+      ) : (
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:-mx-8 md:px-8">
+          {exReports.map((report) => {
+            const { year, monthDay } = splitDate(report.date);
+            return (
+              <a
+                href={report.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="snap-start shrink-0 relative block w-[290px] hover:opacity-85 transition-opacity"
+                aria-label={report.title}
+              >
+                <img
+                  src={reportCardImg.src}
+                  alt=""
+                  aria-hidden="true"
+                  class="w-full h-auto block"
+                />
+
+                {/* 内部レポートと同じリボン・文字サイズ */}
+                <div class="absolute inset-0 z-10 px-3 py-0 overflow-hidden flex flex-col">
+                  <div class="relative">
+                    <RibbonDate
+                      year={year}
+                      monthDay={monthDay}
+                      wrapperClass="absolute top-0 left-0 z-20"
+                      ribbonClass="h-18 w-14 block"
+                    />
+                    <p class="ml-14 py-3.5 leading-snug line-clamp-2 text-gray-700">
+                      {report.media.join("・")}
+                    </p>
+                  </div>
+                  <p class="font-bold px-1 leading-snug line-clamp-2">
+                    {report.title}
+                  </p>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )
+    }
+
+    <!-- SNS -->
+    <p class="mt-14 mb-8 pl-0.5">SNS</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <XPostEmbed postUrl={FEATURED_X_POST_URL} />
+      <InstagramPostEmbed postUrl={FEATURED_INSTAGRAM_POST_URL} />
+    </div>
+  </div>
+</section>

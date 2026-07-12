@@ -1,0 +1,52 @@
+---
+import bannerImg from "../assets/バナー（HP用）.png";
+import HamburgerMenu from "./HamburgerMenu.astro";
+import { pickNavLinks } from "../data/navigation";
+
+const navLinks = pickNavLinks(["activity", "about", "news", "results", "overview", "support"]);
+---
+
+<header class="fixed top-0 inset-x-0 z-50 bg-white border-b border-gray-100">
+  <div class="flex items-center py-3 px-4 md:px-8 max-w-screen-2xl mx-auto">
+    <!-- ロゴ -->
+    <a href="/" class="shrink-0">
+      <img
+        src={bannerImg.src}
+        alt="さぽちむ Supporting/ed TEAM"
+        class="h-9 w-auto md:h-11"
+      />
+    </a>
+
+    <!-- PC ナビ -->
+    <nav
+      class="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-8"
+      aria-label="メインナビゲーション"
+    >
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="whitespace-nowrap hover:text-[var(--color-primary)] transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- ハンバーガーボタン -->
+    <div class="ml-auto">
+      <button
+        id="menu-open-btn"
+        class="flex flex-col items-end gap-[5px] w-8 h-8 justify-center cursor-pointer hover:opacity-60 transition-opacity"
+        aria-label="メニューを開く"
+        aria-controls="hamburger-menu"
+        aria-expanded="false"
+      >
+        <span class="block h-[2px] w-5 bg-current"></span>
+        <span class="block h-[2px] w-5 bg-current"></span>
+        <span class="block h-[2px] w-5 bg-current"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<HamburgerMenu />

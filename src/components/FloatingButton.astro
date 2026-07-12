@@ -1,0 +1,43 @@
+---
+import supportBtn from "../assets/応援するボタン.png";
+---
+
+<a
+  href="#support"
+  class="fixed right-3 bottom-3 md:right-8 md:bottom-8 z-50 hover:opacity-80 inline-block balloon-float"
+  aria-label="応援する"
+>
+  <div class="relative">
+    <img
+      src={supportBtn.src}
+      alt=""
+      class="w-22 h-auto md:w-28 drop-shadow-md"
+      aria-hidden="true"
+    />
+    <span class="absolute inset-0 flex items-start justify-center pt-3">
+      <span class="inline-block mt-6 md:mt-10"> 応援する </span>
+    </span>
+  </div>
+</a>
+
+<style>
+  @keyframes balloon-sway {
+    0%   { transform: rotate(-3deg) translateY(0px);   }
+    20%  { transform: rotate(2deg)  translateY(-6px);  }
+    40%  { transform: rotate(-2deg) translateY(-3px);  }
+    60%  { transform: rotate(3deg)  translateY(-7px);  }
+    80%  { transform: rotate(-1deg) translateY(-2px);  }
+    100% { transform: rotate(-3deg) translateY(0px);   }
+  }
+
+  .balloon-float {
+    animation: balloon-sway 4s ease-in-out infinite;
+    transform-origin: center bottom; /* 結び目を軸にゆれる */
+  }
+
+  /* ホバー時はアニメーション一時停止 */
+  .balloon-float:hover {
+    animation-play-state: paused;
+    opacity: 0.8;
+  }
+</style>

@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-background: #fffbec;
+  --color-text: #000000;
+  --color-primary: #628963;
+  --font-sans: "BIZ UDPGothic", sans-serif;
+}
+
+/* ヘッダー高さの唯一の定義場所
+   ロゴ画像(h-9=36px) + 上下パディング(py-3=12px×2) = 60px */
+:root {
+  --header-height: 60px;
+}
+@media (min-width: 768px) {
+  /* ロゴ画像(h-11=44px) + 上下パディング(py-3=12px×2) = 68px */
+  :root {
+    --header-height: 68px;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* id付き要素（アンカーリンクの着地先）が固定ヘッダーの下に隠れないようにする */
+[id] {
+  scroll-margin-top: var(--header-height);
+}
+
+/* 全セクション共通の見出しスタイル */
+.section-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+@media (min-width: 768px) {
+  .section-heading {
+    font-size: 1.125rem;
+  }
+}
+
+/* 小さめ文字のデフォルト（日付・補足テキストなどに使用） */
+.text-small {
+  font-size: 0.8rem;
+}
+
+/* 各セクション共通のコンテンツ幅（見出し以下のコンテナ） */
+.section-container {
+  @apply max-w-4xl mx-auto px-4 md:px-8 relative z-10;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.75;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}

@@ -1,0 +1,21 @@
+---
+import { BUBBLE_DECORATIONS, type BubbleDecorationVariant } from "../data/bubbles";
+
+interface Props {
+  variant: BubbleDecorationVariant;
+}
+
+const { variant } = Astro.props;
+const bubbles = BUBBLE_DECORATIONS[variant];
+---
+
+{
+  bubbles.map((bubble) => (
+    <img
+      src={bubble.src.src}
+      alt=""
+      aria-hidden="true"
+      class={`pointer-events-none select-none absolute ${bubble.class}`}
+    />
+  ))
+}

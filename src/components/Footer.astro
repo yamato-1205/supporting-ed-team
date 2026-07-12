@@ -1,0 +1,142 @@
+---
+import bannerImg from '../assets/バナー（HP用）.png';
+import footerWave from '../assets/フッター.png';
+import cityscapeImg from '../assets/街並み.png';
+import houseSquare from '../assets/家.png';
+import houseWide from '../assets/家_細長.png';
+import SnsButton from './SnsButton.astro';
+import { pickNavLinks } from '../data/navigation';
+import { pickSnsLinks } from '../data/sns';
+
+const navLeft = pickNavLinks(['top', 'activity', 'about', 'news', 'results']);
+
+const navRight = [
+  { label: '存在意義',      href: '#mission' },
+  { label: 'チーム名の由来', href: '#name' },
+];
+
+const snsLinks = pickSnsLinks(['x', 'instagram', 'note', 'facebook']);
+---
+
+<footer id="contact" class="relative overflow-hidden bg-[var(--color-primary)]">
+
+  <!-- ── クリーム色の波（フッター.png・画面端まで表示） ── -->
+  <!-- 上方向にずらし、左側のバナー・ナビが緑地に載るようにする -->
+  <img
+    src={footerWave.src}
+    alt=""
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 z-0 w-full h-auto -translate-y-[15%] select-none"
+  />
+
+  <!-- ── フッター本体（1280px で固定・中央寄せ） ── -->
+  <div class="relative z-10 mx-auto max-w-[1280px] px-6 pt-24 md:px-10 lg:px-16 md:pt-32">
+
+    <!-- ロゴ + メール -->
+    <div class="mb-8 md:mb-10">
+      <a href="/" class="inline-block mb-2">
+        <img
+          src={bannerImg.src}
+          alt="さぽちむ Supporting/ed TEAM"
+          class="h-10 w-auto rounded"
+        />
+      </a>
+      <p class="text-white/90 tracking-wide">
+        メール：<a href="mailto:sapochimu1103@gmail.com" class="hover:underline">sapochimu1103@gmail.com</a>
+      </p>
+    </div>
+
+    <!-- ナビゲーション 2列 -->
+    <nav aria-label="フッターナビゲーション" class="mb-10 md:mb-12 flex gap-12 md:gap-20 lg:gap-28">
+
+      <!-- 左列 -->
+      <ul class="space-y-2.5">
+        {navLeft.map((link, i) => (
+          <li>
+            <a
+              href={link.href}
+              class={`text-white/90 hover:text-white transition-colors tracking-wide ${i === 0 ? 'font-bold text-lg' : ''}`}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- 右列 -->
+      <ul class="space-y-2.5">
+        <li>
+          <span class="font-bold text-lg text-white/90">団体概要</span>
+        </li>
+        {navRight.map(link => (
+          <li>
+            <a
+              href={link.href}
+              class="text-white/90 hover:text-white transition-colors tracking-wide"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+    </nav>
+
+    <!-- SNS アイコン（家.png 土台）＋ お問い合わせ（家型） -->
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-6">
+
+      <!-- SNS アイコン -->
+      <div class="flex items-center gap-2">
+        {snsLinks.map(sns => (
+          <SnsButton
+            href="#"
+            icon={sns.icon.src}
+            label={sns.label}
+            isX={sns.id === 'x'}
+            bgSrc={houseSquare.src}
+            invert={sns.id === 'note'}
+            iconShiftClass="translate-y-[18%]"
+            sizeClass="h-16 w-auto"
+          />
+        ))}
+      </div>
+
+      <!-- お問い合わせ（家型ボタン） -->
+      <a
+        href="mailto:sapochimu1103@gmail.com"
+        aria-label="お問い合わせ"
+        class="relative block shrink-0 hover:opacity-80 transition-opacity"
+      >
+        <img
+          src={houseSquare.src}
+          alt=""
+          aria-hidden="true"
+          class="block md:hidden h-16 w-auto"
+        />
+        <img
+          src={houseWide.src}
+          alt=""
+          aria-hidden="true"
+          class="hidden md:block h-16 w-auto"
+        />
+        <span class="absolute inset-x-0 bottom-[20%] text-center text-[10px] tracking-wide text-white">
+          お問い合わせ
+        </span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── 街並みイラスト（街並み.png を横に繰り返し） ── -->
+  <div
+    class="relative z-10 w-full h-14 md:h-16 bg-repeat-x"
+    aria-hidden="true"
+    style={`background-image: url(${cityscapeImg.src}); background-size: auto 100%; background-position: left bottom;`}
+  >
+  </div>
+
+  <!-- コピーライト -->
+  <p class="relative z-10 text-center text-small text-white/70 pb-4 pt-1">
+    © さぽちむ 2025
+  </p>
+</footer>

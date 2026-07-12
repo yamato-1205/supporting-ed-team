@@ -1,0 +1,49 @@
+---
+import bubbleImg from '../assets/シャボン玉2.png';
+
+interface Props {
+  href: string;
+  icon: string;
+  label: string;
+  isX?: boolean; // 明色背景で X の白ロゴを見せるための黒背景円
+  /** アイコンの土台画像（既定: シャボン玉2.png。フッターでは家.png を渡す） */
+  bgSrc?: string;
+  /** 濃色背景で暗いアイコンを白抜き表示する */
+  invert?: boolean;
+  /** 土台の形状に合わせてアイコン位置を微調整するクラス（家型は本体側へ下げる） */
+  iconShiftClass?: string;
+  /** 土台画像のサイズクラス（既定: h-12 w-auto） */
+  sizeClass?: string;
+}
+
+const {
+  href,
+  icon,
+  label,
+  isX = false,
+  bgSrc = bubbleImg.src,
+  invert = false,
+  iconShiftClass = '',
+  sizeClass = 'h-12 w-auto',
+} = Astro.props;
+---
+
+<a
+  href={href}
+  aria-label={label}
+  class="relative inline-flex items-center justify-center hover:opacity-80 transition-opacity"
+>
+  <img src={bgSrc} alt="" class={sizeClass} aria-hidden="true" />
+
+  {/* X のみ：白アイコンを見せるための黒背景円 */}
+  {isX && (
+    <span class={`absolute rounded-[18%] w-[45%] h-[45%] bg-black ${iconShiftClass}`} aria-hidden="true" />
+  )}
+
+  <img
+    src={icon}
+    alt=""
+    class={`absolute object-contain ${isX ? 'w-[35%] h-[35%]' : 'w-[45%] h-[45%]'} ${invert ? 'invert brightness-200' : ''} ${iconShiftClass}`}
+    aria-hidden="true"
+  />
+</a>

@@ -1,0 +1,25 @@
+---
+import bubbleImg from "../assets/シャボン玉_横.png";
+
+interface Props {
+  href: string;
+  label: string;
+  external?: boolean; // true → target="_blank" で別タブ
+}
+
+const { href, label, external = false } = Astro.props;
+---
+
+<a
+  href={href}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  class="relative inline-block hover:opacity-80 transition-opacity"
+>
+  <img src={bubbleImg.src} alt="" class="h-12 w-auto" aria-hidden="true" />
+  <span
+    class="absolute inset-0 flex items-center justify-center whitespace-nowrap px-4"
+  >
+    {label}
+  </span>
+</a>

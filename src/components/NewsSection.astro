@@ -1,0 +1,89 @@
+---
+import { client } from '../library/microcms';
+import type { News } from '../library/microcms';
+import { splitDate } from '../library/date';
+import SectionBubbles from './SectionBubbles.astro';
+import RibbonDate from './RibbonDate.astro';
+import flagImg     from '../assets/フラッグ5連.png';
+import newsCardImg from '../assets/お知らせ.png';
+
+// microCMS から最新20件を取得（ビルド時にAPIが未設定の場合は空リストで続行）
+let newsList: News[] = [];
+try {
+  const res = await client.getList<News>({
+    endpoint: 'news',
+    queries: { orders: '-date', limit: 20 },
+  });
+  newsList = res.contents;
+} catch (e) {
+  console.warn('[NewsSection] microCMS からのデータ取得に失敗しました:', e);
+}
+---
+
+<section
+  id="news"
+  class="pt-12 pb-14 md:pt-16 md:pb-20 relative overflow-hidden bg-white"
+>
+  <!-- 左右のシャボン玉 -->
+  <SectionBubbles variant="news" />
+
+  <div class="section-container">
+    <!-- セクション見出し -->
+    <h2 class="section-heading mb-3">お知らせ</h2>
+  </div>
+
+  <!-- フラッグ5連（画面横幅いっぱいに繰り返し） -->
+  <div
+    class="w-full h-16 md:h-20 mb-6 relative z-10"
+    style={`background-image: url('${flagImg.src}'); background-repeat: repeat-x; background-size: auto 100%; background-position: left center;`}
+    aria-hidden="true"
+  ></div>
+
+  <div class="section-container">
+
+    {newsList.length === 0 ? (
+      <p class="text-gray-500 text-center py-8">現在お知らせはありません。</p>
+    ) : (
+      <div class="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:-mx-8 md:px-8">
+        {newsList.map((news) => {
+          const { year, monthDay } = splitDate(news.date);
+          const href  = news.link ?? '#';
+          const isExt = !!news.link;
+          return (
+            <a
+              href={href}
+              target={isExt ? '_blank' : undefined}
+              rel={isExt ? 'noopener noreferrer' : undefined}
+              class="snap-start shrink-0 relative block w-52 md:w-56 hover:opacity-85 transition-opacity"
+              aria-label={news.title}
+            >
+              <!-- フレーム：自然サイズ維持・引き伸ばしなし（カードの高さを決める） -->
+              <img
+                src={newsCardImg.src}
+                alt=""
+                aria-hidden="true"
+                class="w-full h-auto block"
+              />
+
+              <!--
+                コンテンツ：z-10 でフレーム画像より確実に前面に
+                flex-col で リボン → タイトル を縦積み
+              -->
+              <div class="absolute inset-0 z-10 px-4 flex flex-col gap-1">
+
+                <!-- 日付（リボン: 文字サイズ程度に極小化） -->
+                <RibbonDate year={year} monthDay={monthDay} />
+
+                <!-- タイトル -->
+                <p class="leading-snug line-clamp-2">
+                  {news.title}
+                </p>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    )}
+
+  </div>
+</section>

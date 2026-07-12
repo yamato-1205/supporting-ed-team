@@ -1,0 +1,138 @@
+---
+import BubbleButton from './BubbleButton.astro';
+import SnsButton    from './SnsButton.astro';
+import { bubble1, bubble3 } from '../data/bubbles';
+import { pickNavLinks } from '../data/navigation';
+import { pickSnsLinks } from '../data/sns';
+
+const recruitLink = { label: '新規メンバー募集中！', href: '#member' };
+
+const navGroups = [
+  pickNavLinks(['top', 'activity', 'about', 'news', 'results']),
+  pickNavLinks(['overview', 'support']),
+];
+
+const snsLinks = pickSnsLinks(['x', 'instagram', 'note', 'facebook']);
+---
+
+<!--
+  オーバーレイ全体：
+    SP  → inset-0（画面一面）
+    PC  → 右側パネル（left:auto、固定幅）
+-->
+<div
+  id="hamburger-menu"
+  class="fixed inset-0 z-[60] hidden"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="ナビゲーションメニュー"
+>
+  <!-- PC 用の半透明バックドロップ（左側の暗幕） -->
+  <div
+    id="menu-backdrop"
+    class="absolute inset-0 hidden md:block bg-black/10"
+  ></div>
+
+  <!-- メニューパネル本体 -->
+  <div class="absolute inset-0 md:inset-auto md:right-0 md:top-0 md:h-full md:w-72 lg:w-80 bg-[#f5f9fd]/95 backdrop-blur-sm flex flex-col overflow-hidden">
+
+    <!-- 装飾バブル（背景） -->
+    <img src={bubble1.src} alt="" aria-hidden="true"
+      class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 w-36 opacity-60" />
+    <img src={bubble3.src} alt="" aria-hidden="true"
+      class="pointer-events-none absolute -bottom-6 -right-6 w-28 opacity-50" />
+
+    <!-- ── ヘッダー行（閉じるボタン） ── -->
+    <div class="flex justify-end px-5 pt-4 pb-2 shrink-0">
+      <button
+        id="menu-close-btn"
+        class="text-xl leading-none hover:opacity-60 transition-opacity"
+        aria-label="メニューを閉じる"
+      >
+        ×
+      </button>
+    </div>
+
+    <!-- ── ナビゲーション本体（スクロール可） ── -->
+    <nav class="flex-1 overflow-y-auto px-6 pb-4" aria-label="ハンバーガーナビゲーション">
+
+      <!-- 新規メンバー募集中 -->
+      <a
+        href={recruitLink.href}
+        class="flex items-center gap-1 py-3 border-b border-dotted border-gray-400 hover:text-[var(--color-primary)] transition-colors"
+      >
+        {recruitLink.label}
+        <span aria-hidden="true">🫧</span>
+      </a>
+
+      <!-- 区切り線 -->
+      <div class="border-b border-dotted border-gray-400 mb-1"></div>
+
+      <!-- 第1グループ -->
+      {navGroups[0].map(link => (
+        <a
+          href={link.href}
+          class="block py-3 border-b border-dotted border-gray-300 hover:text-[var(--color-primary)] transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+
+      <!-- グループ間区切り -->
+      <div class="border-b border-dotted border-gray-400 mt-1 mb-1"></div>
+
+      <!-- 第2グループ -->
+      {navGroups[1].map(link => (
+        <a
+          href={link.href}
+          class="block py-3 hover:text-[var(--color-primary)] transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- ── ボトム固定エリア ── -->
+    <div class="shrink-0 px-6 py-5 flex flex-col items-center gap-3 border-t border-gray-200/60">
+      <BubbleButton href="#contact" label="お問い合わせ" />
+      <div class="flex items-center gap-1">
+        {snsLinks.map((sns) => (
+          <SnsButton href="#" icon={sns.icon.src} label={sns.label} isX={sns.id === 'x'} />
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const menu      = document.getElementById('hamburger-menu')!;
+  const openBtn   = document.getElementById('menu-open-btn')!;
+  const closeBtn  = document.getElementById('menu-close-btn')!;
+  const backdrop  = document.getElementById('menu-backdrop')!;
+
+  function openMenu() {
+    menu.classList.remove('hidden');
+    menu.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    menu.classList.add('hidden');
+    menu.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  backdrop.addEventListener('click', closeMenu);
+
+  // メニュー内のリンクをクリックしたら閉じる
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  // Esc キーで閉じる
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+  });
+</script>

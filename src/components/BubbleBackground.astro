@@ -1,0 +1,31 @@
+---
+import { bubble1, bubble2, bubble3, bubble4 } from '../data/bubbles';
+---
+
+<div class="absolute inset-0 overflow-hidden pointer-events-none select-none z-0" aria-hidden="true">
+
+  <!-- 左上 -->
+  <img src={bubble1.src} alt="" class="absolute w-28 md:w-40 opacity-70 top-[2%]  left-[-4%]" />
+  <img src={bubble3.src} alt="" class="absolute w-16 md:w-24 opacity-55 top-[14%] left-[2%]" />
+
+  <!-- 右上 -->
+  <img src={bubble2.src} alt="" class="absolute w-32 md:w-48 opacity-65 top-[3%]  right-[-5%]" />
+  <img src={bubble4.src} alt="" class="absolute w-20 md:w-28 opacity-50 top-[16%] right-[1%]" />
+
+  <!-- 中段・左 -->
+  <img src={bubble4.src} alt="" class="absolute w-36 md:w-52 opacity-60 top-[36%] left-[-6%]" />
+  <img src={bubble1.src} alt="" class="absolute w-14 md:w-20 opacity-50 top-[50%] left-[3%]" />
+
+  <!-- 中段・右 -->
+  <img src={bubble3.src} alt="" class="absolute w-28 md:w-40 opacity-60 top-[40%] right-[-4%]" />
+  <img src={bubble2.src} alt="" class="absolute w-16 md:w-22 opacity-50 top-[54%] right-[2%]" />
+
+  <!-- 下段・左 -->
+  <img src={bubble2.src} alt="" class="absolute w-36 md:w-52 opacity-60 top-[70%] left-[-6%]" />
+  <img src={bubble4.src} alt="" class="absolute w-16 md:w-24 opacity-50 top-[82%] left-[2%]" />
+
+  <!-- 下段・右 -->
+  <img src={bubble1.src} alt="" class="absolute w-28 md:w-44 opacity-60 top-[73%] right-[-4%]" />
+  <img src={bubble3.src} alt="" class="absolute w-14 md:w-20 opacity-50 top-[87%] right-[2%]" />
+
+</div>
