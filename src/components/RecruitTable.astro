@@ -1,0 +1,42 @@
+---
+import type { RecruitTeam } from "../data/recruit";
+
+interface Props {
+  team: RecruitTeam;
+}
+
+const { team } = Astro.props;
+
+// アクセントごとの背景色（ロール背景の配色に合わせる）
+const bgByAccent: Record<RecruitTeam["accent"], string> = {
+  event: "#fdecec",
+  sns: "#fbf4dc",
+  other: "#e6f1ee",
+};
+---
+
+<div>
+  <h3 class="section-heading mb-3">{team.num}{team.title}</h3>
+  <div
+    class="rounded-2xl px-5 py-5 md:px-8 md:py-6"
+    style={`background-color:${bgByAccent[team.accent]};`}
+  >
+    <dl class="space-y-3 md:space-y-4">
+      {
+        team.rows.map((row) => (
+          <div class="flex gap-3 md:gap-6">
+            <dt class="shrink-0 w-24 md:w-32">{row.label}</dt>
+            <dd class="flex-1">
+              {row.value.split("\n").map((line, i) => (
+                <>
+                  {i > 0 && <br />}
+                  {line}
+                </>
+              ))}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</div>

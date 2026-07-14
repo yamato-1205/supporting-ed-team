@@ -32,6 +32,32 @@ export type NewsListResponse = {
   limit: number;
 };
 
+/** 画像（microCMS の画像フィールド共通形） */
+export type MicroCMSImage = {
+  url: string;
+  height: number;
+  width: number;
+};
+
+/** メンバーの役割1件（役割名＋マーカー背景画像を microCMS 側で保持） */
+export type MemberRoll = {
+  id: string;
+  roll: string; // 役割名（例: 代表 / コア / イベント / SNS / 経理 / HP/デザイン）
+  image: MicroCMSImage; // 役割ごとのマーカー背景画像
+};
+
+/** メンバー1件の型（microCMS の member エンドポイント） */
+export type Member = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  revisedAt: string;
+  name: string;
+  roll: MemberRoll[];
+  icon: MicroCMSImage;
+};
+
 /** 外部レポート（他団体・大学等による掲載記事）1件の型 */
 export type ExternalReport = {
   id: string;

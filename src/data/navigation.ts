@@ -10,12 +10,12 @@ export type NavLink = {
  */
 export const NAV_LINKS: NavLink[] = [
   { id: "top", label: "TOP", href: "/" },
-  { id: "activity", label: "活動内容", href: "#activity" },
-  { id: "about", label: "代表の思い", href: "#about" },
-  { id: "news", label: "お知らせ", href: "#news" },
-  { id: "results", label: "活動実績", href: "#results" },
-  { id: "overview", label: "団体概要", href: "#overview" },
-  { id: "support", label: "応援する", href: "#support" },
+  { id: "activity", label: "活動内容", href: "/#activity" },
+  { id: "about", label: "代表の思い", href: "/#about" },
+  { id: "news", label: "お知らせ", href: "/#news" },
+  { id: "results", label: "活動実績", href: "/#results" },
+  { id: "overview", label: "団体概要", href: "/overview" },
+  { id: "support", label: "応援する", href: "/#support" },
 ];
 
 /** id の配列で指定した順に NAV_LINKS から抽出する */
