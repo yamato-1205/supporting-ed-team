@@ -3,7 +3,7 @@ import supportBtn from "../assets/応援するボタン.png";
 ---
 
 <a
-  href="#support"
+  href="/#support"
   class="fixed right-3 bottom-3 md:right-8 md:bottom-8 z-50 hover:opacity-80 inline-block balloon-float"
   aria-label="応援する"
 >
@@ -22,12 +22,24 @@ import supportBtn from "../assets/応援するボタン.png";
 
 <style>
   @keyframes balloon-sway {
-    0%   { transform: rotate(-3deg) translateY(0px);   }
-    20%  { transform: rotate(2deg)  translateY(-6px);  }
-    40%  { transform: rotate(-2deg) translateY(-3px);  }
-    60%  { transform: rotate(3deg)  translateY(-7px);  }
-    80%  { transform: rotate(-1deg) translateY(-2px);  }
-    100% { transform: rotate(-3deg) translateY(0px);   }
+    0% {
+      transform: rotate(-3deg) translateY(0px);
+    }
+    20% {
+      transform: rotate(2deg) translateY(-6px);
+    }
+    40% {
+      transform: rotate(-2deg) translateY(-3px);
+    }
+    60% {
+      transform: rotate(3deg) translateY(-7px);
+    }
+    80% {
+      transform: rotate(-1deg) translateY(-2px);
+    }
+    100% {
+      transform: rotate(-3deg) translateY(0px);
+    }
   }
 
   .balloon-float {

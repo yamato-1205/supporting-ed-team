@@ -1,0 +1,42 @@
+---
+import type { MemberRoll } from "../library/microcms";
+
+interface Props {
+  name: string;
+  iconUrl: string;
+  roll: MemberRoll[];
+}
+
+const { name, iconUrl, roll } = Astro.props;
+
+// microCMS(imgix)の画像を正方形にトリミングして軽量化
+const squareIcon = `${iconUrl}?fit=crop&w=240&h=240`;
+---
+
+<div
+  class="bg-white rounded-2xl border border-gray-200 px-4 py-5 flex flex-col items-center text-center"
+>
+  <img
+    src={squareIcon}
+    alt={name}
+    width="96"
+    height="96"
+    loading="lazy"
+    class="w-24 h-24 rounded-full object-cover mb-3"
+  />
+  <p class="mb-2">{name}</p>
+  <div class="flex flex-wrap justify-center gap-x-2 gap-y-1">
+    {
+      roll.map((r) => (
+        <span class="relative inline-block leading-none text-small px-1">
+          <span
+            class="absolute inset-x-0 bottom-0 z-0 h-[0.7em]"
+            style={`background-image:url(${r.image.url});background-size:100% 100%;background-repeat:no-repeat;`}
+            aria-hidden="true"
+          />
+          <span class="relative z-10">#{r.roll}</span>
+        </span>
+      ))
+    }
+  </div>
+</div>

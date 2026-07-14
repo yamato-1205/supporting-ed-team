@@ -14,10 +14,46 @@
 │   ├── data/                # ナビゲーション・SNSリンク・装飾など、複数コンポーネントで共有するデータ
 │   ├── layouts/             # 全ページ共通のレイアウト（Header/Footer/背景を含む）
 │   ├── library/             # microCMS・note RSS 連携や日付フォーマットなどのロジック
-│   ├── pages/                # ルーティングされるページ（index.astro がトップページ）
+│   ├── pages/                # ルーティングされるページ（index.astro=トップ / overview.astro=団体概要 / member.astro=メンバー募集）
 │   └── styles/               # グローバルCSS（Tailwindのテーマ・共通ユーティリティ）
 └── package.json
 ```
+
+## ✏️ コンテンツの編集
+
+### 団体概要ページ（`/overview`）
+
+テキストは `src/data/overview.ts` の `OVERVIEW_SECTIONS` にまとまっています。見出しや本文を変えるときはこのファイルだけ編集すれば OK です。
+
+```ts
+{
+  id: "existence",       // アンカーリンク用（例: /overview#existence）
+  title: "存在意義",
+  paragraphs: [
+    "1段落目のテキスト",
+    "2段落目。\n同じ段落内で改行したいときは \\n を使う",
+  ],
+}
+```
+
+- `paragraphs` の各要素が `<p>` タグ1つに対応します
+- 段落内の改行は `\n` で指定します
+- レイアウト（白カード・見出しの下線など）は `src/components/OverviewCard.astro` が担当します
+
+### メンバー募集ページ（`/member`）
+
+- **各チームの募集内容（①イベント・②SNS・③その他）** … `src/data/recruit.ts` の `RECRUIT_TEAMS` を編集します。`value` 内の改行・箇条書きは `\n` で指定します。テーブルの見た目は `src/components/RecruitTable.astro` が担当します。
+- **メンバー一覧** … microCMS の `member` エンドポイント（`name` / `roll` / `icon`）を**ビルド時に取得**して表示します。メンバーの追加・変更は microCMS 管理画面で行います（コード変更不要）。
+- **ロールのマーカー背景** … `roll` は「役割名（`roll`）＋マーカー背景画像（`image`）」の繰り返しフィールドです。背景画像は microCMS 側で保持しているため、`src/components/MemberCard.astro` はその `image.url` をそのまま表示します（ローカル画像は使いません）。
+- **チーム構成図** … `src/assets/さぽちむ簡易図.png` を使用しています。
+
+### ナビゲーション
+
+ヘッダー・フッター・ハンバーガーメニューのリンクは `src/data/navigation.ts` の `NAV_LINKS` が唯一の定義元です。メンバー募集ページへは、トップの「新規メンバー募集」内「詳しく見る」ボタンとハンバーガーメニューの「新規メンバー募集中！」から遷移します。
+
+### トップページ
+
+各セクションのテキストは `src/components/` 配下のコンポーネント（`ActivitySection.astro` など）に直接書かれています。
 
 ## 🔧 セットアップ
 
