@@ -14,7 +14,7 @@ const { href, label, external = false } = Astro.props;
   href={href}
   target={external ? '_blank' : undefined}
   rel={external ? 'noopener noreferrer' : undefined}
-  class="relative inline-block hover:opacity-80 transition-opacity"
+  class="btn-hover relative inline-block"
 >
   <img src={bubbleImg.src} alt="" class="h-12 w-auto" aria-hidden="true" />
   <span

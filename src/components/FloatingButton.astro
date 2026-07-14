@@ -4,7 +4,7 @@ import supportBtn from "../assets/応援するボタン.png";
 
 <a
   href="/#support"
-  class="fixed right-3 bottom-3 md:right-8 md:bottom-8 z-50 hover:opacity-80 inline-block balloon-float"
+  class="fixed right-3 bottom-3 md:right-8 md:bottom-8 z-50 inline-block balloon-float"
   aria-label="応援する"
 >
   <div class="relative">
@@ -45,11 +45,13 @@ import supportBtn from "../assets/応援するボタン.png";
   .balloon-float {
     animation: balloon-sway 4s ease-in-out infinite;
     transform-origin: center bottom; /* 結び目を軸にゆれる */
+    transition: opacity 0.2s ease;
   }
 
-  /* ホバー時はアニメーション一時停止 */
+  /* ホバー時はアニメーション一時停止＋拡大・透明度 */
   .balloon-float:hover {
     animation-play-state: paused;
     opacity: 0.8;
+    transform: scale(1.05);
   }
 </style>

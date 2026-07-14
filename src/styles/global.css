@@ -9,14 +9,14 @@
 }
 
 /* ヘッダー高さの唯一の定義場所
-   ロゴ画像(h-9=36px) + 上下パディング(py-3=12px×2) = 60px */
+   ロゴ画像(h-9=36px) */
 :root {
-  --header-height: 60px;
+  --header-height: 36px;
 }
 @media (min-width: 768px) {
-  /* ロゴ画像(h-11=44px) + 上下パディング(py-3=12px×2) = 68px */
+  /* ロゴ画像(h-11=44px) */
   :root {
-    --header-height: 68px;
+    --header-height: 44px;
   }
 }
 
@@ -29,16 +29,22 @@ html {
   scroll-margin-top: var(--header-height);
 }
 
-/* 全セクション共通の見出しスタイル */
+/* 全セクション共通の見出しスタイル（旧名・互換用。新規は heading-2 / heading-3 を使う） */
 .section-heading {
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
 }
-@media (min-width: 768px) {
-  .section-heading {
-    font-size: 1.125rem;
-  }
+
+/* 見出し2 */
+.heading-2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* 見出し3 */
+.heading-3 {
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 
 /* 小さめ文字のデフォルト（日付・補足テキストなどに使用） */
@@ -46,9 +52,104 @@ html {
   font-size: 0.8rem;
 }
 
-/* 各セクション共通のコンテンツ幅（見出し以下のコンテナ） */
+/* ボタン共通ホバー：透明度＋わずかに拡大 */
+.btn-hover {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.btn-hover:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+/* クリック時：シャボン玉が割れる */
+.btn-hover.bubble-popping,
+.balloon-float.bubble-popping {
+  animation: bubble-button-pop 0.35s ease-out forwards !important;
+  pointer-events: none;
+}
+
+@keyframes bubble-button-pop {
+  0% {
+    transform: scale(1.05);
+    opacity: 0.85;
+    filter: blur(0);
+  }
+  35% {
+    transform: scale(1.25);
+    opacity: 0.55;
+    filter: blur(0.5px);
+  }
+  100% {
+    transform: scale(0.15);
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+.bubble-burst {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.bubble-burst-ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border-radius: 50%;
+  border: 2px solid rgba(130, 195, 230, 0.85);
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.45);
+  animation: bubble-ring-pop 0.45s ease-out forwards;
+}
+
+.bubble-burst-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size, 12px);
+  height: var(--size, 12px);
+  margin: calc(var(--size, 12px) / -2) 0 0 calc(var(--size, 12px) / -2);
+  border-radius: 50%;
+  border: 1.5px solid rgba(140, 200, 230, 0.9);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.75),
+    rgba(170, 215, 240, 0.25)
+  );
+  animation: bubble-particle-fly 0.55s ease-out forwards;
+}
+
+@keyframes bubble-ring-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+@keyframes bubble-particle-fly {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* 各セクション共通のコンテンツ幅（見出し以下のコンテナ）
+   ※新規メンバー募集は専用幅（1280px）のため section-container は使わない */
 .section-container {
-  @apply max-w-4xl mx-auto px-4 md:px-8 relative z-10;
+  @apply max-w-[1024px] mx-auto px-4 md:px-8 relative z-10;
 }
 
 body {

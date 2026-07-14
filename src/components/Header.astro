@@ -3,33 +3,42 @@ import bannerImg from "../assets/バナー（HP用）.png";
 import HamburgerMenu from "./HamburgerMenu.astro";
 import { pickNavLinks } from "../data/navigation";
 
-const navLinks = pickNavLinks(["activity", "about", "news", "results", "overview", "support"]);
+const navLinks = pickNavLinks([
+  "activity",
+  "about",
+  "news",
+  "results",
+  "overview",
+  "support",
+]);
 ---
 
 <header class="fixed top-0 inset-x-0 z-50 bg-white border-b border-gray-100">
-  <div class="flex items-center py-3 px-4 md:px-8 max-w-screen-2xl mx-auto">
+  <div class="flex items-center px-4 md:px-8 max-w-screen-2xl mx-auto gap-8">
     <!-- ロゴ -->
     <a href="/" class="shrink-0">
       <img
         src={bannerImg.src}
         alt="さぽちむ Supporting/ed TEAM"
-        class="h-9 w-auto md:h-11"
+        class="h-11 w-auto md:h-16"
       />
     </a>
 
     <!-- PC ナビ -->
     <nav
-      class="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-8"
+      class="hidden lg:flex flex-1 items-center justify-start gap-8"
       aria-label="メインナビゲーション"
     >
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class="whitespace-nowrap hover:text-[var(--color-primary)] transition-colors"
-        >
-          {link.label}
-        </a>
-      ))}
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="whitespace-nowrap hover:text-[var(--color-primary)] transition-colors"
+          >
+            {link.label}
+          </a>
+        ))
+      }
     </nav>
 
     <!-- ハンバーガーボタン -->

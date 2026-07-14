@@ -1,20 +1,20 @@
 ---
-import eventImg     from '../assets/活動内容_イベント.jpg';
-import communityImg from '../assets/活動内容_コミュニティ.jpg';
-import SectionBubbles from './SectionBubbles.astro';
+import eventImg from "../assets/活動内容_イベント.jpg";
+import communityImg from "../assets/活動内容_コミュニティ.jpg";
+import SectionBubbles from "./SectionBubbles.astro";
 ---
 
-<section id="activity" class="py-14 md:py-20 lg:py-24 bg-white relative overflow-hidden">
-
+<section
+  id="activity"
+  class="py-7 md:py-10 lg:py-12 bg-white relative overflow-hidden"
+>
   <!-- セクション内のシャボン玉装飾（左右の縁から顔を出す） -->
   <SectionBubbles variant="activity" />
 
   <div class="section-container">
-
-    <h2 class="section-heading mb-10 md:mb-14">活動内容</h2>
+    <h2 class="heading-2 mb-10 md:mb-14">活動内容</h2>
 
     <div class="grid grid-cols-1 gap-16 md:grid-cols-2 md:gap-12 lg:gap-20">
-
       <!-- イベント -->
       <article>
         <div class="overflow-hidden rounded-lg mb-6">
@@ -25,18 +25,27 @@ import SectionBubbles from './SectionBubbles.astro';
           />
         </div>
 
-        <!-- 小見出し＋グリーン横線 -->
-        <div class="mb-4">
-          <h3 class="text-sm md:text-base font-bold text-center mb-2">イベント</h3>
-          <hr style="border-color: var(--color-primary); border-top-width: 1.5px;" />
+        <!-- 小見出し＋グリーン横線（文字幅＋左右1文字分、太さは従来1.5pxの1.5倍） -->
+        <div class="mb-4 flex justify-center">
+          <div class="inline-flex flex-col items-center">
+            <h3 class="heading-3">イベント</h3>
+            <hr
+              class="w-[calc(100%+2em)] border-0 border-t-[4px]"
+              style="border-color: var(--color-primary);"
+            />
+          </div>
         </div>
 
         <p>
           福祉の団体なのに、福祉っぽくない。<br />
-          「おもしろそう」から始まる、福祉の入り口をイベントで表現しています。<br />
-          担い手は大学生をメインに、サークルや企業とコラボしながら活動中です。<br />
-          活動拠点は大阪府吹田市を中心に、2026年は兵庫県伊丹市、大阪府大阪市などにも拠点を広げていく予定です。<br />
-          子ども向けのイベントが多いですが、参加するメンバーの関心に合わせてイベントを計画します。<br />
+          「おもしろそう」から始まる、福祉の入り口をイベントで表現しています。<br
+          />
+          担い手は大学生をメインに、サークルや企業とコラボしながら活動中です。<br
+          />
+          活動拠点は大阪府吹田市を中心に、2026年は兵庫県伊丹市、大阪府大阪市などにも拠点を広げていく予定です。<br
+          />
+          子ども向けのイベントが多いですが、参加するメンバーの関心に合わせてイベントを計画します。<br
+          />
           当日運営以外の企画はオンラインなので、全国各地から参加可能。<br />
           福祉に関わるオンラインイベントも多数実施してきています。<br />
           0→1がやりたい人、当日参加のみなど、関わり方も柔軟に。<br />
@@ -54,22 +63,30 @@ import SectionBubbles from './SectionBubbles.astro';
           />
         </div>
 
-        <div class="mb-4">
-          <h3 class="text-sm md:text-base font-bold text-center mb-2">コミュニティ</h3>
-          <hr style="border-color: var(--color-primary); border-top-width: 1.5px;" />
+        <div class="mb-4 flex justify-center">
+          <div class="inline-flex flex-col items-center">
+            <h3 class="heading-3">コミュニティ</h3>
+            <hr
+              class="w-[calc(100%+2em)] border-0 border-t-[4px]"
+              style="border-color: var(--color-primary);"
+            />
+          </div>
         </div>
 
         <p>
-          障害や病に関係なく、誰もが抱える人生の凸凹をともに過ごすコミュニティを醸成中！<br />
-          働き方や生き方を考えたり、頑張れない時間を頑張らずに過ごす方法を考えたり。<br />
+          障害や病に関係なく、誰もが抱える人生の凸凹をともに過ごすコミュニティを醸成中！<br
+          />
+          働き方や生き方を考えたり、頑張れない時間を頑張らずに過ごす方法を考えたり。<br
+          />
           とにかく自分の幸せ＝福祉を考えるコミュニティです。<br />
-          2026年度は、他団体とのコラボの中で、私たち「さぽちむ」というコミュニティは何かを探索する一年にします！<br />
+          2026年度は、他団体とのコラボの中で、私たち「さぽちむ」というコミュニティは何かを探索する一年にします！<br
+          />
           凸凹を抱える私たちはマイノリティ。<br />
-          だからこそ、オンラインで広く繋がり、モデルロールやニッチな相談ができる場所。<br />
+          だからこそ、オンラインで広く繋がり、モデルロールやニッチな相談ができる場所。<br
+          />
           オフラインの場でも他団体とのコラボという形で、直接的な支援ができる体制を目指します。
         </p>
       </article>
-
     </div>
   </div>
 </section>
