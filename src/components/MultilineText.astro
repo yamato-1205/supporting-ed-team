@@ -1,0 +1,24 @@
+---
+/**
+ * テキスト内の \n を <br> に変換して表示する。
+ */
+interface Props {
+  text: string;
+  as?: "p" | "span" | "div";
+  class?: string;
+}
+
+const { text, as: Tag = "p", class: className } = Astro.props;
+const lines = text.split("\n");
+---
+
+<Tag class={className}>
+  {
+    lines.map((line, i) => (
+      <>
+        {i > 0 && <br />}
+        {line}
+      </>
+    ))
+  }
+</Tag>

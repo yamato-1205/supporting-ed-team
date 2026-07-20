@@ -1,0 +1,35 @@
+---
+/**
+ * 見出し＋グリーン下線（文字幅 + 左右 1em）。
+ * OverviewCard / 応援ページ / 活動内容の小見出しで共通利用。
+ */
+interface Props {
+  as?: "h1" | "h2" | "h3";
+  /** heading-2（既定）または heading-3 */
+  level?: "2" | "3";
+  class?: string;
+  /** 見出し自体に追加するクラス */
+  headingClass?: string;
+}
+
+const {
+  as: Tag = "h2",
+  level = "2",
+  class: wrapperClass = "",
+  headingClass = "",
+} = Astro.props;
+
+const sizeClass = level === "3" ? "heading-3" : "heading-2";
+---
+
+<div class:list={["flex justify-center", wrapperClass]}>
+  <div class="inline-flex flex-col items-center">
+    <Tag class:list={[sizeClass, "text-center", headingClass]}>
+      <slot />
+    </Tag>
+    <hr
+      class="w-[calc(100%+2em)] border-0 border-t-[4px]"
+      style="border-color: var(--color-primary);"
+    />
+  </div>
+</div>

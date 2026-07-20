@@ -1,11 +1,11 @@
 ---
-import { client } from '../library/microcms';
-import type { News } from '../library/microcms';
-import { splitDate } from '../library/date';
-import SectionBubbles from './SectionBubbles.astro';
-import RibbonDate from './RibbonDate.astro';
-import flagImg     from '../assets/フラッグ5連.png';
-import newsCardImg from '../assets/お知らせ.png';
+import { client } from "../lib/microcms";
+import type { News } from "../lib/microcms";
+import { splitDate } from "../lib/date";
+import SectionBubbles from "./SectionBubbles.astro";
+import RibbonDate from "./RibbonDate.astro";
+import flagImg from "../assets/decorations/flag-strip.png";
+import newsCardImg from "../assets/decorations/news-card.png";
 
 // microCMS から最新20件を取得（ビルド時にAPIが未設定の場合は空リストで続行）
 let newsList: News[] = [];

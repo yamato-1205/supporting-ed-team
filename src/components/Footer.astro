@@ -1,55 +1,18 @@
 ---
-import bannerImg from "../assets/バナー（HP用）.png";
-import footerWave from "../assets/フッター.png";
-import cityscapeImg from "../assets/街並み.png";
-import houseSquare from "../assets/家.png";
-import houseWide from "../assets/家_細長.png";
+import bannerImg from "../assets/brand/banner.png";
+import footerWave from "../assets/decorations/footer-wave.png";
+import cityscapeImg from "../assets/decorations/cityscape.png";
+import houseSquare from "../assets/decorations/house.png";
+import houseWide from "../assets/decorations/house-wide.png";
 import SnsButton from "./SnsButton.astro";
 import { getSnsLinks } from "../data/sns";
-
-type FooterNavGroup = {
-  label: string;
-  href: string;
-  children: { label: string; href: string }[];
-};
-
-/** ページ階層が分かるフッターナビ */
-const navGroups: FooterNavGroup[] = [
-  {
-    label: "ホーム",
-    href: "/",
-    children: [
-      { label: "活動内容", href: "/#activity" },
-      { label: "代表の思い", href: "/#about" },
-      { label: "お知らせ", href: "/#news" },
-      { label: "活動実績", href: "/#results" },
-    ],
-  },
-  {
-    label: "団体概要",
-    href: "/overview",
-    children: [
-      { label: "存在意義", href: "/overview#existence" },
-      { label: "文化", href: "/overview#existence-1" },
-      { label: "チーム名の由来", href: "/overview#origin" },
-    ],
-  },
-  {
-    label: "応援する",
-    href: "/support",
-    children: [
-      { label: "ご寄付が支えるもの", href: "/support#why" },
-      { label: "ご寄付の使い道", href: "/support#usage" },
-      { label: "寄付の方法", href: "/support#donate" },
-    ],
-  },
-];
+import { NAV_GROUPS } from "../data/navigation";
+import { CONTACT_EMAIL, COPYRIGHT_YEAR } from "../data/site";
 
 const snsLinks = getSnsLinks("footer");
 ---
 
 <footer id="contact" class="relative overflow-hidden bg-[var(--color-primary)]">
-  <!-- ── クリーム色の波（フッター.png・画面端まで表示） ── -->
   <img
     src={footerWave.src}
     alt=""
@@ -57,11 +20,9 @@ const snsLinks = getSnsLinks("footer");
     class="pointer-events-none absolute inset-x-0 top-0 z-0 w-full h-auto -translate-y-[15%] select-none"
   />
 
-  <!-- ── フッター本体（1280px で固定・中央寄せ） ── -->
   <div
     class="relative z-10 mx-auto max-w-[1280px] px-6 pt-24 md:px-10 lg:px-16 md:pt-32"
   >
-    <!-- ロゴ + メール -->
     <div class="mb-8 md:mb-10">
       <a href="/" class="mb-2 inline-block">
         <img
@@ -71,19 +32,18 @@ const snsLinks = getSnsLinks("footer");
         />
       </a>
       <p class="tracking-wide text-white/90">
-        メール：<a href="mailto:sapochimu1103@gmail.com" class="hover:underline"
-          >sapochimu1103@gmail.com</a
+        メール：<a href={`mailto:${CONTACT_EMAIL}`} class="hover:underline"
+          >{CONTACT_EMAIL}</a
         >
       </p>
     </div>
 
-    <!-- ナビゲーション：ホーム / 団体概要 / 応援する の階層 -->
     <nav
       aria-label="フッターナビゲーション"
       class="mb-10 flex w-fit max-w-full flex-col gap-6 text-left sm:flex-row sm:flex-wrap sm:gap-x-10 sm:gap-y-6 md:mb-12 md:gap-x-12 lg:gap-x-14"
     >
       {
-        navGroups.map((group) => (
+        NAV_GROUPS.map((group) => (
           <div class="min-w-0 shrink-0">
             <a
               href={group.href}
@@ -108,7 +68,6 @@ const snsLinks = getSnsLinks("footer");
       }
     </nav>
 
-    <!-- SNS アイコン（家.png）＋ お問い合わせ（家_細長.png・高さ揃え） -->
     <div class="mb-3 flex items-end justify-between gap-3">
       <div
         class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:flex md:flex-wrap md:items-center md:gap-2"
@@ -149,7 +108,6 @@ const snsLinks = getSnsLinks("footer");
     </div>
   </div>
 
-  <!-- ── 街並みイラスト ── -->
   <div
     class="relative z-10 h-14 w-full bg-repeat-x md:h-16"
     aria-hidden="true"
@@ -158,6 +116,6 @@ const snsLinks = getSnsLinks("footer");
   </div>
 
   <p class="relative z-10 pb-4 pt-1 text-center text-small text-white/70">
-    © さぽちむ 2025
+    © さぽちむ {COPYRIGHT_YEAR}
   </p>
 </footer>

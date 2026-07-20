@@ -1,84 +1,88 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import BubbleButton from '../components/BubbleButton.astro';
-import RecruitTable from '../components/RecruitTable.astro';
-import MemberCard from '../components/MemberCard.astro';
-import { client } from '../library/microcms';
-import type { Member } from '../library/microcms';
-import { RECRUIT_TEAMS } from '../data/recruit';
-import diagramImg from '../assets/さぽちむ簡易図.png';
+import Layout from "../layouts/Layout.astro";
+import BubbleButton from "../components/BubbleButton.astro";
+import RecruitTable from "../components/RecruitTable.astro";
+import MemberCard from "../components/MemberCard.astro";
+import MultilineText from "../components/MultilineText.astro";
+import { client } from "../lib/microcms";
+import type { Member } from "../lib/microcms";
+import { RECRUIT_TEAMS } from "../data/recruit";
+import { MEMBER_PAGE } from "../data/member";
+import { pageTitle } from "../data/site";
 
-// microCMS からメンバー一覧を取得（APIが未設定/失敗時は空リストで続行）
 let members: Member[] = [];
 try {
   const res = await client.getList<Member>({
-    endpoint: 'member',
+    endpoint: "member",
     queries: { limit: 100 },
   });
   members = res.contents;
 } catch (e) {
-  console.warn('[member] メンバー一覧の取得に失敗しました:', e);
+  console.warn("[member] メンバー一覧の取得に失敗しました:", e);
 }
 ---
 
-<Layout
-  title="メンバー募集 | 任意団体 さぽちむ HP"
-  description="さぽちむのメンバー募集ページ。イベント・SNS・その他の各チームの活動内容と、現在のメンバーを紹介します。"
->
-
+<Layout title={pageTitle(MEMBER_PAGE.title)} description={MEMBER_PAGE.description}>
   <div
     id="member"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"
   >
     <div class="section-container flex flex-col gap-10 md:gap-14">
+      <h1 class="heading-2 text-center">{MEMBER_PAGE.title}</h1>
 
-      <h1 class="heading-2 text-center">メンバー募集</h1>
-
-      <!-- さぽちむとは -->
-      <section class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10">
-        <h2 class="heading-2 mb-5">さぽちむとは</h2>
+      <section
+        class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
+      >
+        <h2 class="heading-2 mb-5">{MEMBER_PAGE.aboutTitle}</h2>
         <div class="space-y-4">
-          <p>
-            全チーム：おおよそ週1で各チームごとに1時間のミーティング<br />
-            固定の曜日等ではなく、毎月バイト等の予定が出てからメンバー間で調整します！（固定でやっているチームも○）オンラインツールで適宜コミュニケーションをとります。
-          </p>
+          {
+            MEMBER_PAGE.aboutParagraphs.map((paragraph) => (
+              <MultilineText text={paragraph} />
+            ))
+          }
           <ul class="space-y-1">
-            <li>・ミーティング：オンライン（discord）</li>
-            <li>・対面イベント：GV津雲台（阪急山田駅）周辺メイン、その他活動したいところで挑戦できます</li>
-            <li>・オンラインイベント：zoomなどを使用（イベントに関しては、イベントチーム以外は参加は任意）</li>
-            <li>・不定期でオフ会を開催</li>
+            {
+              MEMBER_PAGE.aboutList.map((item) => (
+                <li>・{item}</li>
+              ))
+            }
           </ul>
         </div>
 
-        <!-- チーム構成の簡易図 -->
         <img
-          src={diagramImg.src}
-          alt="さぽちむのチーム構成図（①イベント・②SNS・③その他）"
+          src={MEMBER_PAGE.diagram.src.src}
+          alt={MEMBER_PAGE.diagram.alt}
           class="w-full max-w-2xl mx-auto mt-8"
         />
       </section>
 
-      <!-- お問い合わせCTA -->
       <div class="flex justify-center">
-        <BubbleButton href="/contact" label="お問い合わせ" />
+        <BubbleButton
+          href={MEMBER_PAGE.contactHref}
+          label={MEMBER_PAGE.contactLabel}
+        />
       </div>
 
-      <!-- 各チームの募集内容 -->
       <div class="flex flex-col gap-8 md:gap-10">
         {RECRUIT_TEAMS.map((team) => <RecruitTable team={team} />)}
       </div>
 
-      <!-- お問い合わせCTA -->
       <div class="flex justify-center">
-        <BubbleButton href="/contact" label="お問い合わせ" />
+        <BubbleButton
+          href={MEMBER_PAGE.contactHref}
+          label={MEMBER_PAGE.contactLabel}
+        />
       </div>
 
-      <!-- メンバー一覧 -->
-      <section class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10">
-        <h2 class="heading-2 mb-6">メンバー一覧</h2>
+      <section
+        class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
+      >
+        <h2 class="heading-2 mb-6">{MEMBER_PAGE.membersTitle}</h2>
         {
           members.length === 0 ? (
-            <p class="text-gray-500 text-center py-8">現在メンバー情報を取得できません。</p>
+            <p class="text-gray-500 text-center py-8">
+              {MEMBER_PAGE.membersEmpty}
+            </p>
           ) : (
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {members.map((m) => (
@@ -88,7 +92,6 @@ try {
           )
         }
       </section>
-
     </div>
   </div>
 </Layout>

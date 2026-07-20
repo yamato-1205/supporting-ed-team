@@ -1,19 +1,12 @@
 ---
-const GAS_ACTION_URL =
-  "https://script.google.com/macros/s/AKfycbxlB_ifZouDNYDZ9RcgvuNsYKnZ2heppGrGW7pp4rfo-sYuUCjsQnHNbQBlpfHSW9oQWQ/exec";
-
-const inquiryOptions = [
-  "メンバーになりたい",
-  "活動内容について",
-  "取材依頼",
-  "その他",
-] as const;
+import { CONTACT_FORM_URL, CONTACT_EMAIL } from "../data/site";
+import { INQUIRY_OPTIONS } from "../data/contact";
 ---
 
 <div id="form-container">
   <form
     id="contact-form"
-    action={GAS_ACTION_URL}
+    action={CONTACT_FORM_URL}
     method="POST"
     class="mx-auto w-full max-w-[640px] space-y-8"
   >
@@ -59,7 +52,7 @@ const inquiryOptions = [
         id="email"
         name="メールアドレス"
         required
-        placeholder="sapochimu1103@gmail.com"
+        placeholder={CONTACT_EMAIL}
         class="form-input"
       />
     </div>
@@ -83,7 +76,7 @@ const inquiryOptions = [
         >
           <option value="">項目を選択ください</option>
           {
-            inquiryOptions.map((option) => (
+            INQUIRY_OPTIONS.map((option) => (
               <option value={option}>{option}</option>
             ))
           }
@@ -102,7 +95,7 @@ const inquiryOptions = [
         </button>
         <ul class="form-select-list" role="listbox" hidden>
           {
-            inquiryOptions.map((option) => (
+            INQUIRY_OPTIONS.map((option) => (
               <li role="option" data-value={option}>
                 {option}
               </li>

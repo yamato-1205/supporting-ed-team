@@ -1,6 +1,6 @@
 ---
-import { fetchInstagramEmbed } from "../library/socialEmbed";
-import { INSTAGRAM_PROFILE_URL } from "../data/socialLinks";
+import { fetchInstagramEmbed } from "../lib/socialEmbed";
+import { SNS_URLS } from "../data/sns";
 
 interface Props {
   postUrl: string;
@@ -8,6 +8,7 @@ interface Props {
 
 const { postUrl } = Astro.props;
 const embed = await fetchInstagramEmbed(postUrl);
+const profileUrl = SNS_URLS.footer.instagram!;
 ---
 
 <div class="w-full max-w-sm mx-auto">
@@ -16,7 +17,7 @@ const embed = await fetchInstagramEmbed(postUrl);
       <Fragment set:html={embed.html} />
     ) : (
       <a
-        href={INSTAGRAM_PROFILE_URL}
+        href={profileUrl}
         target="_blank"
         rel="noopener noreferrer"
         class="flex items-center justify-center h-40 rounded-2xl border border-gray-200 bg-white text-sm hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] transition-colors"

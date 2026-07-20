@@ -2,22 +2,23 @@
 import BubbleButton from "./BubbleButton.astro";
 import SectionBubbles from "./SectionBubbles.astro";
 import RibbonDate from "./RibbonDate.astro";
-import frameImg from "../assets/活動実績.png";
-import reportCardImg from "../assets/お知らせ.png";
-import { fetchNoteArticles, stripHtml } from "../library/note";
-import { splitDate } from "../library/date";
-import { client } from "../library/microcms";
-import type { ExternalReport } from "../library/microcms";
+import frameImg from "../assets/decorations/results-frame.png";
+import reportCardImg from "../assets/decorations/news-card.png";
+import { fetchNoteArticles, stripHtml } from "../lib/note";
+import { splitDate } from "../lib/date";
+import { client } from "../lib/microcms";
+import type { ExternalReport } from "../lib/microcms";
 import XPostEmbed from "./XPostEmbed.astro";
 import InstagramPostEmbed from "./InstagramPostEmbed.astro";
 import {
   FEATURED_X_POST_URL,
   FEATURED_INSTAGRAM_POST_URL,
-} from "../data/socialLinks";
+} from "../data/sns";
+import { NOTE_ACCOUNT } from "../data/site";
 
-const items = await fetchNoteArticles("sapochimu", 10);
+const noteHref = `https://note.com/${NOTE_ACCOUNT}`;
+const items = await fetchNoteArticles(NOTE_ACCOUNT, 10);
 
-// microCMS から外部レポート（他団体・大学等の掲載記事）を取得
 let exReports: ExternalReport[] = [];
 try {
   const res = await client.getList<ExternalReport>({
@@ -34,14 +35,11 @@ try {
   id="results"
   class="py-7 md:py-10 relative overflow-hidden bg-[var(--color-background)]"
 >
-  <!-- 左右のシャボン玉装飾 -->
   <SectionBubbles variant="results" />
 
   <div class="section-container">
-    <!-- セクション見出し -->
     <h2 class="heading-2 mb-6">活動実績</h2>
 
-    <!-- サブセクション：内部レポート -->
     <h3 class="heading-3 mb-8">内部レポート</h3>
 
     {
@@ -60,7 +58,6 @@ try {
                 class="snap-start shrink-0 relative block w-[320px] md:w-[320px] hover:opacity-85 transition-opacity"
                 aria-label={item.title}
               >
-                {/* フレーム画像（自然サイズ維持・カードの高さを決める） */}
                 <img
                   src={frameImg.src}
                   alt=""
@@ -68,9 +65,7 @@ try {
                   class="w-full h-auto block"
                 />
 
-                {/* コンテンツ（絶対配置・フレームに合わせてクリップ） */}
                 <div class="absolute inset-0 z-10 px-3.5 flex flex-col overflow-hidden">
-                  {/* サムネイル（最上部配置）＋リボンを左上に重ねる */}
                   <div class="relative shrink-0">
                     {item.thumbnail && (
                       <img
@@ -81,7 +76,6 @@ try {
                         style="margin-top: 44px;"
                       />
                     )}
-                    {/* 日付バッジ（リボン）をサムネイル左上に重ねる */}
                     <RibbonDate
                       year={year}
                       monthDay={monthDay}
@@ -90,9 +84,7 @@ try {
                     />
                   </div>
 
-                  {/* テキストラッパー（フレックス内でのクリップを確実に） */}
                   <div class="flex-1 min-h-0 overflow-hidden flex flex-col">
-                    {/* タイトル（2行・超過時は…） */}
                     <div
                       class="shrink-0 overflow-hidden pt-2 pb-1"
                       style="max-height: calc(2 * 1.375rem + 0.5rem + 0.25rem);"
@@ -102,7 +94,6 @@ try {
                       </p>
                     </div>
 
-                    {/* 説明文（4行・超過時は…） */}
                     <div
                       class="overflow-hidden pb-2"
                       style="max-height: calc(4 * 1.375rem + 0.5rem);"
@@ -120,16 +111,10 @@ try {
       )
     }
 
-    <!-- もっと見るボタン -->
     <div class="mt-10 flex justify-center">
-      <BubbleButton
-        href="https://note.com/sapochimu"
-        label="もっと見る ↗"
-        external
-      />
+      <BubbleButton href={noteHref} label="もっと見る ↗" external />
     </div>
 
-    <!-- サブセクション：外部レポート -->
     <h3 class="heading-3 mt-14 mb-8">外部レポート</h3>
 
     {
@@ -156,7 +141,6 @@ try {
                   class="w-full h-auto block"
                 />
 
-                {/* 内部レポートと同じリボン・文字サイズ */}
                 <div class="absolute inset-0 z-10 px-3 py-0 overflow-hidden flex flex-col">
                   <div class="relative">
                     <RibbonDate
@@ -180,7 +164,6 @@ try {
       )
     }
 
-    <!-- SNS（他セクション見出しと同じ見出し2） -->
     <h2 class="heading-2 mt-14 mb-8">SNS</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <XPostEmbed postUrl={FEATURED_X_POST_URL} />

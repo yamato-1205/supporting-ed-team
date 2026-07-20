@@ -3,104 +3,79 @@
 任意団体「さぽちむ（Supporting/ed TEAM）」公式サイトです。
 [Astro](https://astro.build) + [Tailwind CSS](https://tailwindcss.com) + [microCMS](https://microcms.io) で構築しています。
 
-## 🚀 プロジェクト構成
+## プロジェクト構成
 
 ```text
 /
-├── public/                # そのまま配信される静的ファイル
+├── public/
 ├── src
-│   ├── assets/             # 画像（Astroのビルドパイプラインで最適化される）
-│   ├── components/         # ページを構成するUIコンポーネント
-│   ├── data/                # ナビゲーション・SNSリンク・装飾など、複数コンポーネントで共有するデータ
-│   ├── layouts/             # 全ページ共通のレイアウト（Header/Footer/背景を含む）
-│   ├── library/             # microCMS・note RSS 連携や日付フォーマットなどのロジック
-│   ├── pages/                # ルーティング（index / overview / member / contact / support）
-│   └── styles/               # グローバルCSS（Tailwindのテーマ・共通ユーティリティ）
+│   ├── assets/              # 画像（用途別ディレクトリ・英語 kebab-case）
+│   │   ├── brand/           # ロゴ・バナー
+│   │   ├── bubbles/         # シャボン玉素材
+│   │   ├── decorations/     # リボン・家・カード枠など
+│   │   ├── icons/           # SNS アイコン
+│   │   ├── members/         # メンバー写真（ローカル用）
+│   │   ├── sections/        # ヒーロー・活動内容など
+│   │   └── unused/          # 未使用素材の保管
+│   ├── components/          # UI コンポーネント
+│   ├── data/                # 変更しやすいコンテンツ・設定の定義元
+│   ├── layouts/
+│   ├── lib/                 # microCMS / note / 日付 / embed ロジック
+│   ├── pages/
+│   └── styles/
 └── package.json
 ```
 
-## ✏️ コンテンツの編集
+## コンテンツの編集（どこを触るか）
 
-### 団体概要ページ（`/overview`）
+| 変更したいもの | 編集ファイル |
+|----------------|--------------|
+| サイト名・説明文 | `src/data/site.ts` |
+| メール・note・寄付URL・フォームURL・microCMS domain | `.env`（必須） |
+| ナビゲーション（ヘッダー / フッター / ハンバーガー） | `src/data/navigation.ts` |
+| SNS プロフィール URL・埋め込み投稿 URL | `src/data/sns.ts` |
+| トップ（ヒーロー・活動内容・代表の思い・募集CTA） | `src/data/home.ts` |
+| 団体概要の本文 | `src/data/overview.ts` |
+| 応援するページの文言 | `src/data/support.ts` |
+| メンバー募集の各チーム表 | `src/data/recruit.ts` |
+| メンバー募集ページの説明文 | `src/data/member.ts` |
+| お問い合わせ項目の選択肢 | `src/data/contact.ts` |
+| シャボン玉装飾の位置 | `src/data/bubbles.ts` |
 
-テキストは `src/data/overview.ts` の `OVERVIEW_SECTIONS` にまとまっています。見出しや本文を変えるときはこのファイルだけ編集すれば OK です。
+メンバー一覧・お知らせ・外部レポートは **microCMS** 管理画面で編集します（ビルド時取得）。
 
-```ts
-{
-  id: "existence",       // アンカーリンク用（例: /overview#existence）
-  title: "存在意義",
-  paragraphs: [
-    "1段落目のテキスト",
-    "2段落目。\n同じ段落内で改行したいときは \\n を使う",
-  ],
-}
-```
-
-- `paragraphs` の各要素が `<p>` タグ1つに対応します
-- 段落内の改行は `\n` で指定します
-- レイアウト（白カード・見出しの下線など）は `src/components/OverviewCard.astro` が担当します
-
-### 応援するページ（`/support`）
-
-テキスト・寄付先URLは `src/data/support.ts` にまとまっています。
-
-- **本文・金額例・参加者の声** … 同ファイル内の各定数を編集
-- **寄付ボタンの遷移先** … `DONATE_URL`（[Syncable 支援フォーム](https://syncable.biz/associate/sapochimu1/donate)）
-- ページ内の「寄付で応援する」は `#donate`（寄付の方法セクション）へのアンカーです
-- 風船ボタンは常に `/support`（ページトップ）へ遷移します
-
-### メンバー募集ページ（`/member`）
-
-- **各チームの募集内容（①イベント・②SNS・③その他）** … `src/data/recruit.ts` の `RECRUIT_TEAMS` を編集します。`value` 内の改行・箇条書きは `\n` で指定します。テーブルの見た目は `src/components/RecruitTable.astro` が担当します。
-- **メンバー一覧** … microCMS の `member` エンドポイント（`name` / `roll` / `icon`）を**ビルド時に取得**して表示します。メンバーの追加・変更は microCMS 管理画面で行います（コード変更不要）。
-- **ロールのマーカー背景** … `roll` は「役割名（`roll`）＋マーカー背景画像（`image`）」の繰り返しフィールドです。背景画像は microCMS 側で保持しているため、`src/components/MemberCard.astro` はその `image.url` をそのまま表示します（ローカル画像は使いません）。
-- **チーム構成図** … `src/assets/さぽちむ簡易図.png` を使用しています。
-
-### ナビゲーション
-
-ヘッダー・フッター・ハンバーガーメニューのリンクは `src/data/navigation.ts` の `NAV_LINKS` が唯一の定義元です。メンバー募集ページへは、トップの「新規メンバー募集」内「詳しく見る」ボタンとハンバーガーメニューの「新規メンバー募集中！」から遷移します。
-
-### SNSリンク
-
-場所ごとのURLは **`src/data/sns.ts` の `SNS_URLS`** だけ編集すればOKです。
-
-| キー | 表示場所 |
-|------|----------|
-| `hamburger` | ハンバーガーメニュー下部 |
-| `footer` | フッターの家型アイコン |
-| `representative` | TOP「代表の思い」 |
-
-活動実績に埋め込むおすすめ投稿URLは `src/data/socialLinks.ts` です。
-
-### トップページ
-
-各セクションのテキストは `src/components/` 配下のコンポーネント（`ActivitySection.astro` など）に直接書かれています。
-
-## 🔧 セットアップ
-
-microCMS のお知らせ機能を使う場合は `.env.example` を `.env` にコピーし、APIキーを設定してください。
+## セットアップ
 
 ```sh
 cp .env.example .env
-# .env を開き、MICROCMS_API_KEY に microCMS 管理画面の API キーを設定
+# .env を開き、一覧の変数をすべて設定（未設定だとビルド失敗）
 ```
 
-> **注意:** `.env` は Git に含めません（`.gitignore` で除外済み）。  
-> GitHub Actions など CI でビルドする場合は、リポジトリの **Secrets** に `MICROCMS_API_KEY` を登録してください。
+> `.env` は Git に含めません。CI では Secrets に同じキーを**すべて**登録してください。
 
-## 🧞 コマンド
+### `.env` に置くもの（すべて必須）
 
-すべてプロジェクトルートで実行します：
+| 変数 | 用途 |
+|------|------|
+| `MICROCMS_API_KEY` | microCMS API キー（**秘密**） |
+| `MICROCMS_SERVICE_DOMAIN` | microCMS サービスドメイン |
+| `PUBLIC_CONTACT_FORM_URL` | GAS お問い合わせ送信先 |
+| `PUBLIC_DONATE_URL` | Syncable 寄付 URL |
+| `PUBLIC_CONTACT_EMAIL` | フッター等のメール |
+| `PUBLIC_NOTE_ACCOUNT` | note アカウント名 |
 
-| コマンド                  | 内容                                             |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | 依存パッケージのインストール                      |
-| `npm run dev`             | 開発サーバーを起動（`localhost:4321`）             |
-| `npm run build`           | 本番用に `./dist/` へビルド                        |
-| `npm run preview`         | ビルド結果をローカルでプレビュー                   |
-| `npm run astro ...`       | Astro CLI コマンドの実行                           |
+`PUBLIC_*` はクライアントにも露出します。秘密鍵は置かないでください。
 
-## 👀 参考
+## コマンド
+
+| コマンド | 内容 |
+| :------- | :--- |
+| `npm install` | 依存パッケージのインストール |
+| `npm run dev` | 開発サーバー（`localhost:4321`） |
+| `npm run build` | 本番ビルド → `./dist/` |
+| `npm run preview` | ビルド結果のプレビュー |
+
+## 参考
 
 - [Astro ドキュメント](https://docs.astro.build)
 - [Tailwind CSS ドキュメント](https://tailwindcss.com/docs)

@@ -1,14 +1,13 @@
-import bubble1 from "../assets/シャボン玉1.png";
-import bubble2 from "../assets/シャボン玉2.png";
-import bubble3 from "../assets/シャボン玉3.png";
-import bubble4 from "../assets/シャボン玉4.png";
+import bubble1 from "../assets/bubbles/bubble-1.png";
+import bubble2 from "../assets/bubbles/bubble-2.png";
+import bubble3 from "../assets/bubbles/bubble-3.png";
+import bubble4 from "../assets/bubbles/bubble-4.png";
 
 export { bubble1, bubble2, bubble3, bubble4 };
 
 /**
  * セクション装飾用シャボン玉のプリセット。
- * 各セクションで手書きしていた position/opacity 付き img タグを
- * SectionBubbles コンポーネント + このデータに集約する。
+ * SectionBubbles + このデータで position/opacity を集約する。
  */
 export const BUBBLE_DECORATIONS = {
   activity: [
@@ -24,7 +23,10 @@ export const BUBBLE_DECORATIONS = {
     { src: bubble4, class: "-right-6 top-[65%] w-24 md:w-40 opacity-55" },
   ],
   news: [
-    { src: bubble2, class: "-left-8 top-1/2 -translate-y-1/2 w-24 md:w-36 opacity-60" },
+    {
+      src: bubble2,
+      class: "-left-8 top-1/2 -translate-y-1/2 w-24 md:w-36 opacity-60",
+    },
     { src: bubble4, class: "-right-6 top-1/3 w-20 md:w-32 opacity-55" },
   ],
   results: [

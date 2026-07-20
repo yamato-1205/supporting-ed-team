@@ -1,87 +1,32 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import HeroSection from "../components/HeroSection.astro";
 import MemberRecruitSection from "../components/MemberRecruitSection.astro";
 import WaveSeparator from "../components/WaveSeparator.astro";
 import ActivitySection from "../components/ActivitySection.astro";
 import RepresentativeSection from "../components/RepresentativeSection.astro";
 import NewsSection from "../components/NewsSection.astro";
 import ActivityResultSection from "../components/ActivityResultSection.astro";
-import cloudImg from "../assets/TOP_見出し.png";
-import bubblesImg from "../assets/見出しのシャボン玉群.png";
 ---
 
 <Layout>
-  <!-- ========== HERO ========== -->
-  <section
-    id="hero"
-    class="relative overflow-hidden h-screen bg-no-repeat bg-top bg-center [background-size:auto_100%]"
-    style={`background-image: url('${bubblesImg.src}');`}
-  >
-    <!-- ── スマホ: 縦並び（雲中央→横書きテキスト下） ── -->
-    <div
-      class="sm:hidden absolute inset-0 flex flex-col items-center justify-center gap-4 z-10 px-6"
-    >
-      <img
-        src={cloudImg.src}
-        alt="誰もが福祉の一員である"
-        class="pointer-events-none select-none w-[85vw] h-auto object-contain block"
-      />
-      <div
-        class="heading-3 bg-white rounded-xl px-5 py-4 w-full max-w-[400px]"
-        style="line-height: 2.0; color: var(--color-primary);"
-      >
-        誰もが、誰かの幸せを、<br />
-        気づかないうちに紡いでいる。<br />
-        そんな幸せの営み＝「福祉」を、<br />
-        みんなの暮らしの中で表現します。
-      </div>
-    </div>
+  <HeroSection />
 
-    <!-- ── PC(sm+): 雲の中心＝画面中心、テキストは雲右端から絶対配置 ── -->
-    <div class="hidden sm:block absolute inset-0 z-10">
-      <img
-        src={cloudImg.src}
-        alt="誰もが福祉の一員である"
-        class="pointer-events-none select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] h-auto object-contain"
-      />
-      <div
-        class="heading-3 absolute top-1/2 -translate-y-1/2 flex flex-row-reverse bg-white rounded-xl"
-        style="left: calc(50% + 32.5vw + 0.5rem); line-height: 2.8; letter-spacing: 0.12em; color: var(--color-primary); padding-top: 20px; padding-bottom: 20px;"
-      >
-        <p style="writing-mode: vertical-rl; margin: 0;">
-          誰もが、誰かの幸せを、気づかないうちに紡いでいる。
-        </p>
-        <p style="writing-mode: vertical-rl; margin: 0;">
-          そんな幸せの営み＝「福祉」を、みんなの暮らしの中で表現します。
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 新規メンバー募集 -->
   <MemberRecruitSection />
 
-  <!-- 波形セパレーター（ベージュ → 白） -->
   <WaveSeparator fromColor="#fffbec" toColor="#ffffff" />
 
-  <!-- 活動内容 -->
   <ActivitySection />
 
-  <!-- 波形セパレーター（白 → ベージュ） -->
   <WaveSeparator fromColor="#ffffff" toColor="#fffbec" />
 
-  <!-- 代表の思い -->
   <RepresentativeSection />
 
-  <!-- 波形セパレーター（ベージュ → 白、広い波）お知らせ上部のみ -->
   <WaveSeparator fromColor="#fffbec" toColor="#ffffff" wide />
 
-  <!-- お知らせ -->
   <NewsSection />
 
-  <!-- 波形セパレーター（白 → ベージュ） -->
   <WaveSeparator fromColor="#ffffff" toColor="#fffbec" />
 
-  <!-- 活動実績 -->
   <ActivityResultSection />
 </Layout>

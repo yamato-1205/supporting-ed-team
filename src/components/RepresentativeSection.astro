@@ -1,44 +1,29 @@
 ---
-import SnsButton  from './SnsButton.astro';
-import SectionBubbles from './SectionBubbles.astro';
-import fuukaImg   from '../assets/メンバーアイコン/ふうか.png';
-import { bubble1, bubble2, bubble3, bubble4 } from '../data/bubbles';
-import { getSnsLinks } from '../data/sns';
+import SnsButton from "./SnsButton.astro";
+import SectionBubbles from "./SectionBubbles.astro";
+import MultilineText from "./MultilineText.astro";
+import { bubble1, bubble2, bubble3, bubble4 } from "../data/bubbles";
+import { getSnsLinks } from "../data/sns";
+import { REPRESENTATIVE } from "../data/home";
 
-const snsLinks = getSnsLinks('representative');
+const snsLinks = getSnsLinks("representative");
 ---
 
 <section
   id="about"
   class="relative overflow-hidden bg-[var(--color-background)] py-8 md:py-12"
 >
-
-  <!-- 左右のシャボン玉装飾 -->
   <SectionBubbles variant="representative" />
 
-  <!-- 活動内容と同じ max-w-4xl を使用 -->
   <div class="section-container">
-
-    <!--
-      h2 の下余白:
-        写真(144px)の上端がカード上辺より96px上に出る → 見出しと写真の間に余裕を持たせる
-    -->
     <h2 class="heading-2 mb-32">代表の思い</h2>
 
-    <!--
-      写真とカードが重なる構造:
-        写真 w-36 h-36 = 144px
-        -top-24 = -96px → 写真上端がカード上辺より96px上
-        写真下端 = -96 + 144 = +48px → 48px がカード内にオーバーラップ
-    -->
     <div class="relative">
-
-      <!-- ── プロフィール写真（常に中央） ── -->
       <div class="absolute -top-24 left-1/2 z-30 h-36 w-36 -translate-x-1/2">
         <div class="relative h-full w-full">
           <img
-            src={fuukaImg.src}
-            alt="代表ふうか"
+            src={REPRESENTATIVE.image.src}
+            alt={REPRESENTATIVE.imageAlt}
             class="h-full w-full rounded-full object-cover"
           />
           <img
@@ -80,7 +65,6 @@ const snsLinks = getSnsLinks('representative');
         </div>
       </div>
 
-      <!-- SP: ふうか中央の右隣に縦並び（はみ出し装飾は SP で非表示＋セクションでクリップ） -->
       <div
         class="absolute top-[-1.5rem] left-1/2 z-30 ml-[calc(4.5rem+0.35rem)] flex -translate-y-1/2 flex-col gap-1 md:hidden"
       >
@@ -97,10 +81,7 @@ const snsLinks = getSnsLinks('representative');
         }
       </div>
 
-      <!-- ── ホワイトカード ── -->
       <div class="relative overflow-hidden rounded-2xl bg-white">
-
-        <!-- PC: SNS をカード右上に横並び -->
         <div class="absolute top-3 right-3 z-10 hidden items-center md:flex">
           <span class="mr-2 flex gap-1.5 opacity-40" aria-hidden="true">
             <span
@@ -125,65 +106,29 @@ const snsLinks = getSnsLinks('representative');
           }
         </div>
 
-        <!--
-          pt-16 (64px) > 48px オーバーラップ
-          → 写真直下に「代表：ふうか」が来る
-        -->
         <div class="px-8 pt-16 pb-10 md:px-12">
+          <p class="text-center mb-5">{REPRESENTATIVE.nameLabel}</p>
 
-          <!-- 写真の真下・中央揃えで名前 -->
-          <p class="text-center mb-5">代表：ふうか</p>
+          <MultilineText text={REPRESENTATIVE.intro} class="mb-5" />
 
-          <!-- イントロ文（常に表示） -->
-          <p class="mb-5">
-            社会に貢献したい意思があるけど、急にしんどくなる時がある。<br />
-            自分でもどうにも頑張れない時期＝障害が現れるときは、誰にでもある。<br />
-            さぽちむは、そんな「誰もが抱える/抱えうる痛みや弱さを認め合い、支え合う社会」を目指します。
-          </p>
-
-          <!--
-            SP: 見出し下の本文をトグル
-            PC: 常に展開
-          -->
-          <details class="about-fold mb-5" data-about-fold>
-            <summary class="about-fold-summary list-none">
-              <span
-                class="heading-3 flex items-center justify-center gap-2 text-center"
-              >
-                凸凹をもったままで、社会に貢献したい
-                <span
-                  class="about-fold-chevron text-sm font-normal text-[var(--color-primary)] transition-transform md:hidden"
-                  aria-hidden="true">▼</span
-                >
-              </span>
-            </summary>
-            <p class="mt-4">
-              自分自身にはどうにもならない特性や環境、病を抱える人は、意外と多く存在しています。<br />
-              私自身も、鬱や発達傾向を持ちながら、パラレルワーカーや社会人大学院生など、面白い生き方をしています！<br />
-              ひとりひとりの状態に合わせ、スピードもタスクも柔軟に変化させ、チームで補う体制を表現する。<br />
-              そして、凸凹を抱えている人でも社会に貢献する方法があることを実験し続け、証明します。
-            </p>
-          </details>
-
-          <details class="about-fold" data-about-fold>
-            <summary class="about-fold-summary list-none">
-              <span
-                class="heading-3 flex items-center justify-center gap-2 text-center"
-              >
-                頑張るとき、休むときの居場所をつなぐ
-                <span
-                  class="about-fold-chevron text-sm font-normal text-[var(--color-primary)] transition-transform md:hidden"
-                  aria-hidden="true">▼</span
-                >
-              </span>
-            </summary>
-            <p class="mt-4">
-              頑張りすぎて、疲れちゃう人。頑張りたいのに、頑張れるチャンスがない人。<br />
-              そんなメンバーに、多様な働き方や社会貢献の姿を表現することで、ひとりひとりの幸せをじっくり考え、選び、悩み、深化する過程を応援し合うコミュニティをデザインします。<br />
-              たくさんの団体とコラボすることで、さぽちむ自体をハブとして、自分に合った居場所に、できるだけたくさん出会うことを目指します。
-            </p>
-          </details>
-
+          {
+            REPRESENTATIVE.folds.map((fold) => (
+              <details class="about-fold mb-5 last:mb-0" data-about-fold>
+                <summary class="about-fold-summary list-none">
+                  <span class="heading-3 flex items-center justify-center gap-2 text-center">
+                    {fold.title}
+                    <span
+                      class="about-fold-chevron text-sm font-normal text-[var(--color-primary)] transition-transform md:hidden"
+                      aria-hidden="true"
+                    >
+                      ▼
+                    </span>
+                  </span>
+                </summary>
+                <MultilineText text={fold.body} class="mt-4" />
+              </details>
+            ))
+          }
         </div>
       </div>
     </div>

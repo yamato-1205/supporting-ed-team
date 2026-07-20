@@ -1,11 +1,8 @@
 /**
  * 応援するページのコンテンツ（唯一の定義元）。
- * 寄付先URL・文言の変更はこのファイルだけで行う。
+ * 寄付先 URL は site.ts（.env の PUBLIC_DONATE_URL）を参照。
  */
-
-/** Syncable 寄付フォーム */
-export const DONATE_URL =
-  "https://syncable.biz/associate/sapochimu1/donate";
+export { DONATE_URL } from "./site";
 
 export const SUPPORT_INTRO = {
   lead: "誰もが抱える/抱えうる弱さや痛みを受容できる社会を目指して。",

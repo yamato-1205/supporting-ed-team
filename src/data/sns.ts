@@ -1,7 +1,7 @@
-import xIcon from "../assets/X.png";
-import igIcon from "../assets/Instagram.png";
-import noteIcon from "../assets/note.png";
-import fbIcon from "../assets/Facebook.png";
+import xIcon from "../assets/icons/x.png";
+import igIcon from "../assets/icons/instagram.png";
+import noteIcon from "../assets/icons/note.png";
+import fbIcon from "../assets/icons/facebook.png";
 
 export type SnsId = "x" | "instagram" | "note" | "facebook";
 
@@ -10,32 +10,28 @@ export type SnsPlacement = "hamburger" | "footer" | "representative";
 type SnsUrls = Partial<Record<SnsId, string>>;
 
 /**
- * ============================================================
- * SNSのリンク先（編集するのはここだけ）
- * ============================================================
+ * SNS のリンク先（編集するのはここだけ）。
  *
- * 場所ごとにURLを分けています。同じサービスでも、
- * 団体アカウント／代表アカウントなどで差し替え可能です。
- *
- * - hamburger      … ハンバーガーメニュー下部のアイコン
+ * - hamburger      … ハンバーガーメニュー下部
  * - footer         … フッターの家型アイコン
- * - representative … TOP「代表の思い」のSNSアイコン
+ * - representative … TOP「代表の思い」
  *
- * ※ 活動実績に埋め込む「おすすめ投稿」のURLは
- *    src/data/socialLinks.ts 側で設定します。
+ * 活動実績の埋め込み投稿は FEATURED_*_POST_URL を編集する。
  */
 export const SNS_URLS: Record<SnsPlacement, SnsUrls> = {
   hamburger: {
     x: "https://x.com/sapochimu",
     instagram: "https://www.instagram.com/sapochimu/",
     note: "https://note.com/sapochimu",
-    facebook: "https://www.facebook.com/people/%E3%81%95%E3%81%BD%E3%81%A1%E3%82%80supporTEAM/100063885861972/", // TODO: 団体のFacebook URLに差し替え
+    facebook:
+      "https://www.facebook.com/people/%E3%81%95%E3%81%BD%E3%81%A1%E3%82%80supporTEAM/100063885861972/",
   },
   footer: {
     x: "https://x.com/sapochimu",
     instagram: "https://www.instagram.com/sapochimu/",
     note: "https://note.com/sapochimu",
-    facebook: "https://www.facebook.com/people/%E3%81%95%E3%81%BD%E3%81%A1%E3%82%80supporTEAM/100063885861972/", // TODO: 団体のFacebook URLに差し替え
+    facebook:
+      "https://www.facebook.com/people/%E3%81%95%E3%81%BD%E3%81%A1%E3%82%80supporTEAM/100063885861972/",
   },
   /** 代表ふうか用（個人アカウントがある場合はここを変更） */
   representative: {
@@ -45,14 +41,13 @@ export const SNS_URLS: Record<SnsPlacement, SnsUrls> = {
   },
 };
 
-/** 各場所で表示するSNSの順番 */
+/** 各場所で表示する SNS の順番 */
 const SNS_ORDER: Record<SnsPlacement, SnsId[]> = {
   hamburger: ["x", "instagram", "note", "facebook"],
   footer: ["x", "instagram", "note", "facebook"],
   representative: ["x", "instagram", "note"],
 };
 
-/** アイコン・ラベルなどの見た目情報 */
 const SNS_META: Record<
   SnsId,
   { label: string; icon: ImageMetadata; invert: boolean }
@@ -71,7 +66,7 @@ export type SnsLink = {
   invert: boolean;
 };
 
-/** 指定した場所用のSNSリンク一覧を返す */
+/** 指定した場所用の SNS リンク一覧を返す */
 export function getSnsLinks(placement: SnsPlacement): SnsLink[] {
   const urls = SNS_URLS[placement];
   return SNS_ORDER[placement]
@@ -83,8 +78,11 @@ export function getSnsLinks(placement: SnsPlacement): SnsLink[] {
     }));
 }
 
-/** @deprecated getSnsLinks を使ってください */
-export type SnsLinkId = SnsId;
-export function pickSnsLinks(ids: SnsId[]): Omit<SnsLink, "href">[] {
-  return ids.map((id) => ({ id, ...SNS_META[id] }));
-}
+/**
+ * トップ「活動実績」に埋め込むおすすめ投稿。
+ * 投稿ページで「リンクをコピー」して差し替える。
+ */
+export const FEATURED_X_POST_URL =
+  "https://x.com/sapochimu/status/2065288911526740400?s=20";
+export const FEATURED_INSTAGRAM_POST_URL =
+  "https://www.instagram.com/p/DW0jLfegRoj/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==";

@@ -1,25 +1,23 @@
 ---
-import '../styles/global.css';
-import Header            from '../components/Header.astro';
-import Footer            from '../components/Footer.astro';
-import FloatingButton    from '../components/FloatingButton.astro';
-import BubbleBackground  from '../components/BubbleBackground.astro';
-import BubblePopScript   from '../components/BubblePopScript.astro';
-import logoImg           from '../assets/ロゴ（背景色あり）.png';
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import FloatingButton from "../components/FloatingButton.astro";
+import BubbleBackground from "../components/BubbleBackground.astro";
+import BubblePopScript from "../components/BubblePopScript.astro";
+import logoImg from "../assets/brand/logo.png";
+import { SITE_NAME, SITE_DESCRIPTION } from "../data/site";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-// 受け取るデータのデフォルト値を設定
-const {
-  title = '任意団体 さぽちむ HP',
-  description = `さぽちむは、「誰もが福祉の一員である」を表現する任意団体です。
-  イベント・コミュニティ運営を通して、誰もが抱える/抱えうる弱さや痛みを受容できる社会を目指して活動します。`
-} = Astro.props;
+const { title = SITE_NAME, description = SITE_DESCRIPTION } = Astro.props;
 
-const showFloatingButton = !Astro.url.pathname.replace(/\/$/, "").endsWith("/support");
+const showFloatingButton = !Astro.url.pathname
+  .replace(/\/$/, "")
+  .endsWith("/support");
 ---
 
 <!doctype html>
@@ -32,7 +30,7 @@ const showFloatingButton = !Astro.url.pathname.replace(/\/$/, "").endsWith("/sup
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -40,24 +38,19 @@ const showFloatingButton = !Astro.url.pathname.replace(/\/$/, "").endsWith("/sup
       rel="stylesheet"
     />
   </head>
-  
-  <!-- フッターを最下部に固定するため flex-col レイアウトを使用 -->
+
   <body class="flex min-h-screen flex-col overflow-x-hidden">
     <Header />
 
     <main class="grow relative">
-      <!-- ヒーロー・ヘッダーを除くサイト全体のシャボン玉背景 -->
       <BubbleBackground />
       <slot />
     </main>
 
     <Footer />
 
-    <!-- サイト全体で常に表示：応援するボタン（応援ページでは非表示） -->
     {showFloatingButton && <FloatingButton />}
 
-    <!-- ボタンクリック時のシャボン玉割れ演出 -->
     <BubblePopScript />
-
   </body>
 </html>

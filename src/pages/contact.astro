@@ -1,10 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Contact from "../components/Contact.astro";
+import { pageTitle } from "../data/site";
 ---
 
 <Layout
-  title="お問い合わせ | 任意団体 さぽちむ HP"
+  title={pageTitle("お問い合わせ")}
   description="さぽちむへのお問い合わせはこちらのフォームからお願いします。"
 >
   <div
@@ -34,7 +35,11 @@ import Contact from "../components/Contact.astro";
       <p class="contact-success-hero__text">
         内容を確認次第、ご記入いただいたメールアドレス宛にご返信いたします。
       </p>
-      <button type="button" class="form-submit contact-success-hero__button" data-contact-success-close>
+      <button
+        type="button"
+        class="form-submit contact-success-hero__button"
+        data-contact-success-close
+      >
         閉じる
       </button>
     </div>

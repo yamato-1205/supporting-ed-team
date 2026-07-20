@@ -2,6 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import OverviewCard from "../components/OverviewCard.astro";
 import BubbleButton from "../components/BubbleButton.astro";
+import HeadingUnderline from "../components/HeadingUnderline.astro";
+import MultilineText from "../components/MultilineText.astro";
 import {
   SUPPORT_INTRO,
   SUPPORT_WHY,
@@ -10,14 +12,11 @@ import {
   DONATE_URL,
   SUPPORT_CLOSING,
 } from "../data/support";
-
-function lines(text: string) {
-  return text.split("\n");
-}
+import { pageTitle } from "../data/site";
 ---
 
 <Layout
-  title="応援する | 任意団体 さぽちむ HP"
+  title={pageTitle("応援する")}
   description="さぽちむの活動を、ご寄付で応援していただけます。イベントや居場所づくりを支える使い道をご紹介します。"
 >
   <div
@@ -27,7 +26,6 @@ function lines(text: string) {
     <div class="section-container flex flex-col gap-8 md:gap-10">
       <h1 class="heading-2 text-center">応援する</h1>
 
-      <!-- イントロ：理解 → 寄付へ誘導 -->
       <section
         class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
       >
@@ -37,14 +35,7 @@ function lines(text: string) {
         <div class="mx-auto mb-8 max-w-2xl space-y-4">
           {
             SUPPORT_INTRO.paragraphs.map((paragraph) => (
-              <p class="font-normal leading-relaxed">
-                {lines(paragraph).map((line, i) => (
-                  <>
-                    {i > 0 && <br />}
-                    {line}
-                  </>
-                ))}
-              </p>
+              <MultilineText text={paragraph} class="font-normal leading-relaxed" />
             ))
           }
         </div>
@@ -58,36 +49,21 @@ function lines(text: string) {
         </div>
       </section>
 
-      <!-- なぜ寄付が必要か -->
       <OverviewCard id="why" title={SUPPORT_WHY.title}>
         {
           SUPPORT_WHY.paragraphs.map((paragraph) => (
-            <p class="font-normal">
-              {lines(paragraph).map((line, i) => (
-                <>
-                  {i > 0 && <br />}
-                  {line}
-                </>
-              ))}
-            </p>
+            <MultilineText text={paragraph} class="font-normal" />
           ))
         }
       </OverviewCard>
 
-      <!-- 使い道 + 金額イメージ -->
       <section
         id="usage"
         class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
       >
-        <div class="mb-6 flex justify-center md:mb-8">
-          <div class="inline-flex flex-col items-center">
-            <h2 class="heading-2 text-center">{SUPPORT_USAGE.title}</h2>
-            <hr
-              class="w-[calc(100%+2em)] border-0 border-t-[4px]"
-              style="border-color: var(--color-primary);"
-            />
-          </div>
-        </div>
+        <HeadingUnderline class="mb-6 md:mb-8">
+          {SUPPORT_USAGE.title}
+        </HeadingUnderline>
 
         <ul class="mx-auto mb-10 max-w-2xl space-y-2 font-normal">
           {
@@ -140,34 +116,19 @@ function lines(text: string) {
         </div>
       </section>
 
-      <!-- 寄付の方法 -->
       <section
         id="donate"
         class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
       >
-        <div class="mb-6 flex justify-center md:mb-8">
-          <div class="inline-flex flex-col items-center">
-            <h2 class="heading-2 text-center">寄付の方法</h2>
-            <hr
-              class="w-[calc(100%+2em)] border-0 border-t-[4px]"
-              style="border-color: var(--color-primary);"
-            />
-          </div>
-        </div>
+        <HeadingUnderline class="mb-6 md:mb-8">寄付の方法</HeadingUnderline>
         <p class="mx-auto mb-6 max-w-xl text-center font-normal leading-relaxed">
           以下のページからご支援ください。<br />
           少額からでも、活動の大きな力になります。
         </p>
-        <p class="mx-auto mb-8 max-w-2xl text-center font-normal leading-relaxed">
-          {
-            lines(SUPPORT_CLOSING).map((line, i) => (
-              <>
-                {i > 0 && <br />}
-                {line}
-              </>
-            ))
-          }
-        </p>
+        <MultilineText
+          text={SUPPORT_CLOSING}
+          class="mx-auto mb-8 max-w-2xl text-center font-normal leading-relaxed"
+        />
         <div class="flex justify-center">
           <BubbleButton
             href={DONATE_URL}

@@ -1,5 +1,5 @@
 ---
-import bannerImg from "../assets/バナー（HP用）.png";
+import bannerImg from "../assets/brand/banner.png";
 import HamburgerMenu from "./HamburgerMenu.astro";
 import { pickNavLinks } from "../data/navigation";
 
@@ -15,7 +15,6 @@ const navLinks = pickNavLinks([
 
 <header class="fixed top-0 inset-x-0 z-50 bg-white border-b border-gray-100">
   <div class="flex items-center px-4 md:px-8 max-w-screen-2xl mx-auto gap-8">
-    <!-- ロゴ -->
     <a href="/" class="shrink-0">
       <img
         src={bannerImg.src}
@@ -24,7 +23,6 @@ const navLinks = pickNavLinks([
       />
     </a>
 
-    <!-- PC ナビ -->
     <nav
       class="hidden lg:flex flex-1 items-center justify-start gap-8"
       aria-label="メインナビゲーション"
@@ -41,7 +39,6 @@ const navLinks = pickNavLinks([
       }
     </nav>
 
-    <!-- ハンバーガーボタン -->
     <div class="ml-auto">
       <button
         id="menu-open-btn"

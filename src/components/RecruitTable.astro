@@ -1,5 +1,6 @@
 ---
 import type { RecruitTeam } from "../data/recruit";
+import MultilineText from "./MultilineText.astro";
 
 interface Props {
   team: RecruitTeam;
@@ -7,7 +8,6 @@ interface Props {
 
 const { team } = Astro.props;
 
-// アクセントごとの背景色（ロール背景の配色に合わせる）
 const bgByAccent: Record<RecruitTeam["accent"], string> = {
   event: "#fdecec",
   sns: "#fbf4dc",
@@ -27,12 +27,7 @@ const bgByAccent: Record<RecruitTeam["accent"], string> = {
           <div class="flex gap-3 md:gap-6">
             <dt class="shrink-0 w-24 md:w-32">{row.label}</dt>
             <dd class="flex-1">
-              {row.value.split("\n").map((line, i) => (
-                <>
-                  {i > 0 && <br />}
-                  {line}
-                </>
-              ))}
+              <MultilineText text={row.value} as="span" />
             </dd>
           </div>
         ))

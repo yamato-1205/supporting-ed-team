@@ -1,39 +1,31 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import OverviewCard from '../components/OverviewCard.astro';
-import { OVERVIEW_SECTIONS } from '../data/overview';
+import Layout from "../layouts/Layout.astro";
+import OverviewCard from "../components/OverviewCard.astro";
+import MultilineText from "../components/MultilineText.astro";
+import { OVERVIEW_SECTIONS } from "../data/overview";
+import { pageTitle } from "../data/site";
 ---
 
 <Layout
-  title="団体概要 | 任意団体 さぽちむ HP"
+  title={pageTitle("団体概要")}
   description="さぽちむの存在意義・文化・チーム名の由来をご紹介します。"
 >
-
   <div
     id="overview"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-10 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-14"
   >
     <div class="section-container flex flex-col gap-8 md:gap-10">
-
       <h1 class="heading-2 text-center">団体概要</h1>
 
       {
         OVERVIEW_SECTIONS.map((section) => (
           <OverviewCard id={section.id} title={section.title}>
             {section.paragraphs.map((paragraph) => (
-              <p>
-                {paragraph.split('\n').map((line, i) => (
-                  <>
-                    {i > 0 && <br />}
-                    {line}
-                  </>
-                ))}
-              </p>
+              <MultilineText text={paragraph} />
             ))}
           </OverviewCard>
         ))
       }
-
     </div>
   </div>
 </Layout>
