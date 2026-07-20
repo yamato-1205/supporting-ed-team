@@ -1,0 +1,182 @@
+---
+import Layout from "../layouts/Layout.astro";
+import OverviewCard from "../components/OverviewCard.astro";
+import BubbleButton from "../components/BubbleButton.astro";
+import {
+  SUPPORT_INTRO,
+  SUPPORT_WHY,
+  SUPPORT_USAGE,
+  SUPPORT_AMOUNTS_VISIBLE,
+  DONATE_URL,
+  SUPPORT_CLOSING,
+} from "../data/support";
+
+function lines(text: string) {
+  return text.split("\n");
+}
+---
+
+<Layout
+  title="応援する | 任意団体 さぽちむ HP"
+  description="さぽちむの活動を、ご寄付で応援していただけます。イベントや居場所づくりを支える使い道をご紹介します。"
+>
+  <div
+    id="support-page"
+    class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"
+  >
+    <div class="section-container flex flex-col gap-8 md:gap-10">
+      <h1 class="heading-2 text-center">応援する</h1>
+
+      <!-- イントロ：理解 → 寄付へ誘導 -->
+      <section
+        class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
+      >
+        <p class="heading-3 mb-6 text-center leading-relaxed">
+          {SUPPORT_INTRO.lead}
+        </p>
+        <div class="mx-auto mb-8 max-w-2xl space-y-4">
+          {
+            SUPPORT_INTRO.paragraphs.map((paragraph) => (
+              <p class="font-normal leading-relaxed">
+                {lines(paragraph).map((line, i) => (
+                  <>
+                    {i > 0 && <br />}
+                    {line}
+                  </>
+                ))}
+              </p>
+            ))
+          }
+        </div>
+        <div class="flex justify-center">
+          <BubbleButton
+            href={DONATE_URL}
+            label="寄付で応援する"
+            size="lg"
+            external
+          />
+        </div>
+      </section>
+
+      <!-- なぜ寄付が必要か -->
+      <OverviewCard id="why" title={SUPPORT_WHY.title}>
+        {
+          SUPPORT_WHY.paragraphs.map((paragraph) => (
+            <p class="font-normal">
+              {lines(paragraph).map((line, i) => (
+                <>
+                  {i > 0 && <br />}
+                  {line}
+                </>
+              ))}
+            </p>
+          ))
+        }
+      </OverviewCard>
+
+      <!-- 使い道 + 金額イメージ -->
+      <section
+        id="usage"
+        class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
+      >
+        <div class="mb-6 flex justify-center md:mb-8">
+          <div class="inline-flex flex-col items-center">
+            <h2 class="heading-2 text-center">{SUPPORT_USAGE.title}</h2>
+            <hr
+              class="w-[calc(100%+2em)] border-0 border-t-[4px]"
+              style="border-color: var(--color-primary);"
+            />
+          </div>
+        </div>
+
+        <ul class="mx-auto mb-10 max-w-2xl space-y-2 font-normal">
+          {
+            SUPPORT_USAGE.items.map((item) => (
+              <li class="flex gap-2">
+                <span
+                  aria-hidden="true"
+                  class="shrink-0 text-[var(--color-primary)]"
+                >
+                  ・
+                </span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
+          <li class="pl-4 text-small text-black/60">など</li>
+        </ul>
+
+        <p class="mb-5 text-center font-normal text-black/70">例えばーー</p>
+
+        <div class="mx-auto mb-10 grid max-w-3xl gap-3 sm:grid-cols-2">
+          {
+            SUPPORT_AMOUNTS_VISIBLE.map((item) => (
+              <div
+                class:list={[
+                  "rounded-xl border border-[var(--color-primary)]/25 bg-[var(--color-background)] px-5 py-4",
+                  item.description && "sm:col-span-2 md:col-span-1",
+                ]}
+              >
+                <p class="heading-3 text-[var(--color-primary)]">
+                  {item.amount}
+                </p>
+                {item.description && (
+                  <p class="mt-1 font-normal leading-relaxed">
+                    {item.description}
+                  </p>
+                )}
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="flex justify-center">
+          <BubbleButton
+            href={DONATE_URL}
+            label="寄付で応援する"
+            size="lg"
+            external
+          />
+        </div>
+      </section>
+
+      <!-- 寄付の方法 -->
+      <section
+        id="donate"
+        class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
+      >
+        <div class="mb-6 flex justify-center md:mb-8">
+          <div class="inline-flex flex-col items-center">
+            <h2 class="heading-2 text-center">寄付の方法</h2>
+            <hr
+              class="w-[calc(100%+2em)] border-0 border-t-[4px]"
+              style="border-color: var(--color-primary);"
+            />
+          </div>
+        </div>
+        <p class="mx-auto mb-6 max-w-xl text-center font-normal leading-relaxed">
+          以下のページからご支援ください。<br />
+          少額からでも、活動の大きな力になります。
+        </p>
+        <p class="mx-auto mb-8 max-w-2xl text-center font-normal leading-relaxed">
+          {
+            lines(SUPPORT_CLOSING).map((line, i) => (
+              <>
+                {i > 0 && <br />}
+                {line}
+              </>
+            ))
+          }
+        </p>
+        <div class="flex justify-center">
+          <BubbleButton
+            href={DONATE_URL}
+            label="寄付で応援する"
+            size="lg"
+            external
+          />
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>

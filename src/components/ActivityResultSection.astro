@@ -39,8 +39,10 @@ try {
 
   <div class="section-container">
     <!-- セクション見出し -->
-    <h2 class="heading-2 mb-1">活動実績</h2>
-    <p class="mb-8 pl-0.5">内部レポート</p>
+    <h2 class="heading-2 mb-6">活動実績</h2>
+
+    <!-- サブセクション：内部レポート -->
+    <h3 class="heading-3 mb-8">内部レポート</h3>
 
     {
       items.length === 0 ? (
@@ -127,8 +129,8 @@ try {
       />
     </div>
 
-    <!-- 外部レポート -->
-    <p class="mt-14 mb-8 pl-0.5">外部レポート</p>
+    <!-- サブセクション：外部レポート -->
+    <h3 class="heading-3 mt-14 mb-8">外部レポート</h3>
 
     {
       exReports.length === 0 ? (
@@ -178,8 +180,8 @@ try {
       )
     }
 
-    <!-- SNS -->
-    <p class="mt-14 mb-8 pl-0.5">SNS</p>
+    <!-- SNS（他セクション見出しと同じ見出し2） -->
+    <h2 class="heading-2 mt-14 mb-8">SNS</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <XPostEmbed postUrl={FEATURED_X_POST_URL} />
       <InstagramPostEmbed postUrl={FEATURED_INSTAGRAM_POST_URL} />

@@ -18,6 +18,8 @@ const {
   description = `さぽちむは、「誰もが福祉の一員である」を表現する任意団体です。
   イベント・コミュニティ運営を通して、誰もが抱える/抱えうる弱さや痛みを受容できる社会を目指して活動します。`
 } = Astro.props;
+
+const showFloatingButton = !Astro.url.pathname.replace(/\/$/, "").endsWith("/support");
 ---
 
 <!doctype html>
@@ -40,7 +42,7 @@ const {
   </head>
   
   <!-- フッターを最下部に固定するため flex-col レイアウトを使用 -->
-  <body class="min-h-screen flex flex-col">
+  <body class="flex min-h-screen flex-col overflow-x-hidden">
     <Header />
 
     <main class="grow relative">
@@ -51,8 +53,8 @@ const {
 
     <Footer />
 
-    <!-- サイト全体で常に表示：応援するボタン -->
-    <FloatingButton />
+    <!-- サイト全体で常に表示：応援するボタン（応援ページでは非表示） -->
+    {showFloatingButton && <FloatingButton />}
 
     <!-- ボタンクリック時のシャボン玉割れ演出 -->
     <BubblePopScript />

@@ -14,7 +14,7 @@
 │   ├── data/                # ナビゲーション・SNSリンク・装飾など、複数コンポーネントで共有するデータ
 │   ├── layouts/             # 全ページ共通のレイアウト（Header/Footer/背景を含む）
 │   ├── library/             # microCMS・note RSS 連携や日付フォーマットなどのロジック
-│   ├── pages/                # ルーティングされるページ（index.astro=トップ / overview.astro=団体概要 / member.astro=メンバー募集）
+│   ├── pages/                # ルーティング（index / overview / member / contact / support）
 │   └── styles/               # グローバルCSS（Tailwindのテーマ・共通ユーティリティ）
 └── package.json
 ```
@@ -40,6 +40,15 @@
 - 段落内の改行は `\n` で指定します
 - レイアウト（白カード・見出しの下線など）は `src/components/OverviewCard.astro` が担当します
 
+### 応援するページ（`/support`）
+
+テキスト・寄付先URLは `src/data/support.ts` にまとまっています。
+
+- **本文・金額例・参加者の声** … 同ファイル内の各定数を編集
+- **寄付ボタンの遷移先** … `DONATE_URL`（[Syncable 支援フォーム](https://syncable.biz/associate/sapochimu1/donate)）
+- ページ内の「寄付で応援する」は `#donate`（寄付の方法セクション）へのアンカーです
+- 風船ボタンは常に `/support`（ページトップ）へ遷移します
+
 ### メンバー募集ページ（`/member`）
 
 - **各チームの募集内容（①イベント・②SNS・③その他）** … `src/data/recruit.ts` の `RECRUIT_TEAMS` を編集します。`value` 内の改行・箇条書きは `\n` で指定します。テーブルの見た目は `src/components/RecruitTable.astro` が担当します。
@@ -50,6 +59,18 @@
 ### ナビゲーション
 
 ヘッダー・フッター・ハンバーガーメニューのリンクは `src/data/navigation.ts` の `NAV_LINKS` が唯一の定義元です。メンバー募集ページへは、トップの「新規メンバー募集」内「詳しく見る」ボタンとハンバーガーメニューの「新規メンバー募集中！」から遷移します。
+
+### SNSリンク
+
+場所ごとのURLは **`src/data/sns.ts` の `SNS_URLS`** だけ編集すればOKです。
+
+| キー | 表示場所 |
+|------|----------|
+| `hamburger` | ハンバーガーメニュー下部 |
+| `footer` | フッターの家型アイコン |
+| `representative` | TOP「代表の思い」 |
+
+活動実績に埋め込むおすすめ投稿URLは `src/data/socialLinks.ts` です。
 
 ### トップページ
 

@@ -4,6 +4,8 @@ export const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/sapochimu/";
 /**
  * トップページ「活動実績」に埋め込むおすすめ投稿。
  *
+ * ※ プロフィール／各UIのSNSボタンURLは src/data/sns.ts の SNS_URLS で設定。
+ *
  * X・Instagramともに「最新投稿を自動で一覧表示するフィード」は無料のAPIキーなしでは
  * 実現できないため、投稿単位の埋め込み（無料・API不要）を採用している。
  * 新しい投稿を目立たせたいときは、それぞれの投稿ページで「リンクをコピー」し、

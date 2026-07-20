@@ -2,24 +2,49 @@
 import BubbleButton from "./BubbleButton.astro";
 import SnsButton from "./SnsButton.astro";
 import { bubble1, bubble3 } from "../data/bubbles";
-import { pickNavLinks } from "../data/navigation";
-import { pickSnsLinks } from "../data/sns";
+import { getSnsLinks } from "../data/sns";
 
-const recruitLink = { label: "新規メンバー募集中！", href: "/member" };
+type MenuGroup = {
+  label: string;
+  href: string;
+  children: { label: string; href: string }[];
+};
 
-const navGroups = [
-  pickNavLinks(["top", "activity", "about", "news", "results"]),
-  pickNavLinks(["overview", "support"]),
+/** フッターと同じページ階層 */
+const navGroups: MenuGroup[] = [
+  {
+    label: "ホーム",
+    href: "/",
+    children: [
+      { label: "活動内容", href: "/#activity" },
+      { label: "代表の思い", href: "/#about" },
+      { label: "お知らせ", href: "/#news" },
+      { label: "活動実績", href: "/#results" },
+    ],
+  },
+  {
+    label: "団体概要",
+    href: "/overview",
+    children: [
+      { label: "存在意義", href: "/overview#existence" },
+      { label: "文化", href: "/overview#existence-1" },
+      { label: "チーム名の由来", href: "/overview#origin" },
+    ],
+  },
+  {
+    label: "応援する",
+    href: "/support",
+    children: [
+      { label: "ご寄付が支えるもの", href: "/support#why" },
+      { label: "ご寄付の使い道", href: "/support#usage" },
+      { label: "寄付の方法", href: "/support#donate" },
+    ],
+  },
 ];
 
-const snsLinks = pickSnsLinks(["x", "instagram", "note", "facebook"]);
+const snsLinks = getSnsLinks("hamburger");
 ---
 
-<!--
-  オーバーレイ全体：
-    SP  → inset-0（画面一面）
-    PC  → 右側パネル（left:auto、固定幅）
--->
 <div
   id="hamburger-menu"
   class="fixed inset-0 z-[60] hidden"
@@ -28,94 +53,86 @@ const snsLinks = pickSnsLinks(["x", "instagram", "note", "facebook"]);
   aria-modal="true"
   aria-label="ナビゲーションメニュー"
 >
-  <!-- PC 用の半透明バックドロップ（左側の暗幕） -->
-  <div id="menu-backdrop" class="absolute inset-0 hidden md:block bg-black/10">
+  <div id="menu-backdrop" class="absolute inset-0 hidden bg-black/10 md:block">
   </div>
 
-  <!-- メニューパネル本体 -->
   <div
-    class="absolute inset-0 md:inset-auto md:right-0 md:top-0 md:h-full md:w-72 lg:w-80 bg-[#f5f9fd]/95 backdrop-blur-sm flex flex-col overflow-hidden"
+    class="absolute inset-0 flex flex-col overflow-hidden bg-[#f5f9fd]/95 backdrop-blur-sm md:inset-auto md:right-0 md:top-0 md:h-full md:w-80 lg:w-[22rem]"
   >
-    <!-- 装飾バブル（背景） -->
     <img
       src={bubble1.src}
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 w-36 opacity-60"
+      class="pointer-events-none absolute -top-8 left-1/2 w-36 -translate-x-1/2 opacity-50"
     />
     <img
       src={bubble3.src}
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute -bottom-6 -right-6 w-28 opacity-50"
+      class="pointer-events-none absolute -bottom-6 -right-6 w-28 opacity-40"
     />
 
-    <!-- ── ヘッダー行（閉じるボタン） ── -->
-    <div class="flex justify-end px-5 pt-4 pb-2 shrink-0">
+    <div class="flex shrink-0 justify-end px-5 pb-1 pt-4">
       <button
         id="menu-close-btn"
-        class="text-xl leading-none hover:opacity-60 transition-opacity"
+        class="text-2xl leading-none transition-opacity hover:opacity-60"
         aria-label="メニューを閉じる"
       >
         ×
       </button>
     </div>
 
-    <!-- ── ナビゲーション本体（スクロール可） ── -->
     <nav
-      class="flex-1 overflow-y-auto px-6 pb-4"
+      class="relative z-10 flex-1 overflow-y-auto px-5 pb-4"
       aria-label="ハンバーガーナビゲーション"
     >
-      <!-- 新規メンバー募集中 -->
+      <!-- 新規メンバー募集：目立たせる -->
       <a
-        href={recruitLink.href}
-        class="flex items-center gap-1 py-3 border-b border-dotted border-gray-400 hover:text-[var(--color-primary)] transition-colors"
+        href="/member"
+        class="mb-5 flex items-center justify-center gap-2 rounded-2xl bg-[var(--color-primary)] px-4 py-3.5 text-center font-bold tracking-wide text-white shadow-sm transition-opacity hover:opacity-90"
       >
-        {recruitLink.label}
-        <span aria-hidden="true">🫧</span>
+        <span>新規メンバー募集中！</span>
+        <span aria-hidden="true" class="text-lg leading-none">🫧</span>
       </a>
 
-      <!-- 区切り線 -->
-      <div class="border-b border-dotted border-gray-400 mb-1"></div>
-
-      <!-- 第1グループ -->
-      {
-        navGroups[0].map((link) => (
-          <a
-            href={link.href}
-            class="block py-3 border-b border-dotted border-gray-300 hover:text-[var(--color-primary)] transition-colors"
-          >
-            {link.label}
-          </a>
-        ))
-      }
-
-      <!-- グループ間区切り -->
-      <div class="border-b border-dotted border-gray-400 mt-1 mb-1"></div>
-
-      <!-- 第2グループ -->
-      {
-        navGroups[1].map((link) => (
-          <a
-            href={link.href}
-            class="block py-3 hover:text-[var(--color-primary)] transition-colors"
-          >
-            {link.label}
-          </a>
-        ))
-      }
+      <!-- 階層ナビ -->
+      <div class="space-y-5">
+        {
+          navGroups.map((group) => (
+            <div>
+              <a
+                href={group.href}
+                class="mb-1.5 block text-[1.05rem] font-bold tracking-wide text-[var(--color-primary)] transition-opacity hover:opacity-70"
+              >
+                {group.label}
+              </a>
+              <ul class="space-y-0.5 border-l-2 border-[var(--color-primary)]/35 pl-3">
+                {group.children.map((child) => (
+                  <li>
+                    <a
+                      href={child.href}
+                      class="block py-2 tracking-wide text-black/80 transition-colors hover:text-[var(--color-primary)]"
+                    >
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
     </nav>
 
-    <!-- ── ボトム固定エリア ── -->
     <div
-      class="shrink-0 px-6 py-5 flex flex-col items-center gap-3 border-t border-gray-200/60"
+      class="relative z-10 flex shrink-0 flex-col items-center gap-3 border-t border-[var(--color-primary)]/20 px-6 py-5"
     >
-        <BubbleButton href="/contact" label="お問い合わせ" />
+      <BubbleButton href="/contact" label="お問い合わせ" />
       <div class="flex items-center gap-1">
         {
           snsLinks.map((sns) => (
             <SnsButton
-              href="#"
+              href={sns.href}
               icon={sns.icon.src}
               label={sns.label}
               isX={sns.id === "x"}
@@ -149,12 +166,10 @@ const snsLinks = pickSnsLinks(["x", "instagram", "note", "facebook"]);
   closeBtn.addEventListener("click", closeMenu);
   backdrop.addEventListener("click", closeMenu);
 
-  // メニュー内のリンクをクリックしたら閉じる
   menu
     .querySelectorAll("a")
     .forEach((a) => a.addEventListener("click", closeMenu));
 
-  // Esc キーで閉じる
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeMenu();
   });

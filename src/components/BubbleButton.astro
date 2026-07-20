@@ -5,20 +5,44 @@ interface Props {
   href: string;
   label: string;
   external?: boolean; // true → target="_blank" で別タブ
+  /** default: 通常 / lg: やや大きめ / xl: 目立たせたいCTA */
+  size?: "default" | "lg" | "xl";
 }
 
-const { href, label, external = false } = Astro.props;
+const { href, label, external = false, size = "default" } = Astro.props;
+
+const sizeClass =
+  size === "xl"
+    ? "h-16 md:h-20"
+    : size === "lg"
+      ? "h-14"
+      : "h-12";
+
+const labelClass =
+  size === "xl"
+    ? "text-xl md:text-2xl font-bold text-black px-6"
+    : size === "lg"
+      ? "text-base px-5"
+      : "px-4";
 ---
 
 <a
   href={href}
-  target={external ? '_blank' : undefined}
-  rel={external ? 'noopener noreferrer' : undefined}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
   class="btn-hover relative inline-block"
 >
-  <img src={bubbleImg.src} alt="" class="h-12 w-auto" aria-hidden="true" />
+  <img
+    src={bubbleImg.src}
+    alt=""
+    class:list={["w-auto", sizeClass]}
+    aria-hidden="true"
+  />
   <span
-    class="absolute inset-0 flex items-center justify-center whitespace-nowrap px-4"
+    class:list={[
+      "absolute inset-0 flex items-center justify-center whitespace-nowrap",
+      labelClass,
+    ]}
   >
     {label}
   </span>

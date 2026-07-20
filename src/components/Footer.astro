@@ -5,23 +5,51 @@ import cityscapeImg from "../assets/街並み.png";
 import houseSquare from "../assets/家.png";
 import houseWide from "../assets/家_細長.png";
 import SnsButton from "./SnsButton.astro";
-import { pickNavLinks } from "../data/navigation";
-import { pickSnsLinks } from "../data/sns";
+import { getSnsLinks } from "../data/sns";
 
-const navLeft = pickNavLinks(["top", "activity", "about", "news", "results"]);
+type FooterNavGroup = {
+  label: string;
+  href: string;
+  children: { label: string; href: string }[];
+};
 
-const navRight = [
-  { label: "団体概要", href: "/overview" },
-  { label: "存在意義", href: "/overview#existence" },
-  { label: "チーム名の由来", href: "/overview#origin" },
+/** ページ階層が分かるフッターナビ */
+const navGroups: FooterNavGroup[] = [
+  {
+    label: "ホーム",
+    href: "/",
+    children: [
+      { label: "活動内容", href: "/#activity" },
+      { label: "代表の思い", href: "/#about" },
+      { label: "お知らせ", href: "/#news" },
+      { label: "活動実績", href: "/#results" },
+    ],
+  },
+  {
+    label: "団体概要",
+    href: "/overview",
+    children: [
+      { label: "存在意義", href: "/overview#existence" },
+      { label: "文化", href: "/overview#existence-1" },
+      { label: "チーム名の由来", href: "/overview#origin" },
+    ],
+  },
+  {
+    label: "応援する",
+    href: "/support",
+    children: [
+      { label: "ご寄付が支えるもの", href: "/support#why" },
+      { label: "ご寄付の使い道", href: "/support#usage" },
+      { label: "寄付の方法", href: "/support#donate" },
+    ],
+  },
 ];
 
-const snsLinks = pickSnsLinks(["x", "instagram", "note", "facebook"]);
+const snsLinks = getSnsLinks("footer");
 ---
 
 <footer id="contact" class="relative overflow-hidden bg-[var(--color-primary)]">
   <!-- ── クリーム色の波（フッター.png・画面端まで表示） ── -->
-  <!-- 上方向にずらし、左側のバナー・ナビが緑地に載るようにする -->
   <img
     src={footerWave.src}
     alt=""
@@ -35,66 +63,60 @@ const snsLinks = pickSnsLinks(["x", "instagram", "note", "facebook"]);
   >
     <!-- ロゴ + メール -->
     <div class="mb-8 md:mb-10">
-      <a href="/" class="inline-block mb-2">
+      <a href="/" class="mb-2 inline-block">
         <img
           src={bannerImg.src}
           alt="さぽちむ Supporting/ed TEAM"
           class="h-10 w-auto rounded"
         />
       </a>
-      <p class="text-white/90 tracking-wide">
+      <p class="tracking-wide text-white/90">
         メール：<a href="mailto:sapochimu1103@gmail.com" class="hover:underline"
           >sapochimu1103@gmail.com</a
         >
       </p>
     </div>
 
-    <!-- ナビゲーション 2列 -->
+    <!-- ナビゲーション：ホーム / 団体概要 / 応援する の階層 -->
     <nav
       aria-label="フッターナビゲーション"
-      class="mb-10 md:mb-12 flex gap-12 md:gap-20 lg:gap-28"
+      class="mb-10 flex w-fit max-w-full flex-col gap-6 text-left sm:flex-row sm:flex-wrap sm:gap-x-10 sm:gap-y-6 md:mb-12 md:gap-x-12 lg:gap-x-14"
     >
-      <!-- 左列 -->
-      <ul class="space-y-2.5">
-        {
-          navLeft.map((link, i) => (
-            <li>
-              <a
-                href={link.href}
-                class={`text-white/90 hover:text-white transition-colors tracking-wide ${i === 0 ? "font-bold text-lg" : ""}`}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-
-      <!-- 右列 -->
-      <ul class="space-y-2.5">
-        {
-          navRight.map((link, i) => (
-            <li>
-              <a
-                href={link.href}
-                class={`text-white/90 hover:text-white transition-colors tracking-wide ${i === 0 ? "font-bold text-lg" : ""}`}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      {
+        navGroups.map((group) => (
+          <div class="min-w-0 shrink-0">
+            <a
+              href={group.href}
+              class="mb-2.5 inline-block text-lg font-bold tracking-wide text-white transition-colors hover:text-white/80"
+            >
+              {group.label}
+            </a>
+            <ul class="space-y-2 border-l border-white/30 pl-3">
+              {group.children.map((child) => (
+                <li>
+                  <a
+                    href={child.href}
+                    class="tracking-wide text-white/85 transition-colors hover:text-white"
+                  >
+                    {child.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
     </nav>
 
-    <!-- SNS アイコン（家.png 土台）＋ お問い合わせ（家型） -->
-    <div class="flex items-end justify-between flex-wrap gap-4 mb-6">
-      <!-- SNS アイコン -->
-      <div class="flex items-center gap-2">
+    <!-- SNS アイコン（家.png）＋ お問い合わせ（家_細長.png・高さ揃え） -->
+    <div class="mb-3 flex items-end justify-between gap-3">
+      <div
+        class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:flex md:flex-wrap md:items-center md:gap-2"
+      >
         {
           snsLinks.map((sns) => (
             <SnsButton
-              href="#"
+              href={sns.href}
               icon={sns.icon.src}
               label={sns.label}
               isX={sns.id === "x"}
@@ -107,26 +129,19 @@ const snsLinks = pickSnsLinks(["x", "instagram", "note", "facebook"]);
         }
       </div>
 
-      <!-- お問い合わせ（家型ボタン） -->
       <a
         href="/contact"
         aria-label="お問い合わせ"
         class="btn-hover relative block shrink-0"
       >
         <img
-          src={houseSquare.src}
-          alt=""
-          aria-hidden="true"
-          class="block md:hidden h-16 w-auto"
-        />
-        <img
           src={houseWide.src}
           alt=""
           aria-hidden="true"
-          class="hidden md:block h-16 w-auto"
+          class="block h-16 w-auto"
         />
         <span
-          class="absolute inset-x-0 bottom-[20%] text-center text-[10px] tracking-wide text-white"
+          class="absolute inset-x-0 bottom-[28%] text-center text-[0.7rem] leading-tight tracking-wide text-white"
         >
           お問い合わせ
         </span>
@@ -134,16 +149,15 @@ const snsLinks = pickSnsLinks(["x", "instagram", "note", "facebook"]);
     </div>
   </div>
 
-  <!-- ── 街並みイラスト（街並み.png を横に繰り返し） ── -->
+  <!-- ── 街並みイラスト ── -->
   <div
-    class="relative z-10 w-full h-14 md:h-16 bg-repeat-x"
+    class="relative z-10 h-14 w-full bg-repeat-x md:h-16"
     aria-hidden="true"
     style={`background-image: url(${cityscapeImg.src}); background-size: auto 100%; background-position: left bottom;`}
   >
   </div>
 
-  <!-- コピーライト -->
-  <p class="relative z-10 text-center text-small text-white/70 pb-4 pt-1">
+  <p class="relative z-10 pb-4 pt-1 text-center text-small text-white/70">
     © さぽちむ 2025
   </p>
 </footer>

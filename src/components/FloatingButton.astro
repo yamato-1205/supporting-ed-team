@@ -3,7 +3,8 @@ import supportBtn from "../assets/応援するボタン.png";
 ---
 
 <a
-  href="/#support"
+  id="floating-support"
+  href="/support"
   class="fixed right-3 bottom-3 md:right-8 md:bottom-8 z-50 inline-block balloon-float"
   aria-label="応援する"
 >
@@ -44,14 +45,119 @@ import supportBtn from "../assets/応援するボタン.png";
 
   .balloon-float {
     animation: balloon-sway 4s ease-in-out infinite;
-    transform-origin: center bottom; /* 結び目を軸にゆれる */
+    transform-origin: center bottom;
     transition: opacity 0.2s ease;
   }
 
-  /* ホバー時はアニメーション一時停止＋拡大・透明度 */
   .balloon-float:hover {
     animation-play-state: paused;
     opacity: 0.8;
     transform: scale(1.05);
   }
 </style>
+
+<!-- JS で付与するクラスは scoped 外で定義 -->
+<style is:global>
+  @keyframes balloon-fly-up {
+    0% {
+      opacity: 1;
+      transform: translateY(0) rotate(-3deg) scale(1);
+    }
+    45% {
+      opacity: 1;
+      transform: translateY(-35vh) rotate(8deg) scale(1.05);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-120vh) rotate(-14deg) scale(0.7);
+    }
+  }
+
+  #floating-support.balloon-fly-away {
+    animation: balloon-fly-up 0.85s ease-in forwards !important;
+    pointer-events: none !important;
+  }
+
+  /* 飛んだあともフッター上では非表示を維持 */
+  #floating-support.balloon-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    animation: none !important;
+  }
+</style>
+
+<script>
+  function initBalloonFooterHide() {
+    const balloon = document.getElementById("floating-support");
+    const footer = document.querySelector("footer");
+    if (!balloon || !footer) return;
+
+    // ページ遷移で二重登録しない
+    if (balloon.dataset.footerHideInit === "true") return;
+    balloon.dataset.footerHideInit = "true";
+
+    let flying = false;
+    let hidden = false;
+    let flyTimer: number | undefined;
+
+    const shouldHideNow = () => {
+      const footerTop = footer.getBoundingClientRect().top;
+      // fixed 配置の静止位置（bottom-3 / md:bottom-8）を基準にする
+      const bottomOffset = window.matchMedia("(min-width: 768px)").matches
+        ? 32
+        : 12;
+      const restingBottom = window.innerHeight - bottomOffset;
+      // フッター上端が風船の下端より上に来たら隠す
+      return footerTop < restingBottom;
+    };
+
+    const update = () => {
+      const shouldHide = shouldHideNow();
+
+      if (shouldHide && !hidden && !flying) {
+        flying = true;
+        balloon.classList.remove("balloon-hidden");
+        balloon.classList.add("balloon-fly-away");
+        balloon.setAttribute("aria-hidden", "true");
+        balloon.setAttribute("tabindex", "-1");
+
+        window.clearTimeout(flyTimer);
+        flyTimer = window.setTimeout(() => {
+          flying = false;
+          hidden = true;
+          balloon.classList.remove("balloon-fly-away");
+          balloon.classList.add("balloon-hidden");
+        }, 850);
+      } else if (!shouldHide && (hidden || flying)) {
+        window.clearTimeout(flyTimer);
+        flying = false;
+        hidden = false;
+        balloon.classList.remove("balloon-fly-away", "balloon-hidden");
+        balloon.setAttribute("aria-hidden", "false");
+        balloon.removeAttribute("tabindex");
+      }
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
+  }
+
+  initBalloonFooterHide();
+  document.addEventListener("astro:page-load", () => {
+    const balloon = document.getElementById("floating-support");
+    if (balloon) delete balloon.dataset.footerHideInit;
+    initBalloonFooterHide();
+  });
+</script>
