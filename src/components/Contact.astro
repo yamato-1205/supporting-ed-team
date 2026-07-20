@@ -1,0 +1,306 @@
+---
+const GAS_ACTION_URL =
+  "https://script.google.com/macros/s/AKfycbxlB_ifZouDNYDZ9RcgvuNsYKnZ2heppGrGW7pp4rfo-sYuUCjsQnHNbQBlpfHSW9oQWQ/exec";
+
+const inquiryOptions = [
+  "メンバーになりたい",
+  "活動内容について",
+  "取材依頼",
+  "その他",
+] as const;
+---
+
+<div id="form-container">
+  <form
+    id="contact-form"
+    action={GAS_ACTION_URL}
+    method="POST"
+    class="mx-auto w-full max-w-[640px] space-y-8"
+  >
+    <!-- お名前 -->
+    <div>
+      <div class="mb-2 flex items-center gap-2">
+        <label for="name" class="font-bold">お名前</label>
+        <span class="form-badge form-badge-required">必須</span>
+      </div>
+      <input
+        type="text"
+        id="name"
+        name="お名前"
+        required
+        placeholder="やまだ はなこ"
+        class="form-input"
+      />
+    </div>
+
+    <!-- 団体名 -->
+    <div>
+      <div class="mb-2 flex items-center gap-2">
+        <label for="organization" class="font-bold">団体名</label>
+        <span class="form-badge form-badge-optional">任意</span>
+      </div>
+      <input
+        type="text"
+        id="organization"
+        name="団体名"
+        placeholder="さぽちむ"
+        class="form-input"
+      />
+    </div>
+
+    <!-- メールアドレス -->
+    <div>
+      <div class="mb-2 flex items-center gap-2">
+        <label for="email" class="font-bold">メールアドレス</label>
+        <span class="form-badge form-badge-required">必須</span>
+      </div>
+      <input
+        type="email"
+        id="email"
+        name="メールアドレス"
+        required
+        placeholder="sapochimu1103@gmail.com"
+        class="form-input"
+      />
+    </div>
+
+    <!-- お問い合わせ項目 -->
+    <div>
+      <div class="mb-2 flex items-center gap-2">
+        <label id="subject-label" for="subject" class="font-bold"
+          >お問い合わせ項目</label
+        >
+        <span class="form-badge form-badge-required">必須</span>
+      </div>
+      <div class="form-select-custom" data-form-select>
+        <select
+          id="subject"
+          name="お問い合わせ項目"
+          required
+          class="form-select-native"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <option value="">項目を選択ください</option>
+          {
+            inquiryOptions.map((option) => (
+              <option value={option}>{option}</option>
+            ))
+          }
+        </select>
+        <button
+          type="button"
+          class="form-input form-select-trigger"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-labelledby="subject-label"
+        >
+          <span class="form-select-value is-placeholder" data-select-label
+            >項目を選択ください</span
+          >
+          <span class="form-select-icon" aria-hidden="true"></span>
+        </button>
+        <ul class="form-select-list" role="listbox" hidden>
+          {
+            inquiryOptions.map((option) => (
+              <li role="option" data-value={option}>
+                {option}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <!-- お問い合わせ内容 -->
+    <div>
+      <div class="mb-2 flex items-center gap-2">
+        <label for="message" class="font-bold">お問い合わせ内容</label>
+        <span class="form-badge form-badge-required">必須</span>
+      </div>
+      <textarea
+        id="message"
+        name="お問い合わせ内容"
+        rows="8"
+        required
+        placeholder="お問い合わせ内容は、こちらにご記載ください"
+        class="form-input form-textarea"></textarea>
+    </div>
+
+    <button type="submit" class="form-submit"> 送信する </button>
+  </form>
+</div>
+
+<script>
+  function showContactSuccess() {
+    document.getElementById("contact-form-view")?.setAttribute("hidden", "");
+    document.getElementById("contact-success-view")?.removeAttribute("hidden");
+    document.body.classList.add("contact-sent");
+    document.body.style.overflow = "hidden";
+    history.replaceState(null, "", "/contact/?sent=true");
+  }
+
+  function hideContactSuccess() {
+    window.location.href = "/";
+  }
+
+  function initContactSuccessModal() {
+    if (document.body.dataset.contactSuccessInit) return;
+    document.body.dataset.contactSuccessInit = "true";
+
+    document.querySelectorAll("[data-contact-success-close]").forEach((el) => {
+      el.addEventListener("click", hideContactSuccess);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const successView = document.getElementById("contact-success-view");
+      if (event.key === "Escape" && successView && !successView.hidden) {
+        hideContactSuccess();
+      }
+    });
+
+    if (new URLSearchParams(window.location.search).get("sent") === "true") {
+      showContactSuccess();
+    }
+  }
+
+  function initFormSelects() {
+    document
+      .querySelectorAll<HTMLElement>("[data-form-select]")
+      .forEach((root) => {
+        if (root.dataset.selectInit) return;
+        root.dataset.selectInit = "true";
+
+        const select = root.querySelector<HTMLSelectElement>(
+          ".form-select-native",
+        );
+        const trigger = root.querySelector<HTMLButtonElement>(
+          ".form-select-trigger",
+        );
+        const label = root.querySelector<HTMLElement>("[data-select-label]");
+        const list = root.querySelector<HTMLUListElement>(".form-select-list");
+        const options = root.querySelectorAll<HTMLLIElement>('[role="option"]');
+
+        if (!select || !trigger || !label || !list) return;
+
+        const placeholder = select.options[0]?.textContent ?? "";
+
+        const setValue = (value: string) => {
+          select.value = value;
+          label.textContent = value || placeholder;
+          label.classList.toggle("is-placeholder", !value);
+          options.forEach((option) => {
+            option.setAttribute(
+              "aria-selected",
+              option.dataset.value === value ? "true" : "false",
+            );
+          });
+        };
+
+        const close = () => {
+          list.hidden = true;
+          trigger.setAttribute("aria-expanded", "false");
+        };
+
+        const open = () => {
+          list.hidden = false;
+          trigger.setAttribute("aria-expanded", "true");
+        };
+
+        trigger.addEventListener("click", () => {
+          trigger.classList.remove("is-invalid");
+          if (list.hidden) open();
+          else close();
+        });
+
+        options.forEach((option) => {
+          option.addEventListener("click", () => {
+            setValue(option.dataset.value ?? "");
+            close();
+          });
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!root.contains(event.target as Node)) close();
+        });
+
+        trigger.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") close();
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            if (list.hidden) open();
+            else close();
+          }
+        });
+      });
+  }
+
+  function initFormSubmit() {
+    const form = document.getElementById("contact-form") as HTMLFormElement;
+
+    if (!form || form.dataset.submitInit) return;
+    form.dataset.submitInit = "true";
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const select = form.querySelector<HTMLSelectElement>(
+        ".form-select-native",
+      );
+      const trigger = form.querySelector<HTMLButtonElement>(
+        ".form-select-trigger",
+      );
+      if (select && !select.value) {
+        if (trigger) {
+          trigger.classList.add("is-invalid");
+          trigger.focus();
+        }
+        return;
+      }
+
+      const submitButton = form.querySelector(
+        ".form-submit",
+      ) as HTMLButtonElement;
+      const originalText = submitButton.textContent || "送信する";
+
+      submitButton.textContent = "送信中...";
+      submitButton.disabled = true;
+      submitButton.style.opacity = "0.7";
+      submitButton.style.cursor = "not-allowed";
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          showContactSuccess();
+        } else {
+          alert("送信に失敗しました。時間をおいて再度お試しください。");
+          submitButton.textContent = originalText;
+          submitButton.disabled = false;
+          submitButton.style.opacity = "1";
+          submitButton.style.cursor = "pointer";
+        }
+      } catch {
+        alert("通信エラーが発生しました。インターネット接続をご確認ください。");
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+        submitButton.style.opacity = "1";
+        submitButton.style.cursor = "pointer";
+      }
+    });
+  }
+
+  initFormSelects();
+  initFormSubmit();
+  initContactSuccessModal();
+
+  document.addEventListener("astro:page-load", () => {
+    initFormSelects();
+    initFormSubmit();
+    initContactSuccessModal();
+  });
+</script>

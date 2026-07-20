@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Contact from "../components/Contact.astro";
+---
+
+<Layout
+  title="お問い合わせ | 任意団体 さぽちむ HP"
+  description="さぽちむへのお問い合わせはこちらのフォームからお願いします。"
+>
+  <div
+    id="contact-form-view"
+    class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"
+  >
+    <div class="section-container">
+      <h1 class="heading-2 mb-6 text-center">お問い合わせ</h1>
+
+      <p id="contact-intro" class="mb-10 text-center leading-relaxed">
+        さぽちむに対するお問い合わせはこちらのフォームからお願いします。<br />
+        ご記入いただいたメールアドレス宛にお返事させていただきます。
+      </p>
+
+      <Contact />
+    </div>
+  </div>
+
+  <section
+    id="contact-success-view"
+    class="contact-success-hero"
+    hidden
+    aria-live="polite"
+  >
+    <div class="contact-success-hero__inner">
+      <h1 class="heading-2 mb-4">お問い合わせありがとうございました</h1>
+      <p class="contact-success-hero__text">
+        内容を確認次第、ご記入いただいたメールアドレス宛にご返信いたします。
+      </p>
+      <button type="button" class="form-submit contact-success-hero__button" data-contact-success-close>
+        閉じる
+      </button>
+    </div>
+  </section>
+</Layout>

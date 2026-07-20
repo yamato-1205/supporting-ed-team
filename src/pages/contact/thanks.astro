@@ -1,0 +1,18 @@
+---
+// GAS のリダイレクト先として設定されている場合のフォールバック
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>送信完了</title>
+    <meta http-equiv="refresh" content="0;url=/contact/?sent=true" />
+    <script is:inline>
+      window.location.replace("/contact/?sent=true");
+    </script>
+  </head>
+  <body>
+    <p>送信が完了しました。リダイレクト中…</p>
+  </body>
+</html>
