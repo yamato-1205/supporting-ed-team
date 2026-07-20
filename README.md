@@ -51,7 +51,10 @@ cp .env.example .env
 # .env を開き、一覧の変数をすべて設定（未設定だとビルド失敗）
 ```
 
-> `.env` は Git に含めません。CI では Secrets に同じキーを**すべて**登録してください。
+> `.env` は Git に含めません。CI / Cloudflare Pages では同じキーを**すべて**登録してください。
+>
+> Cloudflare Pages では **Variable name** に `PUBLIC_DONATE_URL`、**Value** に URL だけ（`https://...`）を入れます。  
+> `.env` の1行まるごと（`PUBLIC_DONATE_URL=https://...`）を Value に貼ると、リンクが壊れて相対パス扱いになります。
 
 ### `.env` に置くもの（すべて必須）
 

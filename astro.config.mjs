@@ -18,10 +18,14 @@ export default defineConfig({
       PUBLIC_CONTACT_FORM_URL: envField.string({
         context: "server",
         access: "public",
+        url: true,
+        startsWith: "https://",
       }),
       PUBLIC_DONATE_URL: envField.string({
         context: "server",
         access: "public",
+        url: true,
+        startsWith: "https://",
       }),
       PUBLIC_CONTACT_EMAIL: envField.string({
         context: "server",
