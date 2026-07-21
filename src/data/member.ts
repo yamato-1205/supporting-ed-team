@@ -1,7 +1,22 @@
 /**
  * メンバー募集ページの静的テキスト（チーム募集表は recruit.ts）。
+ * ロール背景画像の割り当ては旧 microCMS roll（現 roll_2）と同じ対応。
  */
+import type { ImageMetadata } from "astro";
 import teamDiagramImg from "../assets/sections/team-diagram.png";
+import eventRollBg from "../assets/rolls/event.png";
+import snsRollBg from "../assets/rolls/sns.png";
+import otherRollBg from "../assets/rolls/other.png";
+
+/** microCMS の roll 選択値 → ハイライト背景（旧 CMS 画像と同じ対応） */
+const ROLL_BACKGROUNDS: Record<string, ImageMetadata> = {
+  イベント: eventRollBg,
+  SNS: snsRollBg,
+};
+
+export function rollBackground(roll: string): ImageMetadata {
+  return ROLL_BACKGROUNDS[roll] ?? otherRollBg;
+}
 
 export const MEMBER_PAGE = {
   title: "メンバー募集",

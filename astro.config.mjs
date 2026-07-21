@@ -1,9 +1,21 @@
 // @ts-check
 import { defineConfig, envField } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+
+const site = (process.env.PUBLIC_SITE_URL || "https://supporting-ed-team.pages.dev").replace(
+  /\/$/,
+  "",
+);
 
 // https://astro.build/config
 export default defineConfig({
+  site,
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes("/places"),
+    }),
+  ],
   env: {
     validateSecrets: true,
     schema: {
@@ -14,6 +26,12 @@ export default defineConfig({
       MICROCMS_SERVICE_DOMAIN: envField.string({
         context: "server",
         access: "public",
+      }),
+      PUBLIC_SITE_URL: envField.string({
+        context: "server",
+        access: "public",
+        url: true,
+        startsWith: "https://",
       }),
       PUBLIC_CONTACT_FORM_URL: envField.string({
         context: "server",

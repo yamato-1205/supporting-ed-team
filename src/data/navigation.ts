@@ -27,6 +27,8 @@ export const NAV_LINKS: NavLink[] = [
 /**
  * フッター・ハンバーガー共通の階層ナビ。
  * ページ構成やアンカーを変えるときはここだけ編集する。
+ *
+ * 注: 居場所マップ（/places）は直リンク限定のためここに含めない。
  */
 export const NAV_GROUPS: NavGroup[] = [
   {

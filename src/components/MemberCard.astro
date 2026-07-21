@@ -1,10 +1,10 @@
 ---
-import type { MemberRoll } from "../lib/microcms";
+import { rollBackground } from "../data/member";
 
 interface Props {
   name: string;
   iconUrl: string;
-  roll: MemberRoll[];
+  roll: string[];
 }
 
 const { name, iconUrl, roll } = Astro.props;
@@ -27,14 +27,14 @@ const squareIcon = `${iconUrl}?fit=crop&w=240&h=240`;
   <p class="mb-2">{name}</p>
   <div class="flex flex-wrap justify-center gap-x-2 gap-y-1">
     {
-      roll.map((r) => (
+      roll.map((label) => (
         <span class="relative inline-block leading-none text-small px-1">
           <span
             class="absolute inset-x-0 bottom-0 z-0 h-[0.7em]"
-            style={`background-image:url(${r.image.url});background-size:100% 100%;background-repeat:no-repeat;`}
+            style={`background-image:url(${rollBackground(label).src});background-size:100% 100%;background-repeat:no-repeat;`}
             aria-hidden="true"
           />
-          <span class="relative z-10">#{r.roll}</span>
+          <span class="relative z-10">#{label}</span>
         </span>
       ))
     }

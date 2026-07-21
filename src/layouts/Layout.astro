@@ -6,18 +6,58 @@ import FloatingButton from "../components/FloatingButton.astro";
 import BubbleBackground from "../components/BubbleBackground.astro";
 import BubblePopScript from "../components/BubblePopScript.astro";
 import logoImg from "../assets/brand/logo.png";
-import { SITE_NAME, SITE_DESCRIPTION } from "../data/site";
+import {
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_URL,
+  OG_IMAGE_URL,
+  CONTACT_EMAIL,
+  absoluteUrl,
+} from "../data/site";
 
 interface Props {
-  title?: string;
-  description?: string;
+  /** true のとき検索エンジンにインデックスさせない（直リンク限定ページ用） */
+  noindex?: boolean;
 }
 
-const { title = SITE_NAME, description = SITE_DESCRIPTION } = Astro.props;
+const { noindex = false } = Astro.props;
 
-const showFloatingButton = !Astro.url.pathname
-  .replace(/\/$/, "")
-  .endsWith("/support");
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const canonicalUrl = absoluteUrl(pathname === "/" ? "/" : `${pathname}/`);
+const robotsContent = noindex ? "noindex, nofollow" : "index, follow";
+
+const showFloatingButton = !pathname.endsWith("/support");
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: SITE_NAME,
+      description: SITE_DESCRIPTION,
+      inLanguage: "ja",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+    },
+    {
+      "@type": "NGO",
+      "@id": `${SITE_URL}/#organization`,
+      name: "さぽちむ",
+      alternateName: ["Supporting/ed TEAM", SITE_NAME],
+      url: SITE_URL,
+      description: SITE_DESCRIPTION,
+      email: CONTACT_EMAIL,
+      logo: absoluteUrl(logoImg.src),
+      image: OG_IMAGE_URL,
+      inLanguage: "ja",
+      areaServed: {
+        "@type": "Country",
+        name: "日本",
+      },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -25,11 +65,44 @@ const showFloatingButton = !Astro.url.pathname
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href={logoImg.src} />
     <meta name="generator" content={Astro.generator} />
 
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    {/* ファビコン・アプリアイコン（全ページ共通） */}
+    <link rel="icon" type="image/png" href={logoImg.src} />
+    <link rel="apple-touch-icon" href={logoImg.src} />
+
+    {/* 基本 SEO（タイトル・説明は全ページ共通） */}
+    <title>{SITE_NAME}</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <meta name="robots" content={robotsContent} />
+    <meta name="googlebot" content={robotsContent} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* 日本語向け */}
+    <meta http-equiv="content-language" content="ja" />
+    <link rel="alternate" hreflang="ja" href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl("/")} />
+
+    {/* Open Graph（URL 貼り付け時のプレビュー） */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:title" content={SITE_NAME} />
+    <meta property="og:description" content={SITE_DESCRIPTION} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={OG_IMAGE_URL} />
+    <meta property="og:image:alt" content={SITE_NAME} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+
+    {/* X (Twitter) カード */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={SITE_NAME} />
+    <meta name="twitter:description" content={SITE_DESCRIPTION} />
+    <meta name="twitter:image" content={OG_IMAGE_URL} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

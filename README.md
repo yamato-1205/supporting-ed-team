@@ -15,6 +15,8 @@
 │   │   ├── decorations/     # リボン・家・カード枠など
 │   │   ├── icons/           # SNS アイコン
 │   │   ├── members/         # メンバー写真（ローカル用）
+│   │   ├── places/          # 居場所マップ用（日本地図など）
+│   │   ├── rolls/           # メンバーロールのハイライト背景
 │   │   ├── sections/        # ヒーロー・活動内容など
 │   │   └── unused/          # 未使用素材の保管
 │   ├── components/          # UI コンポーネント
@@ -30,15 +32,16 @@
 
 | 変更したいもの | 編集ファイル |
 |----------------|--------------|
-| サイト名・説明文 | `src/data/site.ts` |
-| メール・note・寄付URL・フォームURL・microCMS domain | `.env`（必須） |
+| サイト名・説明文・OGサムネ設定 | `src/data/site.ts` / `public/og-banner.png` / `src/layouts/Layout.astro` |
+| メール・note・寄付URL・フォームURL・サイトURL・microCMS domain | `.env`（必須） |
 | ナビゲーション（ヘッダー / フッター / ハンバーガー） | `src/data/navigation.ts` |
 | SNS プロフィール URL・埋め込み投稿 URL | `src/data/sns.ts` |
 | トップ（ヒーロー・活動内容・代表の思い・募集CTA） | `src/data/home.ts` |
 | 団体概要の本文 | `src/data/overview.ts` |
 | 応援するページの文言 | `src/data/support.ts` |
 | メンバー募集の各チーム表 | `src/data/recruit.ts` |
-| メンバー募集ページの説明文 | `src/data/member.ts` |
+| メンバー募集ページの説明文・ロール背景 | `src/data/member.ts` |
+| 居場所マップの文言・地方区分 | `src/data/places.ts`（直リンク限定・ナビ非掲載） |
 | お問い合わせ項目の選択肢 | `src/data/contact.ts` |
 | シャボン玉装飾の位置 | `src/data/bubbles.ts` |
 
@@ -66,8 +69,11 @@ cp .env.example .env
 | `PUBLIC_DONATE_URL` | Syncable 寄付 URL |
 | `PUBLIC_CONTACT_EMAIL` | フッター等のメール |
 | `PUBLIC_NOTE_ACCOUNT` | note アカウント名 |
+| `PUBLIC_SITE_URL` | サイト正規 URL（OG・canonical・sitemap） |
 
 `PUBLIC_*` はクライアントにも露出します。秘密鍵は置かないでください。
+
+カスタムドメインに切り替えたら、Cloudflare Pages の `PUBLIC_SITE_URL` も合わせて更新してください。
 
 ## コマンド
 

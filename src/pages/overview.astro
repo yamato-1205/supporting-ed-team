@@ -3,13 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import OverviewCard from "../components/OverviewCard.astro";
 import MultilineText from "../components/MultilineText.astro";
 import { OVERVIEW_SECTIONS } from "../data/overview";
-import { pageTitle } from "../data/site";
 ---
 
-<Layout
-  title={pageTitle("団体概要")}
-  description="さぽちむの存在意義・文化・チーム名の由来をご紹介します。"
->
+<Layout>
   <div
     id="overview"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-10 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-14"

@@ -8,7 +8,6 @@ import { client } from "../lib/microcms";
 import type { Member } from "../lib/microcms";
 import { RECRUIT_TEAMS } from "../data/recruit";
 import { MEMBER_PAGE } from "../data/member";
-import { pageTitle } from "../data/site";
 
 let members: Member[] = [];
 try {
@@ -22,7 +21,7 @@ try {
 }
 ---
 
-<Layout title={pageTitle(MEMBER_PAGE.title)} description={MEMBER_PAGE.description}>
+<Layout>
   <div
     id="member"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"

@@ -1,0 +1,56 @@
+---
+import LocationCard from "./LocationCard.astro";
+import { PLACES_PAGE } from "../../data/places";
+import type { Location } from "../../lib/microcms";
+
+interface Props {
+  locations: Location[];
+}
+
+const { locations } = Astro.props;
+---
+
+<section
+  id="place-results"
+  class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
+  aria-live="polite"
+>
+  <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <h2 class="heading-3">居場所一覧</h2>
+    <div class="flex items-center gap-4">
+      <p class="text-small font-normal text-black/60">
+        <span data-place-result-count>{locations.length}</span> 件表示中
+      </p>
+      <button
+        type="button"
+        class="place-clear-btn text-small font-bold text-[var(--color-primary)] underline-offset-2 hover:underline"
+        hidden
+      >
+        {PLACES_PAGE.clearFilter}
+      </button>
+    </div>
+  </div>
+
+  <div class="grid gap-3 sm:grid-cols-2" data-place-list>
+    {
+      locations.map((loc) => (
+        <LocationCard
+          id={loc.id}
+          name={loc.locationName}
+          address={loc.address}
+          prefectures={loc.prefectures}
+          field={loc.field}
+          genre={loc.genre}
+          lat={loc.lat}
+          lng={loc.lng}
+        />
+      ))
+    }
+  </div>
+  <p
+    class="place-empty mt-6 hidden text-center font-normal text-black/50"
+    data-place-empty
+  >
+    {PLACES_PAGE.empty}
+  </p>
+</section>

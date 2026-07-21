@@ -1,13 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Contact from "../components/Contact.astro";
-import { pageTitle } from "../data/site";
 ---
 
-<Layout
-  title={pageTitle("お問い合わせ")}
-  description="さぽちむへのお問い合わせはこちらのフォームからお願いします。"
->
+<Layout>
   <div
     id="contact-form-view"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"

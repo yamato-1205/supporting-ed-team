@@ -34,13 +34,6 @@ export type MicroCMSImage = {
   width: number;
 };
 
-/** メンバーの役割1件 */
-export type MemberRoll = {
-  id: string;
-  roll: string;
-  image: MicroCMSImage;
-};
-
 /** メンバー1件の型（microCMS の member エンドポイント） */
 export type Member = {
   id: string;
@@ -49,7 +42,8 @@ export type Member = {
   publishedAt: string;
   revisedAt: string;
   name: string;
-  roll: MemberRoll[];
+  /** 複数選択（文字列）。背景画像はローカル assets でロール名から割り当てる */
+  roll: string[];
   icon: MicroCMSImage;
 };
 
@@ -64,4 +58,20 @@ export type ExternalReport = {
   media: string[];
   link: string;
   date: string;
+};
+
+/** 居場所1件の型（microCMS の location エンドポイント） */
+export type Location = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  revisedAt: string;
+  locationName: string;
+  address: string;
+  prefectures: string[];
+  field: string[];
+  genre: string[];
+  lat: number;
+  lng: number;
 };
