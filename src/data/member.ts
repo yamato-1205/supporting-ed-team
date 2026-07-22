@@ -3,7 +3,7 @@
  * ロール背景画像の割り当ては旧 microCMS roll（現 roll_2）と同じ対応。
  */
 import type { ImageMetadata } from "astro";
-import teamDiagramImg from "../assets/sections/team-diagram.png";
+import teamDiagramImg from "../assets/sections/sapochimu-diagram.png";
 import eventRollBg from "../assets/rolls/event.png";
 import snsRollBg from "../assets/rolls/sns.png";
 import otherRollBg from "../assets/rolls/other.png";
@@ -34,7 +34,7 @@ export const MEMBER_PAGE = {
   ],
   diagram: {
     src: teamDiagramImg,
-    alt: "さぽちむのチーム構成図（①イベント・②SNS・③その他）",
+    alt: "さぽちむのチーム構成・簡易図",
   },
   membersTitle: "メンバー一覧",
   membersEmpty: "現在メンバー情報を取得できません。",

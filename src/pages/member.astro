@@ -4,10 +4,12 @@ import BubbleButton from "../components/BubbleButton.astro";
 import RecruitTable from "../components/RecruitTable.astro";
 import MemberCard from "../components/MemberCard.astro";
 import MultilineText from "../components/MultilineText.astro";
+import PageTitle from "../components/PageTitle.astro";
 import { client } from "../lib/microcms";
 import type { Member } from "../lib/microcms";
 import { RECRUIT_TEAMS } from "../data/recruit";
 import { MEMBER_PAGE } from "../data/member";
+import { PAGE_META, SITE_NAME } from "../data/site";
 
 let members: Member[] = [];
 try {
@@ -19,15 +21,24 @@ try {
 } catch (e) {
   console.warn("[member] メンバー一覧の取得に失敗しました:", e);
 }
+
+const meta = PAGE_META.member;
 ---
 
-<Layout>
+<Layout
+  title={meta.title}
+  description={meta.description}
+  breadcrumbs={[
+    { name: SITE_NAME, path: "/" },
+    { name: "メンバー募集", path: "/member/" },
+  ]}
+>
   <div
     id="member"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"
   >
     <div class="section-container flex flex-col gap-10 md:gap-14">
-      <h1 class="heading-2 text-center">{MEMBER_PAGE.title}</h1>
+      <PageTitle title={MEMBER_PAGE.title} />
 
       <section
         class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
@@ -83,7 +94,7 @@ try {
               {MEMBER_PAGE.membersEmpty}
             </p>
           ) : (
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            <div class="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 md:gap-x-6 md:gap-y-8">
               {members.map((m) => (
                 <MemberCard name={m.name} iconUrl={m.icon.url} roll={m.roll} />
               ))}

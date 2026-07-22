@@ -12,51 +12,98 @@ import {
   SITE_URL,
   OG_IMAGE_URL,
   CONTACT_EMAIL,
+  THEME_COLOR,
+  TWITTER_SITE,
+  ORGANIZATION_SAME_AS,
   absoluteUrl,
+  type BreadcrumbItem,
 } from "../data/site";
+import type { BubbleBackgroundDensity } from "../data/bubbles";
 
 interface Props {
+  /** ページ固有の <title> / og:title（未指定時は SITE_NAME） */
+  title?: string;
+  /** ページ固有の meta description（未指定時は SITE_DESCRIPTION） */
+  description?: string;
   /** true のとき検索エンジンにインデックスさせない（直リンク限定ページ用） */
   noindex?: boolean;
+  /** パンくず（JSON-LD BreadcrumbList）。TOP は自動で先頭に付与しないので必要なら含める */
+  breadcrumbs?: BreadcrumbItem[];
+  /**
+   * 背景シャボン玉の密度。
+   * 縦が短いページ（404 など）は sparse にして窮屈さを避ける。
+   */
+  bubbleDensity?: BubbleBackgroundDensity;
 }
 
-const { noindex = false } = Astro.props;
+const {
+  title = SITE_NAME,
+  description = SITE_DESCRIPTION,
+  noindex = false,
+  breadcrumbs,
+  bubbleDensity = "default",
+} = Astro.props;
 
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 const canonicalUrl = absoluteUrl(pathname === "/" ? "/" : `${pathname}/`);
 const robotsContent = noindex ? "noindex, nofollow" : "index, follow";
-
 const showFloatingButton = !pathname.endsWith("/support");
+
+const graph: Record<string, unknown>[] = [
+  {
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    inLanguage: "ja",
+    publisher: { "@id": `${SITE_URL}/#organization` },
+  },
+  {
+    "@type": "NGO",
+    "@id": `${SITE_URL}/#organization`,
+    name: "さぽちむ",
+    alternateName: ["Supporting/ed TEAM", SITE_NAME],
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    email: CONTACT_EMAIL,
+    logo: absoluteUrl(logoImg.src),
+    image: OG_IMAGE_URL,
+    inLanguage: "ja",
+    sameAs: ORGANIZATION_SAME_AS,
+    areaServed: {
+      "@type": "Country",
+      name: "日本",
+    },
+  },
+  {
+    "@type": "WebPage",
+    "@id": `${canonicalUrl}#webpage`,
+    url: canonicalUrl,
+    name: title,
+    description,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    about: { "@id": `${SITE_URL}/#organization` },
+    inLanguage: "ja",
+  },
+];
+
+if (breadcrumbs && breadcrumbs.length > 0) {
+  graph.push({
+    "@type": "BreadcrumbList",
+    "@id": `${canonicalUrl}#breadcrumb`,
+    itemListElement: breadcrumbs.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  });
+}
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      "@id": `${SITE_URL}/#website`,
-      url: SITE_URL,
-      name: SITE_NAME,
-      description: SITE_DESCRIPTION,
-      inLanguage: "ja",
-      publisher: { "@id": `${SITE_URL}/#organization` },
-    },
-    {
-      "@type": "NGO",
-      "@id": `${SITE_URL}/#organization`,
-      name: "さぽちむ",
-      alternateName: ["Supporting/ed TEAM", SITE_NAME],
-      url: SITE_URL,
-      description: SITE_DESCRIPTION,
-      email: CONTACT_EMAIL,
-      logo: absoluteUrl(logoImg.src),
-      image: OG_IMAGE_URL,
-      inLanguage: "ja",
-      areaServed: {
-        "@type": "Country",
-        name: "日本",
-      },
-    },
-  ],
+  "@graph": graph,
 };
 ---
 
@@ -66,14 +113,15 @@ const jsonLd = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content={THEME_COLOR} />
 
     {/* ファビコン・アプリアイコン（全ページ共通） */}
     <link rel="icon" type="image/png" href={logoImg.src} />
     <link rel="apple-touch-icon" href={logoImg.src} />
 
-    {/* 基本 SEO（タイトル・説明は全ページ共通） */}
-    <title>{SITE_NAME}</title>
-    <meta name="description" content={SITE_DESCRIPTION} />
+    {/* 基本 SEO（title / description はページごと、OG 画像は共通） */}
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <meta name="robots" content={robotsContent} />
     <meta name="googlebot" content={robotsContent} />
     <link rel="canonical" href={canonicalUrl} />
@@ -87,8 +135,8 @@ const jsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:locale" content="ja_JP" />
-    <meta property="og:title" content={SITE_NAME} />
-    <meta property="og:description" content={SITE_DESCRIPTION} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={OG_IMAGE_URL} />
     <meta property="og:image:alt" content={SITE_NAME} />
@@ -98,8 +146,9 @@ const jsonLd = {
 
     {/* X (Twitter) カード */}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={SITE_NAME} />
-    <meta name="twitter:description" content={SITE_DESCRIPTION} />
+    <meta name="twitter:site" content={TWITTER_SITE} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={OG_IMAGE_URL} />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
@@ -107,7 +156,7 @@ const jsonLd = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Klee+One:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -116,7 +165,7 @@ const jsonLd = {
     <Header />
 
     <main class="grow relative">
-      <BubbleBackground />
+      <BubbleBackground density={bubbleDensity} />
       <slot />
     </main>
 

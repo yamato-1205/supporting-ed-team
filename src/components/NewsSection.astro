@@ -22,7 +22,7 @@ try {
 
 <section
   id="news"
-  class="pt-6 pb-7 md:pt-8 md:pb-10 relative overflow-hidden bg-white"
+  class="relative z-[1] overflow-x-clip bg-white pt-6 pb-7 md:pt-8 md:pb-10"
 >
   <!-- 左右のシャボン玉 -->
   <SectionBubbles variant="news" />
@@ -44,7 +44,7 @@ try {
     {newsList.length === 0 ? (
       <p class="text-gray-500 text-center py-8">現在お知らせはありません。</p>
     ) : (
-      <div class="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:-mx-8 md:px-8">
+      <div class="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory -mx-2 px-2 md:-mx-8 md:px-8">
         {newsList.map((news) => {
           const { year, monthDay } = splitDate(news.date);
           const href  = news.link ?? '#';

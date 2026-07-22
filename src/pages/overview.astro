@@ -2,16 +2,27 @@
 import Layout from "../layouts/Layout.astro";
 import OverviewCard from "../components/OverviewCard.astro";
 import MultilineText from "../components/MultilineText.astro";
+import PageTitle from "../components/PageTitle.astro";
 import { OVERVIEW_SECTIONS } from "../data/overview";
+import { PAGE_META, SITE_NAME } from "../data/site";
+
+const meta = PAGE_META.overview;
 ---
 
-<Layout>
+<Layout
+  title={meta.title}
+  description={meta.description}
+  breadcrumbs={[
+    { name: SITE_NAME, path: "/" },
+    { name: "団体概要", path: "/overview/" },
+  ]}
+>
   <div
     id="overview"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-10 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-14"
   >
     <div class="section-container flex flex-col gap-8 md:gap-10">
-      <h1 class="heading-2 text-center">団体概要</h1>
+      <PageTitle title="団体概要" />
 
       {
         OVERVIEW_SECTIONS.map((section) => (

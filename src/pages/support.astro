@@ -4,6 +4,7 @@ import OverviewCard from "../components/OverviewCard.astro";
 import BubbleButton from "../components/BubbleButton.astro";
 import HeadingUnderline from "../components/HeadingUnderline.astro";
 import MultilineText from "../components/MultilineText.astro";
+import PageTitle from "../components/PageTitle.astro";
 import {
   SUPPORT_INTRO,
   SUPPORT_WHY,
@@ -12,15 +13,25 @@ import {
   DONATE_URL,
   SUPPORT_CLOSING,
 } from "../data/support";
+import { PAGE_META, SITE_NAME } from "../data/site";
+
+const meta = PAGE_META.support;
 ---
 
-<Layout>
+<Layout
+  title={meta.title}
+  description={meta.description}
+  breadcrumbs={[
+    { name: SITE_NAME, path: "/" },
+    { name: "応援する", path: "/support/" },
+  ]}
+>
   <div
     id="support-page"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"
   >
     <div class="section-container flex flex-col gap-8 md:gap-10">
-      <h1 class="heading-2 text-center">応援する</h1>
+      <PageTitle title="応援する" />
 
       <section
         class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"

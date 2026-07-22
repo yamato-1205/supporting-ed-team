@@ -309,6 +309,44 @@ body.contact-sent main {
   @apply max-w-[1024px] mx-auto px-4 md:px-8 relative z-10;
 }
 
+/* 装飾シャボン玉のゆらゆら（PageTitle と同系統） */
+.bubble-float {
+  animation: bubble-float-sway 5s ease-in-out infinite;
+  will-change: transform;
+}
+.bubble-float:nth-child(2n) {
+  animation-duration: 5.8s;
+  animation-delay: -1.3s;
+}
+.bubble-float:nth-child(3n) {
+  animation-duration: 4.6s;
+  animation-delay: -2.5s;
+}
+.bubble-float:nth-child(4n) {
+  animation-duration: 6.4s;
+  animation-delay: -0.7s;
+}
+.bubble-float:nth-child(5n) {
+  animation-duration: 5.2s;
+  animation-delay: -3.1s;
+}
+
+@keyframes bubble-float-sway {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(3px, -7px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble-float {
+    animation: none;
+  }
+}
+
 body {
   font-family: var(--font-sans);
   font-size: 1rem;

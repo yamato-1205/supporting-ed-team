@@ -7,9 +7,13 @@ import ActivitySection from "../components/ActivitySection.astro";
 import RepresentativeSection from "../components/RepresentativeSection.astro";
 import NewsSection from "../components/NewsSection.astro";
 import ActivityResultSection from "../components/ActivityResultSection.astro";
+import SnsSection from "../components/SnsSection.astro";
+import { PAGE_META } from "../data/site";
+
+const meta = PAGE_META.home;
 ---
 
-<Layout>
+<Layout title={meta.title} description={meta.description}>
   <HeroSection />
 
   <MemberRecruitSection />
@@ -29,4 +33,8 @@ import ActivityResultSection from "../components/ActivityResultSection.astro";
   <WaveSeparator fromColor="#ffffff" toColor="#fffbec" />
 
   <ActivityResultSection />
+
+  <WaveSeparator fromColor="#fffbec" toColor="#ffffff" />
+
+  <SnsSection />
 </Layout>

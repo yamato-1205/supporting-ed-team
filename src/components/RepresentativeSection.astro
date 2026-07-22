@@ -11,7 +11,7 @@ const snsLinks = getSnsLinks("representative");
 
 <section
   id="about"
-  class="relative overflow-hidden bg-[var(--color-background)] py-8 md:py-12"
+  class="relative z-[1] overflow-x-clip bg-[var(--color-background)] py-8 md:py-12"
 >
   <SectionBubbles variant="representative" />
 
@@ -38,28 +38,28 @@ const snsLinks = getSnsLinks("representative");
             src={bubble3.src}
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute h-8 w-8 select-none opacity-80 max-md:hidden"
+            class="bubble-float pointer-events-none absolute h-8 w-8 select-none opacity-80 max-md:hidden"
             style="bottom: 2px; left: -18px;"
           />
           <img
             src={bubble4.src}
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute h-5 w-5 select-none opacity-70 max-md:hidden"
+            class="bubble-float pointer-events-none absolute h-5 w-5 select-none opacity-70 max-md:hidden"
             style="bottom: 20px; left: -34px;"
           />
           <img
             src={bubble2.src}
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute hidden h-10 w-10 select-none opacity-75 md:block"
+            class="bubble-float pointer-events-none absolute hidden h-10 w-10 select-none opacity-75 md:block"
             style="bottom: 0px; right: -24px;"
           />
           <img
             src={bubble3.src}
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute hidden h-5 w-5 select-none opacity-65 md:block"
+            class="bubble-float pointer-events-none absolute hidden h-5 w-5 select-none opacity-65 md:block"
             style="bottom: 22px; right: -40px;"
           />
         </div>

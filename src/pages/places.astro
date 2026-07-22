@@ -10,6 +10,7 @@ import { client } from "../lib/microcms";
 import type { Location } from "../lib/microcms";
 import { PLACES_PAGE, countByPrefecture } from "../data/places";
 import bubbleWide from "../assets/bubbles/bubble-wide.png";
+import { PAGE_META } from "../data/site";
 
 let locations: Location[] = [];
 try {
@@ -23,9 +24,10 @@ try {
 }
 
 const prefCount = countByPrefecture(locations).size;
+const meta = PAGE_META.places;
 ---
 
-<Layout noindex>
+<Layout noindex title={meta.title} description={meta.description}>
   <div
     id="places"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"

@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import BubbleButton from "../components/BubbleButton.astro";
+import { SITE_NAME, SITE_DESCRIPTION } from "../data/site";
+---
+
+<Layout
+  title={`ページが見つかりません | ${SITE_NAME}`}
+  description={SITE_DESCRIPTION}
+  noindex
+  bubbleDensity="sparse"
+>
+  <div
+    class="relative z-10 flex min-h-[60vh] flex-col items-center justify-center px-6 pt-[calc(var(--header-height)+2rem)] pb-16 text-center"
+  >
+    <p class="text-6xl font-bold tracking-wide text-[var(--color-primary)] md:text-7xl">
+      404
+    </p>
+    <h1 class="heading-2 mt-4">ページが見つかりません</h1>
+    <p class="mt-4 max-w-md leading-relaxed text-black/70">
+      お探しのページは移動または削除されたか、URL が間違っている可能性があります。
+    </p>
+    <div class="mt-10">
+      <BubbleButton href="/" label="トップへ戻る" />
+    </div>
+  </div>
+</Layout>

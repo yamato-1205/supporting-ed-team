@@ -13,7 +13,8 @@ export default defineConfig({
   site,
   integrations: [
     sitemap({
-      filter: (page) => !page.includes("/places"),
+      filter: (page) =>
+        !page.includes("/places") && !page.includes("/contact/thanks"),
     }),
   ],
   env: {

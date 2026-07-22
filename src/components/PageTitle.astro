@@ -1,0 +1,85 @@
+---
+/**
+ * 下層ページのトップ見出し。
+ * フォントはサイト共通の BIZ UDPGothic（UD）を使い、装飾で雰囲気を出す。
+ */
+import bubbleLeft from "../assets/bubbles/bubble-1.png";
+import bubbleRight from "../assets/bubbles/bubble-3.png";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<header class="page-title relative mx-auto mb-2 flex max-w-lg flex-col items-center text-center">
+  <div class="relative inline-flex items-center justify-center gap-3 px-10 py-2 md:gap-5 md:px-14">
+    <img
+      src={bubbleLeft.src}
+      alt=""
+      aria-hidden="true"
+      class="page-title-bubble pointer-events-none absolute -left-1 top-1/2 h-10 w-auto -translate-y-1/2 opacity-70 md:-left-2 md:h-12"
+    />
+    <img
+      src={bubbleRight.src}
+      alt=""
+      aria-hidden="true"
+      class="page-title-bubble page-title-bubble--delay pointer-events-none absolute -right-1 top-1/2 h-9 w-auto -translate-y-1/2 opacity-65 md:-right-2 md:h-11"
+    />
+
+    <div class="relative z-10">
+      <h1 class="page-title-text relative z-10 px-3">{title}</h1>
+      <span class="page-title-mark" aria-hidden="true"></span>
+    </div>
+  </div>
+</header>
+
+<style>
+  .page-title-text {
+    font-family: "BIZ UDPGothic", sans-serif;
+    font-size: clamp(1.65rem, 4vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    color: var(--color-primary);
+  }
+
+  .page-title-mark {
+    position: absolute;
+    left: 50%;
+    bottom: 0.15em;
+    z-index: 0;
+    width: calc(100% + 0.6em);
+    height: 0.55em;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-primary) 22%, white);
+    transform: rotate(-1.2deg);
+  }
+
+  .page-title-bubble {
+    animation: page-title-float 4.8s ease-in-out infinite;
+  }
+
+  .page-title-bubble--delay {
+    animation-delay: -2.2s;
+    animation-duration: 5.4s;
+  }
+
+  @keyframes page-title-float {
+    0%,
+    100% {
+      transform: translateY(-50%) translateX(0);
+    }
+    50% {
+      transform: translateY(calc(-50% - 6px)) translateX(2px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-title-bubble {
+      animation: none;
+    }
+  }
+</style>

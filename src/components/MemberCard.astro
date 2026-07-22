@@ -13,30 +13,35 @@ const { name, iconUrl, roll } = Astro.props;
 const squareIcon = `${iconUrl}?fit=crop&w=240&h=240`;
 ---
 
-<div
-  class="bg-white rounded-2xl border border-gray-200 px-4 py-5 flex flex-col items-center text-center"
+<article
+  class="relative mx-auto w-full max-w-[10.5rem] pt-12 md:max-w-[13rem] md:pt-14"
 >
-  <img
-    src={squareIcon}
-    alt={name}
-    width="96"
-    height="96"
-    loading="lazy"
-    class="w-24 h-24 rounded-full object-cover mb-3"
-  />
-  <p class="mb-2">{name}</p>
-  <div class="flex flex-wrap justify-center gap-x-2 gap-y-1">
-    {
-      roll.map((label) => (
-        <span class="relative inline-block leading-none text-small px-1">
-          <span
-            class="absolute inset-x-0 bottom-0 z-0 h-[0.7em]"
-            style={`background-image:url(${rollBackground(label).src});background-size:100% 100%;background-repeat:no-repeat;`}
-            aria-hidden="true"
-          />
-          <span class="relative z-10">#{label}</span>
-        </span>
-      ))
-    }
+  {/* 丸写真を枠の上辺に半分かぶせる */}
+  <div
+    class="flex flex-col items-center rounded-[1.75rem] border border-black bg-white px-3 pb-5 pt-14 text-center md:rounded-[2rem] md:px-4 md:pb-6 md:pt-16"
+  >
+    <img
+      src={squareIcon}
+      alt={name}
+      width="96"
+      height="96"
+      loading="lazy"
+      class="absolute top-0 left-1/2 z-10 h-24 w-24 -translate-x-1/2 rounded-full object-cover md:h-28 md:w-28"
+    />
+    <p class="mb-2 leading-snug">{name}</p>
+    <div class="flex flex-wrap justify-center gap-x-2 gap-y-1">
+      {
+        roll.map((label) => (
+          <span class="relative inline-block px-1 leading-none text-small">
+            <span
+              class="absolute inset-x-0 bottom-0 z-0 h-[0.7em]"
+              style={`background-image:url(${rollBackground(label).src});background-size:100% 100%;background-repeat:no-repeat;`}
+              aria-hidden="true"
+            />
+            <span class="relative z-10">#{label}</span>
+          </span>
+        ))
+      }
+    </div>
   </div>
-</div>
+</article>

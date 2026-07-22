@@ -19,8 +19,12 @@ const widePath =
   セクション間の波形区切り
   fromColor（上のセクションの背景色）→ toColor（下のセクションの背景色）
   wide={true} で波の間隔を広く
+  z-0 にして隣接セクション（z-[1]）のシャボン玉が波に隠れないようにする
 -->
-<div class="w-full leading-[0] overflow-hidden" style={`background-color: ${toColor};`}>
+<div
+  class="relative z-0 w-full overflow-x-clip leading-[0]"
+  style={`background-color: ${toColor};`}
+>
   <svg
     viewBox="0 0 1440 56"
     preserveAspectRatio="none"

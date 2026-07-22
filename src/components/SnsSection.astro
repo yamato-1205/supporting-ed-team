@@ -1,0 +1,52 @@
+---
+import SectionBubbles from "./SectionBubbles.astro";
+import XPostEmbed from "./XPostEmbed.astro";
+import InstagramPostEmbed from "./InstagramPostEmbed.astro";
+import {
+  FEATURED_X_POST_URL,
+  FEATURED_INSTAGRAM_POST_URL,
+} from "../data/sns";
+---
+
+<section
+  id="sns"
+  class="relative z-[1] overflow-x-clip bg-white py-7 md:py-10"
+>
+  <SectionBubbles variant="sns" />
+
+  <div class="section-container">
+    <h2 class="heading-2 mb-8">SNS</h2>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-start">
+      <div class="sns-embed-frame">
+        <XPostEmbed postUrl={FEATURED_X_POST_URL} />
+      </div>
+      <div class="sns-embed-frame">
+        <InstagramPostEmbed postUrl={FEATURED_INSTAGRAM_POST_URL} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sns-embed-frame {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 24rem; /* max-w-sm */
+    height: 36rem; /* 576px — X / Instagram 共通 */
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 1rem;
+    background: #fff;
+  }
+
+  .sns-embed-frame :global(> div) {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .sns-embed-frame :global(blockquote),
+  .sns-embed-frame :global(iframe) {
+    margin: 0 !important;
+  }
+</style>

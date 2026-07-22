@@ -58,8 +58,7 @@
     for (const card of cards) {
       const prefs = parseJsonArray(card.dataset.prefectures ?? null);
       const tags = parseJsonArray(card.dataset.tags ?? null);
-      const prefOk =
-        !activePrefecture || prefs.includes(activePrefecture);
+      const prefOk = !activePrefecture || prefs.includes(activePrefecture);
       const tagsOk =
         activeTags.size === 0 ||
         [...activeTags].every((tag) => tags.includes(tag));

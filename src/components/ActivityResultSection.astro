@@ -8,12 +8,6 @@ import { fetchNoteArticles, stripHtml } from "../lib/note";
 import { splitDate } from "../lib/date";
 import { client } from "../lib/microcms";
 import type { ExternalReport } from "../lib/microcms";
-import XPostEmbed from "./XPostEmbed.astro";
-import InstagramPostEmbed from "./InstagramPostEmbed.astro";
-import {
-  FEATURED_X_POST_URL,
-  FEATURED_INSTAGRAM_POST_URL,
-} from "../data/sns";
 import { NOTE_ACCOUNT } from "../data/site";
 
 const noteHref = `https://note.com/${NOTE_ACCOUNT}`;
@@ -33,7 +27,7 @@ try {
 
 <section
   id="results"
-  class="py-7 md:py-10 relative overflow-hidden bg-[var(--color-background)]"
+  class="relative z-[1] overflow-x-clip bg-[var(--color-background)] py-7 md:py-10"
 >
   <SectionBubbles variant="results" />
 
@@ -46,7 +40,7 @@ try {
       items.length === 0 ? (
         <p class="text-gray-500 text-center py-8">現在活動実績はありません。</p>
       ) : (
-        <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:-mx-8 md:px-8">
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-2 px-2 md:-mx-8 md:px-8">
           {items.map((item) => {
             const { year, monthDay } = splitDate(item.pubDate);
             const plainDesc = stripHtml(item.description);
@@ -123,7 +117,7 @@ try {
           現在外部レポートはありません。
         </p>
       ) : (
-        <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:-mx-8 md:px-8">
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-2 px-2 md:-mx-8 md:px-8">
           {exReports.map((report) => {
             const { year, monthDay } = splitDate(report.date);
             return (
@@ -163,11 +157,5 @@ try {
         </div>
       )
     }
-
-    <h2 class="heading-2 mt-14 mb-8">SNS</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <XPostEmbed postUrl={FEATURED_X_POST_URL} />
-      <InstagramPostEmbed postUrl={FEATURED_INSTAGRAM_POST_URL} />
-    </div>
   </div>
 </section>

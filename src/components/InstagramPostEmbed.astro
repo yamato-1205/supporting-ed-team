@@ -11,7 +11,7 @@ const embed = await fetchInstagramEmbed(postUrl);
 const profileUrl = SNS_URLS.footer.instagram!;
 ---
 
-<div class="w-full max-w-sm mx-auto">
+<div class="w-full">
   {
     embed ? (
       <Fragment set:html={embed.html} />
@@ -20,7 +20,7 @@ const profileUrl = SNS_URLS.footer.instagram!;
         href={profileUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center justify-center h-40 rounded-2xl border border-gray-200 bg-white text-sm hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] transition-colors"
+        class="flex h-40 items-center justify-center rounded-2xl border border-gray-200 bg-white text-sm transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
       >
         Instagramで最新の投稿を見る ↗
       </a>
