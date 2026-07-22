@@ -8,16 +8,19 @@ import type { Location } from "../lib/microcms";
 export const PLACES_PAGE = {
   title: "居場所マップ",
   description:
-    "さぽちむがつなぐ全国の居場所を、地図・タグ・Googleマップから探せます。凸凹を抱えたまま関われる場との出会いを応援します。",
+    "さぽちむがつなぐ全国の居場所を、地図とキーワードから探せます。凸凹を抱えたまま関われる場との出会いを応援します。",
   lead: "誰もが福祉の一員である",
   intro:
     "凸凹を抱えたまま関われる場は、思いのほかたくさんあります。\n地図やキーワードから、あなたにちょうどいい居場所を見つけてみてください。",
   mapTitle: "マップから探す",
-  mapLead: "都道府県のシャボン玉をタッチすると、その地域の居場所が絞り込めます。",
-  tagTitle: "タグから探す",
-  tagLead: "分野や関心から、気になるキーワードの居場所を探せます。",
-  googleTitle: "地図で見る",
-  googleLead: "ピンを選ぶと、Googleマップで場所を確認できます。",
+  mapLead:
+    "都道府県のシャボン玉をタッチすると、その地域の居場所が絞り込めます。場所の詳細は、下のバナーを開いてご確認ください。",
+  listTitle: "居場所一覧",
+  fieldLabel: "分野",
+  genreLabel: "カテゴリ",
+  openMap: "詳細",
+  closeMap: "閉じる",
+  openInGoogle: "Googleマップで開く",
   empty: "条件に合う居場所がまだありません。条件を変えてみてください。",
   clearFilter: "絞り込みを解除",
   allPrefectures: "すべて",
@@ -131,7 +134,7 @@ export function googleMapsEmbedUrl(lat: number, lng: number, zoom = 15): string 
   return `https://maps.google.com/maps?q=${q}&z=${zoom}&output=embed&hl=ja`;
 }
 
-export function googleMapsLink(lat: number, lng: number, name: string): string {
-  const q = encodeURIComponent(`${name} ${lat},${lng}`);
+export function googleMapsLink(address: string): string {
+  const q = encodeURIComponent(address);
   return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }

@@ -89,7 +89,7 @@ export const PAGE_META = {
   places: {
     title: `居場所マップ | ${SITE_NAME}`,
     description:
-      "さぽちむがつなぐ全国の居場所を、地図・タグ・Googleマップから探せます。",
+      "さぽちむがつなぐ全国の居場所を、地図とキーワードから探せます。",
   },
 } as const;
 

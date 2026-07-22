@@ -1,6 +1,6 @@
 ---
 import LocationCard from "./LocationCard.astro";
-import { PLACES_PAGE } from "../../data/places";
+import { PLACES_PAGE, countByTag } from "../../data/places";
 import type { Location } from "../../lib/microcms";
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
 }
 
 const { locations } = Astro.props;
+const fields = countByTag(locations, "field");
+const genres = countByTag(locations, "genre");
 ---
 
 <section
@@ -16,22 +18,75 @@ const { locations } = Astro.props;
   aria-live="polite"
 >
   <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-    <h2 class="heading-3">居場所一覧</h2>
-    <div class="flex items-center gap-4">
-      <p class="text-small font-normal text-black/60">
-        <span data-place-result-count>{locations.length}</span> 件表示中
-      </p>
+    <div class="flex flex-wrap items-center gap-3">
+      <h2 class="heading-3">{PLACES_PAGE.listTitle}</h2>
       <button
         type="button"
-        class="place-clear-btn text-small font-bold text-[var(--color-primary)] underline-offset-2 hover:underline"
+        class="place-clear-btn rounded-full border-2 border-[var(--color-primary)] bg-white px-3.5 py-1 text-small font-bold text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)] hover:text-white"
         hidden
       >
         {PLACES_PAGE.clearFilter}
       </button>
     </div>
+    <p class="text-small font-normal text-black/60">
+      <span data-place-result-count>{locations.length}</span> 件表示中
+    </p>
   </div>
 
-  <div class="grid gap-3 sm:grid-cols-2" data-place-list>
+  {
+    (fields.size > 0 || genres.size > 0) && (
+      <div class="mb-6 space-y-4">
+        {fields.size > 0 && (
+          <div>
+            <p class="mb-2 text-small tracking-wide text-black/55">
+              {PLACES_PAGE.fieldLabel}
+            </p>
+            <ul class="flex flex-wrap gap-2">
+              {[...fields.entries()].map(([tag, count]) => (
+                <li>
+                  <button
+                    type="button"
+                    class="place-filter-chip rounded-full border border-[var(--color-primary)]/30 bg-white px-3.5 py-1.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white"
+                    data-filter-type="tag"
+                    data-filter-value={tag}
+                    aria-pressed="false"
+                  >
+                    {tag}
+                    <span class="ml-1 font-normal opacity-70">{count}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {genres.size > 0 && (
+          <div>
+            <p class="mb-2 text-small tracking-wide text-black/55">
+              {PLACES_PAGE.genreLabel}
+            </p>
+            <ul class="flex flex-wrap gap-2">
+              {[...genres.entries()].map(([tag, count]) => (
+                <li>
+                  <button
+                    type="button"
+                    class="place-filter-chip rounded-full border border-[var(--color-primary)]/30 bg-white px-3.5 py-1.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white"
+                    data-filter-type="tag"
+                    data-filter-value={tag}
+                    aria-pressed="false"
+                  >
+                    {tag}
+                    <span class="ml-1 font-normal opacity-70">{count}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  <div class="flex flex-col gap-3" data-place-list>
     {
       locations.map((loc) => (
         <LocationCard

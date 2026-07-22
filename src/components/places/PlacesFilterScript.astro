@@ -1,12 +1,16 @@
 ---
 /**
- * 居場所マップの絞り込み・Google埋め込み切替。
- * 都道府県・タグは AND 条件で .place-card を出し分けする。
+ * 居場所マップの絞り込み・バナー開閉。
+ * 都道府県（地図）・タグは即トグル。一覧タグとバナータグは連動。
  */
+import { PLACES_PAGE } from "../../data/places";
+
+const openMapLabel = PLACES_PAGE.openMap;
+const closeMapLabel = PLACES_PAGE.closeMap;
 ---
 
-<script>
-  function parseJsonArray(value: string | null): string[] {
+<script define:vars={{ openMapLabel, closeMapLabel }}>
+  function parseJsonArray(value) {
     if (!value) return [];
     try {
       const parsed = JSON.parse(value);
@@ -16,42 +20,59 @@
     }
   }
 
-  function embedUrl(lat: number, lng: number, zoom = 15): string {
-    return `https://maps.google.com/maps?q=${encodeURIComponent(`${lat},${lng}`)}&z=${zoom}&output=embed&hl=ja`;
+  const cards = [...document.querySelectorAll(".place-card")];
+  const prefButtons = [...document.querySelectorAll(".place-pref-btn")];
+  const clearButtons = [...document.querySelectorAll(".place-clear-btn")];
+  const emptyEls = [...document.querySelectorAll("[data-place-empty]")];
+  const countEls = [...document.querySelectorAll("[data-place-result-count]")];
+
+  let activePrefecture = null;
+  const activeTags = new Set();
+
+  function setPressed(btn, pressed) {
+    btn.setAttribute("aria-pressed", pressed ? "true" : "false");
   }
 
-  function externalUrl(lat: number, lng: number, name: string): string {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name} ${lat},${lng}`)}`;
+  function closeAllBanners(exceptId) {
+    for (const card of cards) {
+      if (exceptId && card.dataset.placeId === exceptId) continue;
+      setBannerOpen(card, false);
+    }
   }
 
-  const cards = [...document.querySelectorAll<HTMLElement>(".place-card")];
-  const prefButtons = [
-    ...document.querySelectorAll<HTMLButtonElement>(".place-pref-btn"),
-  ];
-  const tagButtons = [
-    ...document.querySelectorAll<HTMLButtonElement>(".place-tag-btn"),
-  ];
-  const clearButtons = [
-    ...document.querySelectorAll<HTMLButtonElement>(".place-clear-btn"),
-  ];
-  const emptyEls = [
-    ...document.querySelectorAll<HTMLElement>("[data-place-empty]"),
-  ];
-  const countEls = [
-    ...document.querySelectorAll<HTMLElement>("[data-place-result-count]"),
-  ];
-  const pinButtons = [
-    ...document.querySelectorAll<HTMLButtonElement>(".place-map-pin"),
-  ];
-  const iframe = document.getElementById(
-    "place-google-embed",
-  ) as HTMLIFrameElement | null;
-  const externalLink = document.getElementById(
-    "place-google-external",
-  ) as HTMLAnchorElement | null;
+  function setBannerOpen(card, open) {
+    const toggle = card.querySelector(".place-banner-toggle");
+    const panel = card.querySelector(".place-banner-panel");
+    const hint = card.querySelector(".place-banner-hint");
+    const iframe = card.querySelector(".place-banner-embed");
 
-  let activePrefecture: string | null = null;
-  const activeTags = new Set<string>();
+    card.dataset.open = open ? "true" : "false";
+    if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (hint) hint.textContent = open ? closeMapLabel : openMapLabel;
+
+    if (panel) {
+      panel.hidden = !open;
+      panel.classList.toggle("hidden", !open);
+    }
+
+    if (open && iframe instanceof HTMLIFrameElement) {
+      const src = iframe.dataset.src;
+      if (src && !iframe.getAttribute("src")) {
+        iframe.src = src;
+      }
+    }
+  }
+
+  function syncChipPressed() {
+    for (const chip of document.querySelectorAll(".place-filter-chip")) {
+      const type = chip.dataset.filterType;
+      const value = chip.dataset.filterValue;
+      const pressed =
+        (type === "prefecture" && value === activePrefecture) ||
+        (type === "tag" && value && activeTags.has(value));
+      setPressed(chip, pressed);
+    }
+  }
 
   function applyFilter() {
     let visible = 0;
@@ -64,7 +85,7 @@
         [...activeTags].every((tag) => tags.includes(tag));
       const show = prefOk && tagsOk;
       card.hidden = !show;
-      card.classList.toggle("opacity-40", false);
+      if (!show) setBannerOpen(card, false);
       if (show) visible += 1;
     }
 
@@ -73,66 +94,62 @@
 
     const filtering = Boolean(activePrefecture) || activeTags.size > 0;
     for (const btn of clearButtons) btn.hidden = !filtering;
-  }
 
-  function setPressed(btn: HTMLButtonElement, pressed: boolean) {
-    btn.setAttribute("aria-pressed", pressed ? "true" : "false");
-  }
+    for (const b of prefButtons) {
+      setPressed(b, b.dataset.prefecture === activePrefecture);
+    }
 
-  for (const btn of prefButtons) {
-    btn.addEventListener("click", () => {
-      const pref = btn.dataset.prefecture ?? null;
-      const next = activePrefecture === pref ? null : pref;
-      activePrefecture = next;
-      for (const b of prefButtons) {
-        setPressed(b, b.dataset.prefecture === next);
-      }
-      applyFilter();
-    });
-  }
-
-  for (const btn of tagButtons) {
-    btn.addEventListener("click", () => {
-      const tag = btn.dataset.tag;
-      if (!tag) return;
-      if (activeTags.has(tag)) activeTags.delete(tag);
-      else activeTags.add(tag);
-      setPressed(btn, activeTags.has(tag));
-      applyFilter();
-    });
+    syncChipPressed();
   }
 
   function clearFilters() {
     activePrefecture = null;
     activeTags.clear();
-    for (const b of prefButtons) setPressed(b, false);
-    for (const b of tagButtons) setPressed(b, false);
     applyFilter();
+  }
+
+  function togglePrefecture(value) {
+    activePrefecture = activePrefecture === value ? null : value;
+    applyFilter();
+  }
+
+  function toggleTag(value) {
+    if (activeTags.has(value)) activeTags.delete(value);
+    else activeTags.add(value);
+    applyFilter();
+  }
+
+  for (const btn of prefButtons) {
+    btn.addEventListener("click", () => {
+      const pref = btn.dataset.prefecture;
+      if (!pref) return;
+      togglePrefecture(pref);
+    });
+  }
+
+  for (const card of cards) {
+    const toggle = card.querySelector(".place-banner-toggle");
+    toggle?.addEventListener("click", () => {
+      const willOpen = card.dataset.open !== "true";
+      if (willOpen) closeAllBanners(card.dataset.placeId);
+      setBannerOpen(card, willOpen);
+    });
+  }
+
+  for (const chip of document.querySelectorAll(".place-filter-chip")) {
+    chip.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const type = chip.dataset.filterType;
+      const value = chip.dataset.filterValue;
+      if (!type || !value) return;
+
+      if (type === "prefecture") togglePrefecture(value);
+      else if (type === "tag") toggleTag(value);
+    });
   }
 
   for (const btn of clearButtons) {
     btn.addEventListener("click", clearFilters);
-  }
-
-  for (const pin of pinButtons) {
-    pin.addEventListener("click", () => {
-      const lat = Number(pin.dataset.lat);
-      const lng = Number(pin.dataset.lng);
-      const name = pin.dataset.name ?? "";
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-
-      for (const p of pinButtons) setPressed(p, p === pin);
-      if (iframe) iframe.src = embedUrl(lat, lng);
-      if (externalLink) {
-        externalLink.href = externalUrl(lat, lng, name);
-      }
-
-      const id = pin.dataset.placeId;
-      if (id) {
-        const card = cards.find((c) => c.dataset.placeId === id);
-        card?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-    });
   }
 
   applyFilter();
