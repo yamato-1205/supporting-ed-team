@@ -1,6 +1,8 @@
 ---
 import LocationCard from "./LocationCard.astro";
+import HeadingUnderline from "../HeadingUnderline.astro";
 import { PLACES_PAGE, countByTag } from "../../data/places";
+import { fetchNoteLinkMeta } from "../../lib/note";
 import type { Location } from "../../lib/microcms";
 
 interface Props {
@@ -10,6 +12,12 @@ interface Props {
 const { locations } = Astro.props;
 const fields = countByTag(locations, "field");
 const genres = countByTag(locations, "genre");
+const noteMetas = await Promise.all(
+  locations.map((loc) => (loc.note ? fetchNoteLinkMeta(loc.note) : null)),
+);
+
+const chipClass =
+  "place-filter-chip rounded-full border border-[var(--color-primary)]/35 bg-white px-3.5 py-1.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white";
 ---
 
 <section
@@ -17,25 +25,24 @@ const genres = countByTag(locations, "genre");
   class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
   aria-live="polite"
 >
-  <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-    <div class="flex flex-wrap items-center gap-3">
-      <h2 class="heading-3">{PLACES_PAGE.listTitle}</h2>
-      <button
-        type="button"
-        class="place-clear-btn rounded-full border-2 border-[var(--color-primary)] bg-white px-3.5 py-1 text-small font-bold text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)] hover:text-white"
-        hidden
-      >
-        {PLACES_PAGE.clearFilter}
-      </button>
-    </div>
+  <HeadingUnderline level="3" class="mb-3">{PLACES_PAGE.listTitle}</HeadingUnderline>
+
+  <div class="mb-5 flex flex-wrap items-center justify-end gap-3">
     <p class="text-small font-normal text-black/60">
       <span data-place-result-count>{locations.length}</span> 件表示中
     </p>
+    <button
+      type="button"
+      class="place-clear-btn rounded-full border border-[var(--color-primary)]/40 bg-[var(--color-background)] px-3.5 py-1 text-small font-bold text-[var(--color-primary)] transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
+      hidden
+    >
+      {PLACES_PAGE.clearFilter}
+    </button>
   </div>
 
   {
     (fields.size > 0 || genres.size > 0) && (
-      <div class="mb-6 space-y-4">
+      <div class="mb-7 space-y-4">
         {fields.size > 0 && (
           <div>
             <p class="mb-2 text-small tracking-wide text-black/55">
@@ -46,13 +53,13 @@ const genres = countByTag(locations, "genre");
                 <li>
                   <button
                     type="button"
-                    class="place-filter-chip rounded-full border border-[var(--color-primary)]/30 bg-white px-3.5 py-1.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white"
+                    class={chipClass}
                     data-filter-type="tag"
                     data-filter-value={tag}
                     aria-pressed="false"
                   >
                     {tag}
-                    <span class="ml-1 font-normal opacity-70">{count}</span>
+                    <span class="ml-1 font-normal opacity-65">{count}</span>
                   </button>
                 </li>
               ))}
@@ -69,13 +76,13 @@ const genres = countByTag(locations, "genre");
                 <li>
                   <button
                     type="button"
-                    class="place-filter-chip rounded-full border border-[var(--color-primary)]/30 bg-white px-3.5 py-1.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white"
+                    class={chipClass}
                     data-filter-type="tag"
                     data-filter-value={tag}
                     aria-pressed="false"
                   >
                     {tag}
-                    <span class="ml-1 font-normal opacity-70">{count}</span>
+                    <span class="ml-1 font-normal opacity-65">{count}</span>
                   </button>
                 </li>
               ))}
@@ -86,9 +93,9 @@ const genres = countByTag(locations, "genre");
     )
   }
 
-  <div class="flex flex-col gap-3" data-place-list>
+  <div class="flex flex-col gap-4" data-place-list>
     {
-      locations.map((loc) => (
+      locations.map((loc, i) => (
         <LocationCard
           id={loc.id}
           name={loc.locationName}
@@ -98,6 +105,14 @@ const genres = countByTag(locations, "genre");
           genre={loc.genre}
           lat={loc.lat}
           lng={loc.lng}
+          note={loc.note}
+          noteMeta={noteMetas[i]}
+          hp={loc.hp}
+          twitter={loc.twitter}
+          instagram={loc.instagram}
+          facebook={loc.facebook}
+          explanation={loc.explanation}
+          explanationLong={loc.explanationLong}
         />
       ))
     }

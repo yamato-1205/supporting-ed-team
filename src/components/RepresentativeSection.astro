@@ -116,7 +116,15 @@ const snsLinks = getSnsLinks("representative");
               <details class="about-fold mb-5 last:mb-0" data-about-fold>
                 <summary class="about-fold-summary list-none">
                   <span class="heading-3 flex items-center justify-center gap-2 text-center">
-                    {fold.title}
+                    <span class="md:hidden">
+                      {fold.titleMobile.map((line, i) => (
+                        <>
+                          {i > 0 && <br />}
+                          {line}
+                        </>
+                      ))}
+                    </span>
+                    <span class="hidden md:inline">{fold.title}</span>
                     <span
                       class="about-fold-chevron text-sm font-normal text-[var(--color-primary)] transition-transform md:hidden"
                       aria-hidden="true"

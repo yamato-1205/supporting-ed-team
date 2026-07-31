@@ -1,5 +1,13 @@
 ---
-import { PLACES_PAGE, googleMapsEmbedUrl, googleMapsLink } from "../../data/places";
+import SnsButton from "../SnsButton.astro";
+import MultilineText from "../MultilineText.astro";
+import {
+  PLACES_PAGE,
+  googleMapsEmbedUrl,
+  googleMapsLink,
+  getLocationSnsLinks,
+} from "../../data/places";
+import type { NoteLinkMeta } from "../../lib/note";
 
 interface Props {
   id: string;
@@ -10,13 +18,43 @@ interface Props {
   genre: string[];
   lat: number;
   lng: number;
+  note?: string;
+  noteMeta?: NoteLinkMeta | null;
+  hp?: string;
+  twitter?: string;
+  instagram?: string;
+  facebook?: string;
+  explanation?: string;
+  explanationLong?: string;
 }
 
-const { id, name, address, prefectures, field, genre, lat, lng } = Astro.props;
+const {
+  id,
+  name,
+  address,
+  prefectures,
+  field,
+  genre,
+  lat,
+  lng,
+  note,
+  noteMeta,
+  hp,
+  twitter,
+  instagram,
+  facebook,
+  explanation,
+  explanationLong,
+} = Astro.props;
 const tags = [...field, ...genre];
 const embedSrc = googleMapsEmbedUrl(lat, lng);
 const mapsHref = googleMapsLink(address);
 const panelId = `place-panel-${id}`;
+const snsLinks = getLocationSnsLinks({ twitter, instagram, facebook });
+const hasTopLinks = Boolean(hp || snsLinks.length > 0);
+
+const chipClass =
+  "place-filter-chip rounded-full border border-[var(--color-primary)]/35 bg-white px-2.5 py-0.5 text-small text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white";
 ---
 
 <article
@@ -51,7 +89,7 @@ const panelId = `place-panel-${id}`;
         prefectures.map((pref) => (
           <button
             type="button"
-            class="place-filter-chip rounded-full border border-[var(--color-primary)]/30 bg-white px-2.5 py-0.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white"
+            class:list={[chipClass, "font-bold"]}
             data-filter-type="prefecture"
             data-filter-value={pref}
             aria-pressed="false"
@@ -64,7 +102,7 @@ const panelId = `place-panel-${id}`;
         tags.map((tag) => (
           <button
             type="button"
-            class="place-filter-chip rounded-full border border-[var(--color-primary)]/30 bg-white px-2.5 py-0.5 text-small font-normal text-black/80 transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white"
+            class:list={[chipClass, "font-normal"]}
             data-filter-type="tag"
             data-filter-value={tag}
             aria-pressed="false"
@@ -75,29 +113,139 @@ const panelId = `place-panel-${id}`;
       }
     </div>
 
-    <div id={panelId} class="place-banner-panel hidden space-y-3" hidden>
-      <p class="font-normal leading-relaxed text-black/75">{address}</p>
+    <div
+      id={panelId}
+      class="place-banner-panel mt-1 hidden space-y-4 border-t border-[var(--color-primary)]/15 pt-4"
+      hidden
+    >
+      {
+        hasTopLinks && (
+          <div class="rounded-2xl bg-[var(--color-background)]/80 px-3 py-3 md:px-4">
+            <p class="mb-2 text-small tracking-wide text-black/50">
+              {PLACES_PAGE.linksLabel}
+            </p>
+            <div class="flex flex-wrap items-center gap-3">
+              {hp && (
+                <a
+                  href={hp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 text-small font-bold text-[var(--color-primary)] underline decoration-[var(--color-primary)]/40 underline-offset-4 hover:opacity-80"
+                >
+                  {PLACES_PAGE.hpLabel}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              )}
+              {snsLinks.map((sns) => (
+                <SnsButton
+                  href={sns.href}
+                  icon={sns.icon.src}
+                  label={sns.label}
+                  isX={sns.id === "twitter"}
+                  invert={sns.invert}
+                  sizeClass="h-10 w-auto"
+                />
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      {
+        (explanation || explanationLong) && (
+          <div class="space-y-3">
+            {explanation && (
+              <p class="place-explanation relative inline-block max-w-full px-1 text-base font-bold leading-relaxed text-[var(--color-primary)] md:text-lg">
+                <span class="relative z-10">{explanation}</span>
+                <span class="place-explanation-mark" aria-hidden="true"></span>
+              </p>
+            )}
+            {explanationLong && (
+              <MultilineText
+                text={explanationLong}
+                class="font-normal leading-relaxed text-black/75"
+              />
+            )}
+          </div>
+        )
+      }
+
       <div
-        class="overflow-hidden rounded-2xl border border-[var(--color-primary)]/15 bg-white"
+        class:list={[
+          "grid gap-5",
+          note ? "md:grid-cols-2 md:items-start" : "",
+        ]}
       >
-        <iframe
-          class="place-banner-embed aspect-[4/3] w-full border-0 md:aspect-[16/11]"
-          title={`${name}のGoogleマップ`}
-          data-src={embedSrc}
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen></iframe>
+        {
+          note && (
+            <div class="min-w-0 space-y-2">
+              <p class="text-small tracking-wide text-black/50">
+                {PLACES_PAGE.noteLabel}
+              </p>
+              <a
+                href={note}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex overflow-hidden rounded-2xl border border-black/10 bg-[var(--color-background)]/50 transition-opacity hover:opacity-90"
+              >
+                {noteMeta?.thumbnail ? (
+                  <img
+                    src={noteMeta.thumbnail}
+                    alt=""
+                    class="h-28 w-28 shrink-0 object-cover sm:h-32 sm:w-36"
+                  />
+                ) : (
+                  <span
+                    class="flex h-28 w-28 shrink-0 items-center justify-center bg-[var(--color-background)] text-small font-bold text-[var(--color-primary)] sm:h-32 sm:w-36"
+                    aria-hidden="true"
+                  >
+                    note
+                  </span>
+                )}
+                <span class="flex min-w-0 flex-1 flex-col justify-center gap-1 px-3 py-2.5">
+                  {noteMeta?.title ? (
+                    <span class="line-clamp-3 text-small font-bold leading-snug text-black/85 group-hover:underline">
+                      {noteMeta.title}
+                    </span>
+                  ) : (
+                    <span class="text-small font-normal text-black/55">
+                      紹介記事を開く ↗
+                    </span>
+                  )}
+                </span>
+              </a>
+            </div>
+          )
+        }
+
+        <div class="min-w-0 space-y-2">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+            <p class="text-small tracking-wide text-black/50">
+              {PLACES_PAGE.addressLabel}
+            </p>
+            <a
+              href={mapsHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-small font-bold text-[var(--color-primary)] underline decoration-[var(--color-primary)]/40 underline-offset-4 hover:opacity-80"
+            >
+              {PLACES_PAGE.openInGoogle} ↗
+            </a>
+          </div>
+          <p class="font-normal leading-relaxed text-black/80">{address}</p>
+          <div
+            class="overflow-hidden rounded-2xl border border-black/10 bg-[var(--color-background)]/40"
+          >
+            <iframe
+              class="place-banner-embed aspect-[2/1] w-full border-0"
+              title={`${name}のGoogleマップ`}
+              data-src={embedSrc}
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen></iframe>
+          </div>
+        </div>
       </div>
-      <p class="text-center text-small font-normal text-black/60">
-        <a
-          href={mapsHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-bold text-[var(--color-primary)] underline-offset-2 hover:underline"
-        >
-          {PLACES_PAGE.openInGoogle}
-        </a>
-      </p>
     </div>
   </div>
 </article>
@@ -105,5 +253,18 @@ const panelId = `place-panel-${id}`;
 <style>
   .place-card[data-open="true"] .place-banner-chevron {
     transform: rotate(180deg);
+  }
+
+  .place-explanation-mark {
+    position: absolute;
+    left: 50%;
+    bottom: 0.05em;
+    z-index: 0;
+    width: calc(100% + 0.5em);
+    height: 0.55em;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-primary) 20%, white);
+    transform: rotate(-1.1deg);
   }
 </style>

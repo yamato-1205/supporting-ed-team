@@ -58,3 +58,42 @@ export async function fetchNoteArticles(
     return [];
   }
 }
+
+export type NoteLinkMeta = {
+  title: string;
+  thumbnail: string;
+};
+
+function metaContent(html: string, property: string): string {
+  const re = new RegExp(
+    `<meta[^>]+(?:property|name)=["']${property}["'][^>]+content=["']([^"']+)["'][^>]*>|<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${property}["'][^>]*>`,
+    "i",
+  );
+  const m = html.match(re);
+  return (m?.[1] ?? m?.[2] ?? "").trim();
+}
+
+/** 記事 URL から og:title / og:image を取得（失敗時は null） */
+export async function fetchNoteLinkMeta(
+  url: string,
+): Promise<NoteLinkMeta | null> {
+  if (!url) return null;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        Accept: "text/html",
+        "User-Agent": "sapochimu-hp/1.0",
+      },
+    });
+    if (!res.ok) return null;
+    const html = await res.text();
+    const title = metaContent(html, "og:title") || metaContent(html, "twitter:title");
+    const thumbnail =
+      metaContent(html, "og:image") || metaContent(html, "twitter:image");
+    if (!title && !thumbnail) return null;
+    return { title, thumbnail };
+  } catch (e) {
+    console.warn("[note] 記事 OGP の取得に失敗しました:", url, e);
+    return null;
+  }
+}

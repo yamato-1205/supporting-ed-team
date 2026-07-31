@@ -42,7 +42,7 @@ const meta = PAGE_META.support;
         <div class="mx-auto mb-8 max-w-2xl space-y-4">
           {
             SUPPORT_INTRO.paragraphs.map((paragraph) => (
-              <MultilineText text={paragraph} class="font-normal leading-relaxed" />
+              <MultilineText text={paragraph} class="leading-relaxed" />
             ))
           }
         </div>
@@ -59,7 +59,7 @@ const meta = PAGE_META.support;
       <OverviewCard id="why" title={SUPPORT_WHY.title}>
         {
           SUPPORT_WHY.paragraphs.map((paragraph) => (
-            <MultilineText text={paragraph} class="font-normal" />
+            <MultilineText text={paragraph} />
           ))
         }
       </OverviewCard>
@@ -72,7 +72,7 @@ const meta = PAGE_META.support;
           {SUPPORT_USAGE.title}
         </HeadingUnderline>
 
-        <ul class="mx-auto mb-10 max-w-2xl space-y-2 font-normal">
+        <ul class="mx-auto mb-10 max-w-2xl space-y-2">
           {
             SUPPORT_USAGE.items.map((item) => (
               <li class="flex gap-2">
@@ -89,7 +89,7 @@ const meta = PAGE_META.support;
           <li class="pl-4 text-small text-black/60">など</li>
         </ul>
 
-        <p class="mb-5 text-center font-normal text-black/70">例えばーー</p>
+        <p class="mb-5 text-center text-black/70">例えばーー</p>
 
         <div class="mx-auto mb-10 grid max-w-3xl gap-3 sm:grid-cols-2">
           {
@@ -104,7 +104,7 @@ const meta = PAGE_META.support;
                   {item.amount}
                 </p>
                 {item.description && (
-                  <p class="mt-1 font-normal leading-relaxed">
+                  <p class="mt-1 leading-relaxed">
                     {item.description}
                   </p>
                 )}
@@ -128,13 +128,13 @@ const meta = PAGE_META.support;
         class="bg-white rounded-2xl md:rounded-3xl px-6 py-8 md:px-10 md:py-10"
       >
         <HeadingUnderline class="mb-6 md:mb-8">寄付の方法</HeadingUnderline>
-        <p class="mx-auto mb-6 max-w-xl text-center font-normal leading-relaxed">
+        <p class="mx-auto mb-6 max-w-xl text-center leading-relaxed">
           以下のページからご支援ください。<br />
           少額からでも、活動の大きな力になります。
         </p>
         <MultilineText
           text={SUPPORT_CLOSING}
-          class="mx-auto mb-8 max-w-2xl text-center font-normal leading-relaxed"
+          class="mx-auto mb-8 max-w-2xl text-center leading-relaxed"
         />
         <div class="flex justify-center">
           <BubbleButton

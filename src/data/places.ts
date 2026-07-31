@@ -3,7 +3,18 @@
  * コンテンツ本体は microCMS の location エンドポイント。
  */
 import japanMapImg from "../assets/places/japan-map.png";
+import xIcon from "../assets/icons/x.png";
+import igIcon from "../assets/icons/instagram.png";
+import fbIcon from "../assets/icons/facebook.png";
 import type { Location } from "../lib/microcms";
+
+export type LocationSnsLink = {
+  id: "twitter" | "instagram" | "facebook";
+  label: string;
+  href: string;
+  icon: ImageMetadata;
+  invert: boolean;
+};
 
 export const PLACES_PAGE = {
   title: "居場所マップ",
@@ -14,13 +25,21 @@ export const PLACES_PAGE = {
     "凸凹を抱えたまま関われる場は、思いのほかたくさんあります。\n地図やキーワードから、あなたにちょうどいい居場所を見つけてみてください。",
   mapTitle: "マップから探す",
   mapLead:
-    "都道府県のシャボン玉をタッチすると、その地域の居場所が絞り込めます。場所の詳細は、下のバナーを開いてご確認ください。",
+    "都道府県のシャボン玉で地域から探せます。場所にとらわれず関わりたいときは、地図の近くの「オンライン」もどうぞ。",
+  onlineLabel: "オンライン",
+  onlineLead: "地域を問わず、オンラインで関われる居場所",
+  /** オンライン絞り込みに使う genre / field タグ名 */
+  onlineTag: "オンライン",
   listTitle: "居場所一覧",
   fieldLabel: "分野",
   genreLabel: "カテゴリ",
   openMap: "詳細",
   closeMap: "閉じる",
   openInGoogle: "Googleマップで開く",
+  noteLabel: "居場所の紹介",
+  hpLabel: "公式サイト",
+  linksLabel: "リンク",
+  addressLabel: "所在地",
   empty: "条件に合う居場所がまだありません。条件を変えてみてください。",
   clearFilter: "絞り込みを解除",
   allPrefectures: "すべて",
@@ -114,6 +133,14 @@ export function countByPrefecture(locations: Location[]): Map<string, number> {
   return counts;
 }
 
+/** オンラインタグを持つ居場所数 */
+export function countOnline(locations: Location[]): number {
+  const tag = PLACES_PAGE.onlineTag;
+  return locations.filter((loc) =>
+    [...(loc.field ?? []), ...(loc.genre ?? [])].includes(tag),
+  ).length;
+}
+
 export function countByTag(
   locations: Location[],
   key: "field" | "genre",
@@ -137,4 +164,52 @@ export function googleMapsEmbedUrl(lat: number, lng: number, zoom = 15): string 
 export function googleMapsLink(address: string): string {
   const q = encodeURIComponent(address);
   return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
+/** 居場所に設定されている SNS だけ返す（未設定は省略） */
+export function getLocationSnsLinks(location: {
+  twitter?: string;
+  instagram?: string;
+  facebook?: string;
+}): LocationSnsLink[] {
+  const entries: {
+    id: LocationSnsLink["id"];
+    label: string;
+    href?: string;
+    icon: ImageMetadata;
+    invert: boolean;
+  }[] = [
+    {
+      id: "twitter",
+      label: "X (Twitter)",
+      href: location.twitter,
+      icon: xIcon,
+      // x.png は黒地に白ロゴ。invert すると黒一色に見えるので付けない
+      invert: false,
+    },
+    {
+      id: "instagram",
+      label: "Instagram",
+      href: location.instagram,
+      icon: igIcon,
+      invert: false,
+    },
+    {
+      id: "facebook",
+      label: "Facebook",
+      href: location.facebook,
+      icon: fbIcon,
+      invert: false,
+    },
+  ];
+
+  return entries
+    .filter((e): e is typeof e & { href: string } => Boolean(e.href))
+    .map(({ id, label, href, icon, invert }) => ({
+      id,
+      label,
+      href,
+      icon,
+      invert,
+    }));
 }

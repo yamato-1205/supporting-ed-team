@@ -74,4 +74,15 @@ export type Location = {
   genre: string[];
   lat: number;
   lng: number;
+  /** 居場所紹介 note の URL */
+  note?: string;
+  /** 団体 HP の URL（未設定なら省略） */
+  hp?: string;
+  twitter?: string;
+  instagram?: string;
+  facebook?: string;
+  /** 一言解説 */
+  explanation?: string;
+  /** 詳細な解説（未設定なら省略） */
+  explanationLong?: string;
 };

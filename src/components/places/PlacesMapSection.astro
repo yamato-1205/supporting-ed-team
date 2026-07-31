@@ -1,8 +1,14 @@
 ---
 import HeadingUnderline from "../HeadingUnderline.astro";
-import { PLACES_PAGE, REGION_GROUPS, countByPrefecture } from "../../data/places";
+import {
+  PLACES_PAGE,
+  REGION_GROUPS,
+  countByPrefecture,
+  countOnline,
+} from "../../data/places";
 import type { Location } from "../../lib/microcms";
 import bubbleImg from "../../assets/bubbles/bubble-2.png";
+import bubbleWide from "../../assets/bubbles/bubble-wide.png";
 
 interface Props {
   locations: Location[];
@@ -10,6 +16,7 @@ interface Props {
 
 const { locations } = Astro.props;
 const prefCounts = countByPrefecture(locations);
+const onlineCount = countOnline(locations);
 const regionsWithData = REGION_GROUPS.filter((region) =>
   region.prefectures.some((p) => (prefCounts.get(p) ?? 0) > 0),
 );
@@ -25,21 +32,51 @@ const regionsWithData = REGION_GROUPS.filter((region) =>
   </p>
 
   <div
-    class="relative mx-auto mb-8 max-w-3xl overflow-hidden rounded-2xl bg-[var(--color-background)]"
+    class="relative mx-auto mb-4 max-w-3xl overflow-hidden rounded-[1.75rem] bg-[var(--color-background)]"
   >
     <img
       src={PLACES_PAGE.diagram.src}
       alt="日本地図（さぽちむ居場所マップ）"
-      class="w-full opacity-90"
+      class="w-full opacity-95"
       width={PLACES_PAGE.diagram.width}
       height={PLACES_PAGE.diagram.height}
     />
     <p
-      class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-white/85 px-3 py-1 text-small font-normal text-black/70 backdrop-blur-sm md:bottom-4 md:left-4"
+      class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-small font-normal text-black/60 md:bottom-4 md:left-4"
     >
       ※地図画像は仮素材です。後日差し替え予定
     </p>
   </div>
+
+  {
+    onlineCount > 0 && (
+      <div class="mx-auto mb-8 flex max-w-3xl flex-col items-center gap-2">
+        <p class="text-small tracking-wide text-black/55">
+          {PLACES_PAGE.onlineLead}
+        </p>
+        <button
+          type="button"
+          class="place-online-btn group relative inline-flex min-w-[9rem] items-center justify-center px-2 py-1"
+          data-filter-type="tag"
+          data-filter-value={PLACES_PAGE.onlineTag}
+          aria-pressed="false"
+        >
+          <img
+            src={bubbleWide.src}
+            alt=""
+            aria-hidden="true"
+            class="h-12 w-auto opacity-90 transition-transform group-hover:scale-105 group-aria-[pressed=true]:scale-110 sm:h-14"
+          />
+          <span class="absolute inset-0 flex flex-col items-center justify-center leading-tight">
+            <span class="text-small font-bold">{PLACES_PAGE.onlineLabel}</span>
+            <span class="text-[0.65rem] font-normal text-[var(--color-primary)]">
+              {onlineCount}
+            </span>
+          </span>
+        </button>
+      </div>
+    )
+  }
 
   <div class="space-y-6">
     {

@@ -64,7 +64,9 @@ const closeMapLabel = PLACES_PAGE.closeMap;
   }
 
   function syncChipPressed() {
-    for (const chip of document.querySelectorAll(".place-filter-chip")) {
+    for (const chip of document.querySelectorAll(
+      ".place-filter-chip, .place-online-btn",
+    )) {
       const type = chip.dataset.filterType;
       const value = chip.dataset.filterValue;
       const pressed =
@@ -145,6 +147,15 @@ const closeMapLabel = PLACES_PAGE.closeMap;
 
       if (type === "prefecture") togglePrefecture(value);
       else if (type === "tag") toggleTag(value);
+    });
+  }
+
+  // マップ近くの「オンライン」はタグ絞り込みと同じ状態を共有
+  for (const btn of document.querySelectorAll(".place-online-btn")) {
+    btn.addEventListener("click", () => {
+      const value = btn.dataset.filterValue;
+      if (!value) return;
+      toggleTag(value);
     });
   }
 
