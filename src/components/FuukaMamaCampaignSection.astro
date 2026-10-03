@@ -7,55 +7,49 @@ import {
   isFuukaMamaCampaignOpen,
 } from "../data/fuukaMamaCampaign";
 
-const open = isFuukaMamaCampaignOpen();
 const campaign = FUUKA_MAMA_CAMPAIGN;
+const copy = isFuukaMamaCampaignOpen() ? campaign.open : campaign.closed;
 ---
 
-{
-  open && (
-    <section id="fuuka-mama-campaign" class="pt-5 md:pt-8">
-      <script is:inline define:vars={{ endsAt: campaign.endsAt }}>
-        if (Date.now() > Date.parse(endsAt)) {
-          document.currentScript.closest("section")?.remove();
-        }
-      </script>
-      <div class="max-w-[1280px] mx-auto px-4 md:px-6">
-        <div class="flex flex-col overflow-hidden rounded-3xl bg-[#fff4f6] md:min-h-[260px] md:flex-row">
-          <div class="flex flex-1 flex-col justify-between px-8 py-6 md:px-10 md:py-6">
-            <div>
-              <h2 class="heading-3 mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span>{campaign.title}</span>
-                <span class="whitespace-nowrap text-sm font-bold text-[#e56b86]">
-                  {campaign.untilLabel}
-                </span>
-              </h2>
-              <MultilineText
-                text={campaign.headline}
-                class="heading-2 leading-tight"
-              />
-              <MultilineText text={campaign.body} class="mt-2" />
-            </div>
+<section id="fuuka-mama-campaign" class="pt-5 md:pt-8">
+  <div class="max-w-[1280px] mx-auto px-4 md:px-6">
+    <div
+      class="flex flex-col overflow-hidden rounded-3xl bg-[#fff4f6] md:min-h-[260px] md:flex-row"
+    >
+      <div
+        class="flex flex-1 flex-col justify-between px-8 py-6 md:px-10 md:py-6"
+      >
+        <div>
+          <h2
+            class="heading-3 mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1"
+          >
+            <span>{copy.title}</span>
+            <span class="whitespace-nowrap text-sm font-bold text-[#e56b86]">
+              {copy.untilLabel}
+            </span>
+          </h2>
+          <MultilineText text={copy.headline} class="heading-2 leading-tight" />
+          <MultilineText text={copy.body} class="mt-2" />
+        </div>
 
-            <div class="mt-4 md:mt-0">
-              <BubbleButton
-                href={campaign.href}
-                label={campaign.buttonLabel}
-                external
-              />
-            </div>
-          </div>
-
-          <div class="h-44 shrink-0 overflow-hidden md:h-auto md:w-[42%]">
-            <img
-              src={fuukaMamaImg.src}
-              alt={campaign.imageAlt}
-              width={fuukaMamaImg.width}
-              height={fuukaMamaImg.height}
-              class="h-full w-full object-cover object-[70%_35%]"
-            />
-          </div>
+        <div class="mt-4 md:mt-0">
+          <BubbleButton
+            href={campaign.href}
+            label={copy.buttonLabel}
+            external
+          />
         </div>
       </div>
-    </section>
-  )
-}
+
+      <div class="h-44 shrink-0 overflow-hidden md:h-auto md:w-[42%]">
+        <img
+          src={fuukaMamaImg.src}
+          alt={campaign.imageAlt}
+          width={fuukaMamaImg.width}
+          height={fuukaMamaImg.height}
+          class="h-full w-full object-cover object-[70%_35%]"
+        />
+      </div>
+    </div>
+  </div>
+</section>
