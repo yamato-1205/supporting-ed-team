@@ -4,20 +4,24 @@ import { HERO } from "../data/home";
 
 <section
   id="hero"
-  class="relative overflow-hidden h-screen bg-no-repeat bg-top bg-center [background-size:auto_100%]"
+  class="relative min-h-screen overflow-x-hidden bg-no-repeat bg-top bg-center [background-size:auto_100%]"
   style={`background-image: url('${HERO.bubblesImg.src}');`}
 >
-  <!-- ── スマホ: 縦並び（雲中央→横書きテキスト下） ── -->
+  <!--
+    狭い幅（〜lg未満）: 横書き
+    広い幅: 縦書き。高さ不足時は上を優先し、下はセクションを伸ばしてスクロールで見る
+    （h-screen + overflow-hidden だと上下が見切れるためやめた）
+  -->
   <div
-    class="sm:hidden absolute inset-0 flex flex-col items-center justify-center gap-4 z-10 px-6"
+    class="lg:hidden flex min-h-screen flex-col items-center justify-center gap-4 px-6 py-[calc(var(--header-height)+1.5rem)]"
   >
     <img
       src={HERO.cloudImg.src}
       alt={HERO.cloudAlt}
-      class="pointer-events-none select-none w-[85vw] h-auto object-contain block"
+      class="pointer-events-none block h-auto w-[85vw] max-h-[42vh] select-none object-contain"
     />
     <div
-      class="heading-3 bg-white rounded-xl px-5 py-4 w-full max-w-[400px]"
+      class="heading-3 w-full max-w-[400px] rounded-xl bg-white px-5 py-4"
       style="line-height: 2.0; color: var(--color-primary);"
     >
       {
@@ -31,22 +35,55 @@ import { HERO } from "../data/home";
     </div>
   </div>
 
-  <!-- ── PC(sm+): 雲の中心＝画面中心、テキストは雲右端から絶対配置 ── -->
-  <div class="hidden sm:block absolute inset-0 z-10">
-    <img
-      src={HERO.cloudImg.src}
-      alt={HERO.cloudAlt}
-      class="pointer-events-none select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] h-auto object-contain"
-    />
-    <div
-      class="heading-3 absolute top-1/2 -translate-y-1/2 flex flex-row-reverse bg-white rounded-xl"
-      style="left: calc(50% + 32.5vw + 0.5rem); line-height: 2.8; letter-spacing: 0.12em; color: var(--color-primary); padding-top: 20px; padding-bottom: 20px;"
-    >
-      {
-        HERO.verticalColumns.map((column) => (
-          <p style="writing-mode: vertical-rl; margin: 0;">{column}</p>
-        ))
-      }
+  <!--
+    PC(lg+): 字間・雲サイズは従来どおり。
+    align-items: safe center → 収まるときは中央、はみ出すときは上基準で下へ伸ばす
+  -->
+  <div
+    class="hero-desktop hidden min-h-screen w-full justify-center px-6 pt-[calc(var(--header-height)+2.75rem)] pb-10 lg:flex lg:px-8"
+  >
+    <div class="hero-desktop-inner flex items-center gap-3 lg:gap-4">
+      <img
+        src={HERO.cloudImg.src}
+        alt={HERO.cloudAlt}
+        class="pointer-events-none h-auto w-[65vw] shrink-0 select-none object-contain"
+      />
+      <div
+        class="hero-vertical-text heading-3 flex shrink-0 flex-row-reverse rounded-xl bg-white"
+        style="line-height: 2.8; letter-spacing: 0.12em; color: var(--color-primary); padding-top: 20px; padding-bottom: 20px;"
+      >
+        {
+          HERO.verticalColumns.map((column) => (
+            <p class="hero-vertical-col">{column}</p>
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  .hero-desktop {
+    /* 中央寄せ。縦に収まらないときは start 扱いにして上を残し、下へ伸ばす */
+    align-items: safe center;
+  }
+
+  .hero-desktop-inner {
+    height: max-content;
+  }
+
+  /*
+    縦書きは親の高さ制限があると次の列へ折り返す。
+    折り返さず1列のまま伸ばし、スクロールで見せる。
+  */
+  .hero-vertical-text {
+    height: max-content;
+  }
+
+  .hero-vertical-col {
+    writing-mode: vertical-rl;
+    margin: 0;
+    white-space: nowrap;
+    height: max-content;
+  }
+</style>
