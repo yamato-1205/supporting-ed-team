@@ -1,0 +1,21 @@
+---
+/**
+ * 「任意団体としてのこの1年」退避ページ。
+ * ナビ非掲載・noindex。将来の専用ページ化用にコンテンツを温存。
+ */
+import Layout from "../layouts/Layout.astro";
+import AnniversaryYearTimeline from "../components/AnniversaryYearTimeline.astro";
+import { ANNIVERSARY_YEAR } from "../data/anniversaryYear";
+import { SITE_NAME } from "../data/site";
+
+const title = `${ANNIVERSARY_YEAR.title} | ${SITE_NAME}`;
+const description = ANNIVERSARY_YEAR.lead;
+---
+
+<Layout title={title} description={description} noindex>
+  <div
+    class="relative z-10 pt-[calc(var(--header-height)+1rem)] pb-8 md:pt-[calc(var(--header-height)+1.5rem)] md:pb-12"
+  >
+    <AnniversaryYearTimeline />
+  </div>
+</Layout>

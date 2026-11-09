@@ -1,0 +1,57 @@
+---
+import BubbleButton from "./BubbleButton.astro";
+import MultilineText from "./MultilineText.astro";
+import anniversaryImg from "../assets/sections/anniversary-1st.png";
+import { ANNIVERSARY_CAMPAIGN } from "../data/anniversaryCampaign";
+
+const campaign = ANNIVERSARY_CAMPAIGN;
+---
+
+<section id="anniversary-campaign" class="pt-5 md:pt-8">
+  <div class="max-w-[1280px] mx-auto px-4 md:px-6">
+    <div
+      class="flex flex-col overflow-hidden rounded-3xl shadow-[0_8px_28px_rgba(98,137,99,0.18)] md:min-h-[260px] md:flex-row"
+      style={`background-color: ${campaign.bannerBg};`}
+    >
+      <div
+        class="flex flex-1 flex-col justify-between px-8 py-6 md:px-10 md:py-6"
+      >
+        <div>
+          <h2
+            class="heading-3 mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1"
+          >
+            <span>{campaign.title}</span>
+            <span
+              class="whitespace-nowrap rounded-full bg-white/70 px-2.5 py-0.5 text-sm font-bold text-[var(--color-primary)]"
+            >
+              {campaign.untilLabel}
+            </span>
+          </h2>
+          <MultilineText
+            text={campaign.headline}
+            class="heading-2 leading-tight"
+          />
+          <MultilineText text={campaign.body} class="mt-2" />
+        </div>
+
+        <div class="mt-4 md:mt-0">
+          <BubbleButton
+            href={campaign.href}
+            label={campaign.buttonLabel}
+            external
+          />
+        </div>
+      </div>
+
+      <div class="h-48 shrink-0 overflow-hidden md:h-auto md:w-[42%]">
+        <img
+          src={anniversaryImg.src}
+          alt={campaign.imageAlt}
+          width={anniversaryImg.width}
+          height={anniversaryImg.height}
+          class="h-full w-full object-cover object-center"
+        />
+      </div>
+    </div>
+  </div>
+</section>

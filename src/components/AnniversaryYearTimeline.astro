@@ -1,0 +1,47 @@
+---
+import { ANNIVERSARY_YEAR } from "../data/anniversaryYear";
+---
+
+<section
+  id={ANNIVERSARY_YEAR.id}
+  class="relative z-[1] bg-white py-8 md:py-10"
+>
+  <div class="section-container">
+    <h2 class="heading-2 mb-2 text-center md:mb-3">{ANNIVERSARY_YEAR.title}</h2>
+    <p class="mb-8 text-center text-black/70 md:mb-10">{ANNIVERSARY_YEAR.lead}</p>
+
+    <ol class="relative mx-auto max-w-2xl">
+      <span
+        aria-hidden="true"
+        class="absolute top-2 bottom-2 left-[0.55rem] w-px bg-[var(--color-primary)]/30 md:left-[0.7rem]"
+      ></span>
+      {
+        ANNIVERSARY_YEAR.items.map((item) => (
+          <li class="relative flex gap-4 pb-7 last:pb-0 md:gap-5 md:pb-8">
+            <span
+              aria-hidden="true"
+              class="relative z-[1] mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--color-primary)] ring-4 ring-white md:mt-2 md:h-3 md:w-3"
+            />
+            <div class="min-w-0 flex-1">
+              <p class="text-small font-bold text-[var(--color-primary)]">
+                {item.dateLabel}
+              </p>
+              {item.href ? (
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-0.5 inline-block leading-snug underline decoration-[var(--color-primary)]/35 underline-offset-4 transition-opacity hover:opacity-70"
+                >
+                  {item.title} ↗
+                </a>
+              ) : (
+                <p class="mt-0.5 leading-snug">{item.title}</p>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
