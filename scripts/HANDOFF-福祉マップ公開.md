@@ -11,10 +11,10 @@
 
 ## 地図
 
-- Leaflet + OpenFreeMap Positron（APIキー不要・無料・見栄え良し）
-- 地図右下に OpenFreeMap / OpenMapTiles / OpenStreetMap の表示必須（表示済み）
+- Leaflet + OSMFJ `osm-bright-ja`（日本語優先・馴染みやすい地図）
+- APIキー不要・無料。右下に OpenStreetMap contributors 表示のみ
 - 日本付近にパン制限
-- 注: CARTO はキー必須になったため使わない（無料枠はあるが登録が要る）
+- 細かい見た目カスタムは Maputnik 等で可能（お金・登録なし、ただし技術作業）
 
 ## TOP 導線を出すとき
 

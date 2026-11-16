@@ -1,19 +1,13 @@
 ---
 /**
- * Leaflet + OpenFreeMap（Positron）のインタラクティブ地図。
- * APIキー不要・無料。見栄えの良い薄いベースマップ。
+ * Leaflet + OSMFJ Bright-JA（日本語優先の見慣れた地図）。
+ * APIキー不要・無料。OpenStreetMap Foundation Japan 提供。
  */
 ---
 
 <script>
   import L from "leaflet";
-  import { setWorkerUrl } from "maplibre-gl";
-  import { maplibreGL } from "@maplibre/maplibre-gl-leaflet";
-  import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
   import "leaflet/dist/leaflet.css";
-  import "maplibre-gl/dist/maplibre-gl.css";
-
-  setWorkerUrl(workerUrl);
 
   type MapPoint = {
     id: string;
@@ -31,7 +25,10 @@
   const JAPAN_ZOOM = 5;
   const DETAIL_ZOOM = 13;
   const JAPAN_BOUNDS = L.latLngBounds([24.0, 122.5], [46.2, 146.0]);
-  const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
+
+  /** 日本語ラベル優先のカラフル地図（Googleマップに近い馴染みやすさ） */
+  const TILE_URL =
+    "https://tile.openstreetmap.jp/styles/osm-bright-ja/{z}/{x}/{y}.png";
 
   function parsePoints(raw: string | undefined): MapPoint[] {
     if (!raw) return [];
@@ -92,18 +89,11 @@
       maxBoundsViscosity: 0.85,
     }).setView(JAPAN_CENTER, JAPAN_ZOOM);
 
-    // OpenFreeMap Positron: キー不要・無料。薄い見栄え（旧 CARTO Positron 相当）
-    maplibreGL({
-      style: MAP_STYLE,
-      interactive: false,
-      attributionControl: false,
+    L.tileLayer(TILE_URL, {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+      maxZoom: 18,
     }).addTo(map);
-
-    // Leaflet 側にクレジットを明示（OpenFreeMap 利用条件）
-    map.attributionControl.setPrefix("Leaflet");
-    map.attributionControl.addAttribution(
-      '<a href="https://openfreemap.org/" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> © <a href="https://openmaptiles.org/" target="_blank" rel="noopener noreferrer">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
-    );
 
     const entries: MarkerEntry[] = [];
     const byId = new Map<string, MarkerEntry>();
