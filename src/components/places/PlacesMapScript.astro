@@ -1,6 +1,6 @@
 ---
 /**
- * Leaflet + CARTO/OSM のインタラクティブ地図。
+ * Leaflet + OpenStreetMap のインタラクティブ地図（APIキー不要）。
  * 絞り込み連動・ピンクリックで一覧カードを開く（固定ヘッダー分をオフセット）。
  */
 ---
@@ -90,16 +90,12 @@
       maxBoundsViscosity: 0.85,
     }).setView(JAPAN_CENTER, JAPAN_ZOOM);
 
-    // CARTO Positron: 領海境界が目立ちにくい薄いベースマップ
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    // OpenStreetMap 公式タイル（APIキー不要・無料）。右下にクレジット表示のみ必須
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
+      maxZoom: 19,
+    }).addTo(map);
 
     const entries: MarkerEntry[] = [];
     const byId = new Map<string, MarkerEntry>();
