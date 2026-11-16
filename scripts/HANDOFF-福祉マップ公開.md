@@ -11,10 +11,9 @@
 
 ## 地図
 
-- Leaflet + OSMFJ `osm-bright-ja`（日本語優先・馴染みやすい地図）
-- APIキー不要・無料。右下に OpenStreetMap contributors 表示のみ
+- Leaflet + 国土地理院 淡色地図（ピンが際立つ・日本語・キー不要）
+- 右下に「国土地理院」表示
 - 日本付近にパン制限
-- 細かい見た目カスタムは Maputnik 等で可能（お金・登録なし、ただし技術作業）
 
 ## TOP 導線を出すとき
 

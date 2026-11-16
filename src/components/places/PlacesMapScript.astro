@@ -1,7 +1,7 @@
 ---
 /**
- * Leaflet + OSMFJ Bright-JA（日本語優先の見慣れた地図）。
- * APIキー不要・無料。OpenStreetMap Foundation Japan 提供。
+ * Leaflet + 国土地理院 淡色地図。
+ * 線が薄くピンが際立つ。日本語・キー不要・無料。
  */
 ---
 
@@ -26,9 +26,9 @@
   const DETAIL_ZOOM = 13;
   const JAPAN_BOUNDS = L.latLngBounds([24.0, 122.5], [46.2, 146.0]);
 
-  /** 日本語ラベル優先のカラフル地図（Googleマップに近い馴染みやすさ） */
+  /** 淡色地図: 道路・境界が薄く、緑ピンが霞みにくい */
   const TILE_URL =
-    "https://tile.openstreetmap.jp/styles/osm-bright-ja/{z}/{x}/{y}.png";
+    "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png";
 
   function parsePoints(raw: string | undefined): MapPoint[] {
     if (!raw) return [];
@@ -91,8 +91,9 @@
 
     L.tileLayer(TILE_URL, {
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+        '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">国土地理院</a>',
       maxZoom: 18,
+      maxNativeZoom: 18,
     }).addTo(map);
 
     const entries: MarkerEntry[] = [];
