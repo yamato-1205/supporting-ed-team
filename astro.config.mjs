@@ -58,5 +58,8 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      noExternal: ["maplibre-gl"],
+    },
   },
 });

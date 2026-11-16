@@ -11,10 +11,10 @@
 
 ## 地図
 
-- Leaflet（BSD）+ OpenStreetMap 公式タイル（APIキー不要・無料）
-- 地図右下に OpenStreetMap のクレジット表示のみ必須（表示済み）
-- 日本付近にパン制限。領海線はタイル側の描画で完全削除は不可
-- 注: CARTO は 2026-09 以降キー必須になったため使わない
+- Leaflet + OpenFreeMap Positron（APIキー不要・無料・見栄え良し）
+- 地図右下に OpenFreeMap / OpenMapTiles / OpenStreetMap の表示必須（表示済み）
+- 日本付近にパン制限
+- 注: CARTO はキー必須になったため使わない（無料枠はあるが登録が要る）
 
 ## TOP 導線を出すとき
 
