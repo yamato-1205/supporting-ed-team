@@ -20,6 +20,23 @@ const onlineCount = countOnline(locations);
 const regionsWithData = REGION_GROUPS.filter((region) =>
   region.prefectures.some((p) => (prefCounts.get(p) ?? 0) > 0),
 );
+
+/** 地図ピン用（緯度経度があるものだけ） */
+const mapPoints = locations
+  .filter(
+    (loc) =>
+      Number.isFinite(loc.lat) &&
+      Number.isFinite(loc.lng) &&
+      !(loc.lat === 0 && loc.lng === 0),
+  )
+  .map((loc) => ({
+    id: loc.id,
+    name: loc.locationName,
+    lat: loc.lat,
+    lng: loc.lng,
+    prefectures: loc.prefectures ?? [],
+    tags: [...(loc.field ?? []), ...(loc.genre ?? [])],
+  }));
 ---
 
 <section
@@ -32,20 +49,23 @@ const regionsWithData = REGION_GROUPS.filter((region) =>
   </p>
 
   <div
-    class="relative mx-auto mb-4 max-w-3xl overflow-hidden rounded-[1.75rem] bg-[var(--color-background)]"
+    class="relative mx-auto mb-4 max-w-3xl overflow-hidden rounded-[1.75rem] border border-[var(--color-primary)]/15 bg-[var(--color-background)]"
   >
-    <img
-      src={PLACES_PAGE.diagram.src}
-      alt="日本地図（さぽちむ居場所マップ）"
-      class="w-full opacity-95"
-      width={PLACES_PAGE.diagram.width}
-      height={PLACES_PAGE.diagram.height}
-    />
-    <p
-      class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-small font-normal text-black/60 md:bottom-4 md:left-4"
+    <div
+      id="places-leaflet-map"
+      class="places-leaflet-map h-[min(70vh,28rem)] w-full md:h-[min(72vh,34rem)]"
+      data-points={JSON.stringify(mapPoints)}
+      role="region"
+      aria-label="「福祉」の位置を示す地図"
     >
-      ※地図画像は仮素材です。後日差し替え予定
-    </p>
+    </div>
+    {
+      mapPoints.length === 0 && (
+        <p class="absolute inset-0 z-[500] flex items-center justify-center bg-[var(--color-background)]/90 px-6 text-center text-small text-black/60">
+          地図に表示できる位置情報がまだありません
+        </p>
+      )
+    }
   </div>
 
   {
@@ -126,3 +146,62 @@ const regionsWithData = REGION_GROUPS.filter((region) =>
     }
   </div>
 </section>
+
+<style is:global>
+  .places-leaflet-map .leaflet-container {
+    font: inherit;
+    background: #fffbec;
+  }
+
+  .places-leaflet-map .leaflet-control-attribution {
+    font-size: 0.65rem;
+    background: rgb(255 255 255 / 0.85);
+  }
+
+  .places-map-pin {
+    background: transparent;
+    border: none;
+  }
+
+  .places-map-pin__dot {
+    display: block;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+  }
+
+  .places-map-pin.is-active .places-map-pin__dot {
+    width: 1.35rem;
+    height: 1.35rem;
+    background: #4f7350;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 35%, transparent);
+  }
+
+  .places-map-popup .leaflet-popup-content-wrapper {
+    border-radius: 0.85rem;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.12);
+  }
+
+  .places-map-popup .leaflet-popup-content {
+    margin: 0.65rem 0.85rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .places-map-popup__btn {
+    display: inline-block;
+    margin-top: 0.35rem;
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+  }
+</style>

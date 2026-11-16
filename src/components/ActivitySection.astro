@@ -2,6 +2,7 @@
 import SectionBubbles from "./SectionBubbles.astro";
 import HeadingUnderline from "./HeadingUnderline.astro";
 import MultilineText from "./MultilineText.astro";
+import BubbleButton from "./BubbleButton.astro";
 import { ACTIVITY_ITEMS } from "../data/home";
 ---
 
@@ -14,23 +15,35 @@ import { ACTIVITY_ITEMS } from "../data/home";
   <div class="section-container">
     <h2 class="heading-2 mb-10 md:mb-14">活動内容</h2>
 
-    <div class="grid grid-cols-1 gap-16 md:grid-cols-2 md:gap-12 lg:gap-20">
+    <!-- 2列幅を維持。3枚目は折り返して中央 -->
+    <div class="flex flex-wrap justify-center gap-16 md:gap-x-12 md:gap-y-14 lg:gap-x-20 lg:gap-y-16">
       {
         ACTIVITY_ITEMS.map((item) => (
-          <article>
-            <div class="overflow-hidden rounded-lg mb-6">
+          <article
+            id={item.id}
+            class="w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(50%-2.5rem)]"
+          >
+            <div class="mb-6 overflow-hidden rounded-lg bg-[#fffbec]">
               <img
                 src={item.image.src}
                 alt={item.alt}
-                class="w-full aspect-[4/3] object-cover"
+                class:list={[
+                  "aspect-[4/3] w-full",
+                  item.imageFit === "contain" ? "object-contain p-4" : "object-cover",
+                ]}
               />
             </div>
-
             <HeadingUnderline as="h3" level="3" class="mb-4">
               {item.title}
             </HeadingUnderline>
-
             <MultilineText text={item.body} />
+            {
+              item.href && item.buttonLabel && (
+                <div class="mt-6 flex justify-center">
+                  <BubbleButton href={item.href} label={item.buttonLabel} />
+                </div>
+              )
+            }
           </article>
         ))
       }

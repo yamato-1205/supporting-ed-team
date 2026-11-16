@@ -1,5 +1,5 @@
 /**
- * 居場所マップページの静的テキスト・都道府県定義。
+ * 「福祉」マップページの静的テキスト・都道府県定義。
  * コンテンツ本体は microCMS の location エンドポイント。
  */
 import japanMapImg from "../assets/places/japan-map.png";
@@ -17,34 +17,35 @@ export type LocationSnsLink = {
 };
 
 export const PLACES_PAGE = {
-  title: "居場所マップ",
+  title: "「福祉」マップ",
   description:
-    "さぽちむがつなぐ全国の居場所を、地図とキーワードから探せます。凸凹を抱えたまま関われる場との出会いを応援します。",
+    "さぽちむがつなぐ全国の「福祉」を、地図とキーワードから探せます。凸凹を抱えたまま関われる場との出会いを応援します。",
   lead: "誰もが福祉の一員である",
   intro:
-    "凸凹を抱えたまま関われる場は、思いのほかたくさんあります。\n地図やキーワードから、あなたにちょうどいい居場所を見つけてみてください。",
+    "凸凹を抱えたまま関われる場は、思いのほかたくさんあります。\n地図やキーワードから、あなたにちょうどいい「福祉」を見つけてみてください。",
   mapTitle: "マップから探す",
   mapLead:
-    "都道府県のシャボン玉で地域から探せます。場所にとらわれず関わりたいときは、地図の近くの「オンライン」もどうぞ。",
+    "地図上のピンで全国の「福祉」の位置がわかります。拡大すると周辺まで詳しく見られます。都道府県のシャボン玉やタグでも絞り込めます。",
   onlineLabel: "オンライン",
-  onlineLead: "地域を問わず、オンラインで関われる居場所",
+  onlineLead: "地域を問わず、オンラインで関われる「福祉」",
   /** オンライン絞り込みに使う genre / field タグ名 */
   onlineTag: "オンライン",
-  listTitle: "居場所一覧",
+  listTitle: "「福祉」一覧",
   fieldLabel: "分野",
   genreLabel: "カテゴリ",
   openMap: "詳細",
   closeMap: "閉じる",
   openInGoogle: "Googleマップで開く",
-  noteLabel: "居場所の紹介",
+  noteLabel: "「福祉」の紹介",
   hpLabel: "公式サイト",
   linksLabel: "リンク",
   addressLabel: "所在地",
-  empty: "条件に合う居場所がまだありません。条件を変えてみてください。",
+  empty: "条件に合う「福祉」がまだありません。条件を変えてみてください。",
   clearFilter: "絞り込みを解除",
   allPrefectures: "すべて",
   statsPrefLabel: "掲載のある都道府県",
-  statsCountLabel: "掲載居場所",
+  statsCountLabel: "掲載「福祉」",
+  /** TOP 活動内容カード等の仮サムネ用（地図本体は Leaflet） */
   diagram: japanMapImg,
 } as const;
 
@@ -133,7 +134,7 @@ export function countByPrefecture(locations: Location[]): Map<string, number> {
   return counts;
 }
 
-/** オンラインタグを持つ居場所数 */
+/** オンラインタグを持つ「福祉」数 */
 export function countOnline(locations: Location[]): number {
   const tag = PLACES_PAGE.onlineTag;
   return locations.filter((loc) =>
@@ -166,7 +167,7 @@ export function googleMapsLink(address: string): string {
   return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }
 
-/** 居場所に設定されている SNS だけ返す（未設定は省略） */
+/** 「福祉」に設定されている SNS だけ返す（未設定は省略） */
 export function getLocationSnsLinks(location: {
   twitter?: string;
   instagram?: string;

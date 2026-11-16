@@ -1,0 +1,230 @@
+---
+/**
+ * Leaflet + CARTO/OSM のインタラクティブ地図。
+ * 絞り込み連動・ピンクリックで一覧カードを開く（固定ヘッダー分をオフセット）。
+ */
+---
+
+<script>
+  import L from "leaflet";
+  import "leaflet/dist/leaflet.css";
+
+  type MapPoint = {
+    id: string;
+    name: string;
+    lat: number;
+    lng: number;
+  };
+
+  type MarkerEntry = {
+    marker: L.Marker;
+    point: MapPoint;
+  };
+
+  const JAPAN_CENTER: L.LatLngExpression = [37.5, 137.5];
+  const JAPAN_ZOOM = 5;
+  const DETAIL_ZOOM = 13;
+  /** 日本付近にパンを制限（完全に国外タイルを消すことはできない） */
+  const JAPAN_BOUNDS = L.latLngBounds(
+    [24.0, 122.5],
+    [46.2, 146.0],
+  );
+
+  function parsePoints(raw: string | undefined): MapPoint[] {
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(
+        (p): p is MapPoint =>
+          p &&
+          typeof p.id === "string" &&
+          typeof p.name === "string" &&
+          Number.isFinite(p.lat) &&
+          Number.isFinite(p.lng),
+      );
+    } catch {
+      return [];
+    }
+  }
+
+  function headerOffsetPx() {
+    const raw = getComputedStyle(document.documentElement)
+      .getPropertyValue("--header-height")
+      .trim();
+    const parsed = Number.parseFloat(raw);
+    return (Number.isFinite(parsed) ? parsed : 64) + 12;
+  }
+
+  /** 固定ヘッダーの下に隠れないようスクロール */
+  function scrollToPlaceCard(card: HTMLElement) {
+    const top =
+      window.scrollY + card.getBoundingClientRect().top - headerOffsetPx();
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }
+
+  function createPinIcon(active = false) {
+    return L.divIcon({
+      className: `places-map-pin${active ? " is-active" : ""}`,
+      html: '<span class="places-map-pin__dot" aria-hidden="true"></span>',
+      iconSize: active ? [22, 22] : [18, 18],
+      iconAnchor: active ? [11, 11] : [9, 9],
+      popupAnchor: [0, -10],
+    });
+  }
+
+  function initPlacesMap() {
+    const el = document.getElementById("places-leaflet-map");
+    if (!el || el.dataset.mapReady === "true") return;
+
+    const points = parsePoints(el.dataset.points);
+    if (points.length === 0) return;
+
+    el.dataset.mapReady = "true";
+
+    const map = L.map(el, {
+      scrollWheelZoom: true,
+      zoomControl: true,
+      minZoom: 4,
+      maxBounds: JAPAN_BOUNDS.pad(0.15),
+      maxBoundsViscosity: 0.85,
+    }).setView(JAPAN_CENTER, JAPAN_ZOOM);
+
+    // CARTO Positron: 領海境界が目立ちにくい薄いベースマップ
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 19,
+      },
+    ).addTo(map);
+
+    const entries: MarkerEntry[] = [];
+    const byId = new Map<string, MarkerEntry>();
+
+    function openPlaceCard(id: string) {
+      const card = document.querySelector(
+        `.place-card[data-place-id="${CSS.escape(id)}"]`,
+      );
+      if (!(card instanceof HTMLElement) || card.hidden) return;
+
+      scrollToPlaceCard(card);
+      card.dispatchEvent(
+        new CustomEvent("places:open-card", { bubbles: true }),
+      );
+    }
+
+    for (const point of points) {
+      const marker = L.marker([point.lat, point.lng], {
+        icon: createPinIcon(false),
+        title: point.name,
+        riseOnHover: true,
+      });
+
+      const popup = L.popup({ className: "places-map-popup", maxWidth: 240 });
+      const wrap = document.createElement("div");
+      const title = document.createElement("p");
+      title.className = "font-bold";
+      title.textContent = point.name;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "places-map-popup__btn";
+      btn.textContent = "詳細を見る";
+      btn.addEventListener("click", () => openPlaceCard(point.id));
+      wrap.append(title, btn);
+      popup.setContent(wrap);
+
+      marker.bindPopup(popup);
+      marker.on("click", () => {
+        for (const entry of entries) {
+          entry.marker.setIcon(createPinIcon(entry.point.id === point.id));
+        }
+      });
+
+      const entry = { marker, point };
+      entries.push(entry);
+      byId.set(point.id, entry);
+      marker.addTo(map);
+    }
+
+    function visibleEntries() {
+      return entries.filter((entry) => {
+        const card = document.querySelector(
+          `.place-card[data-place-id="${CSS.escape(entry.point.id)}"]`,
+        );
+        return !(card instanceof HTMLElement) || !card.hidden;
+      });
+    }
+
+    function fitToVisible(animate = true) {
+      const visible = visibleEntries();
+      for (const entry of entries) {
+        const show = visible.includes(entry);
+        if (show) {
+          if (!map.hasLayer(entry.marker)) entry.marker.addTo(map);
+        } else {
+          if (map.hasLayer(entry.marker)) map.removeLayer(entry.marker);
+        }
+      }
+
+      if (visible.length === 0) {
+        map.setView(JAPAN_CENTER, JAPAN_ZOOM, { animate });
+        return;
+      }
+
+      if (visible.length === 1) {
+        const only = visible[0];
+        map.setView([only.point.lat, only.point.lng], DETAIL_ZOOM, {
+          animate,
+        });
+        return;
+      }
+
+      const bounds = L.latLngBounds(
+        visible.map((e) => [e.point.lat, e.point.lng] as L.LatLngTuple),
+      );
+      map.fitBounds(bounds.pad(0.18), { animate, maxZoom: 11 });
+    }
+
+    requestAnimationFrame(() => {
+      map.invalidateSize();
+      fitToVisible(false);
+    });
+
+    document.addEventListener("places:filter-changed", () => {
+      for (const entry of entries) {
+        entry.marker.setIcon(createPinIcon(false));
+      }
+      map.closePopup();
+      fitToVisible(true);
+    });
+
+    document.addEventListener("places:focus-marker", ((event: Event) => {
+      const detail = (event as CustomEvent<{ id?: string }>).detail;
+      const id = detail?.id;
+      if (!id) return;
+      const entry = byId.get(id);
+      if (!entry || !map.hasLayer(entry.marker)) return;
+
+      for (const e of entries) {
+        e.marker.setIcon(createPinIcon(e.point.id === id));
+      }
+      map.setView([entry.point.lat, entry.point.lng], DETAIL_ZOOM, {
+        animate: true,
+      });
+      entry.marker.openPopup();
+    }) as EventListener);
+
+    window.addEventListener("resize", () => {
+      map.invalidateSize();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initPlacesMap);
+  } else {
+    initPlacesMap();
+  }
+</script>

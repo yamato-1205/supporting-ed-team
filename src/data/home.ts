@@ -45,8 +45,17 @@ export type ActivityItem = {
   alt: string;
   /** 改行は \n */
   body: string;
+  /** 仮の地図サムネは全体を見せる。写真に差し替えたら cover */
+  imageFit?: "cover" | "contain";
+  /** カード下の導線。無いカードは出さない */
+  href?: string;
+  buttonLabel?: string;
 };
 
+/**
+ * TOP 活動内容。
+ * 「福祉」マップカードは /places 正式公開（TOP導線OK）になるまで載せない。
+ */
 export const ACTIVITY_ITEMS: ActivityItem[] = [
   {
     id: "event",

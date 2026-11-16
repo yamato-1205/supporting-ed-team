@@ -1,6 +1,6 @@
 ---
 /**
- * 居場所マップの絞り込み・バナー開閉。
+ * 「福祉」マップの絞り込み・バナー開閉・地図連動。
  * 都道府県（地図）・タグは即トグル。一覧タグとバナータグは連動。
  */
 import { PLACES_PAGE } from "../../data/places";
@@ -76,6 +76,10 @@ const closeMapLabel = PLACES_PAGE.closeMap;
     }
   }
 
+  function notifyMap() {
+    document.dispatchEvent(new CustomEvent("places:filter-changed"));
+  }
+
   function applyFilter() {
     let visible = 0;
     for (const card of cards) {
@@ -102,6 +106,7 @@ const closeMapLabel = PLACES_PAGE.closeMap;
     }
 
     syncChipPressed();
+    notifyMap();
   }
 
   function clearFilters() {
@@ -135,6 +140,18 @@ const closeMapLabel = PLACES_PAGE.closeMap;
       const willOpen = card.dataset.open !== "true";
       if (willOpen) closeAllBanners(card.dataset.placeId);
       setBannerOpen(card, willOpen);
+      if (willOpen && card.dataset.placeId) {
+        document.dispatchEvent(
+          new CustomEvent("places:focus-marker", {
+            detail: { id: card.dataset.placeId },
+          }),
+        );
+      }
+    });
+
+    card.addEventListener("places:open-card", () => {
+      closeAllBanners(card.dataset.placeId);
+      setBannerOpen(card, true);
     });
   }
 
@@ -150,7 +167,6 @@ const closeMapLabel = PLACES_PAGE.closeMap;
     });
   }
 
-  // マップ近くの「オンライン」はタグ絞り込みと同じ状態を共有
   for (const btn of document.querySelectorAll(".place-online-btn")) {
     btn.addEventListener("click", () => {
       const value = btn.dataset.filterValue;

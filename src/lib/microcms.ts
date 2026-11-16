@@ -60,7 +60,7 @@ export type ExternalReport = {
   date: string;
 };
 
-/** 居場所1件の型（microCMS の location エンドポイント） */
+/** 「福祉」1件の型（microCMS の location エンドポイント） */
 export type Location = {
   id: string;
   createdAt: string;
@@ -74,7 +74,7 @@ export type Location = {
   genre: string[];
   lat: number;
   lng: number;
-  /** 居場所紹介 note の URL */
+  /** 「福祉」紹介 note の URL */
   note?: string;
   /** 団体 HP の URL（未設定なら省略） */
   hp?: string;

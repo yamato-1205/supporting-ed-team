@@ -15,7 +15,7 @@
 │   │   ├── decorations/     # リボン・家・カード枠など
 │   │   ├── icons/           # SNS アイコン
 │   │   ├── members/         # メンバー写真（ローカル用）
-│   │   ├── places/          # 居場所マップ用（日本地図など）
+│   │   ├── places/          # 「福祉」マップ用（日本地図など）
 │   │   ├── rolls/           # メンバーロールのハイライト背景
 │   │   ├── sections/        # ヒーロー・活動内容など
 │   │   └── unused/          # 未使用素材の保管
@@ -41,8 +41,8 @@
 | 応援するページの文言 | `src/data/support.ts` |
 | メンバー募集の各チーム表 | `src/data/recruit.ts` |
 | メンバー募集ページの説明文・ロール背景 | `src/data/member.ts` |
-| 居場所マップの文言・地方区分 | `src/data/places.ts`（直リンク限定・ナビ非掲載） |
-| 居場所の Sheets ⟷ microCMS 同期 | `scripts/google-sheets/`（GAS・手順） |
+| 「福祉」マップの文言・地方区分 | `src/data/places.ts`（メンバー確認中は直リンク `/places` のみ） |
+| 「福祉」の Sheets ⟷ microCMS 同期 | `scripts/google-sheets/`（GAS・手順） |
 | お問い合わせ項目の選択肢 | `src/data/contact.ts` |
 | シャボン玉装飾の位置 | `src/data/bubbles.ts` |
 

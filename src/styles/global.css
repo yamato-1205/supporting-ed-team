@@ -8,15 +8,14 @@
   --font-sans: "BIZ UDPGothic", sans-serif;
 }
 
-/* ヘッダー高さの唯一の定義場所
-   ロゴ画像(h-9=36px) */
+/* ヘッダー高さの唯一の定義場所（Header.astro のバナー実寸に合わせる）
+   ロゴ画像(h-11=44px / md:h-16=64px) */
 :root {
-  --header-height: 36px;
+  --header-height: 44px;
 }
 @media (min-width: 768px) {
-  /* ロゴ画像(h-11=44px) */
   :root {
-    --header-height: 44px;
+    --header-height: 64px;
   }
 }
 

@@ -5,6 +5,7 @@ import PageTitle from "../components/PageTitle.astro";
 import PlacesMapSection from "../components/places/PlacesMapSection.astro";
 import PlacesResults from "../components/places/PlacesResults.astro";
 import PlacesFilterScript from "../components/places/PlacesFilterScript.astro";
+import PlacesMapScript from "../components/places/PlacesMapScript.astro";
 import { client } from "../lib/microcms";
 import type { Location } from "../lib/microcms";
 import { PLACES_PAGE, countByPrefecture } from "../data/places";
@@ -20,13 +21,14 @@ try {
   });
   locations = res.contents;
 } catch (e) {
-  console.warn("[places] 居場所一覧の取得に失敗しました:", e);
+  console.warn("[places] 「福祉」一覧の取得に失敗しました:", e);
 }
 
 const prefCount = countByPrefecture(locations).size;
 const meta = PAGE_META.places;
 ---
 
+<!-- メンバー確認中: ナビ・TOP非掲載。検索にも出さない -->
 <Layout noindex title={meta.title} description={meta.description}>
   <div
     id="places"
@@ -99,6 +101,7 @@ const meta = PAGE_META.places;
       <PlacesResults locations={locations} />
     </div>
   </div>
+  <PlacesMapScript />
   <PlacesFilterScript />
 </Layout>
 

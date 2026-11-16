@@ -20,6 +20,8 @@ export const NAV_LINKS: NavLink[] = [
   { id: "about", label: "代表の思い", href: "/#about" },
   { id: "news", label: "お知らせ", href: "/#news" },
   { id: "results", label: "活動実績", href: "/#results" },
+  /** TOP導線OKになったら Header / NAV_GROUPS に足す */
+  { id: "places", label: "「福祉」マップ", href: "/places" },
   { id: "overview", label: "団体概要", href: "/overview" },
   { id: "support", label: "応援する", href: "/support" },
 ];
@@ -28,7 +30,7 @@ export const NAV_LINKS: NavLink[] = [
  * フッター・ハンバーガー共通の階層ナビ。
  * ページ構成やアンカーを変えるときはここだけ編集する。
  *
- * 注: 居場所マップ（/places）は直リンク限定のためここに含めない。
+ * 注: 「福祉」マップ（/places）はメンバー確認中のためナビ非掲載（直リンクのみ）。
  */
 export const NAV_GROUPS: NavGroup[] = [
   {
