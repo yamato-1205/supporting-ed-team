@@ -7,6 +7,8 @@ import activityCommunityImg from "../assets/sections/activity-community.jpg";
 import heroCloudImg from "../assets/sections/hero-cloud.png";
 import heroBubblesImg from "../assets/bubbles/hero-bubbles.png";
 import representativeImg from "../assets/members/fuuka.png";
+import { PLACES_PAGE } from "./places";
+import { PLACES_IS_PUBLIC } from "./places-visibility";
 
 export const HERO = {
   cloudImg: heroCloudImg,
@@ -52,11 +54,8 @@ export type ActivityItem = {
   buttonLabel?: string;
 };
 
-/**
- * TOP 活動内容。
- * 「福祉」マップカードは /places 正式公開（TOP導線OK）になるまで載せない。
- */
-export const ACTIVITY_ITEMS: ActivityItem[] = [
+/** TOP 活動内容（「福祉」マップは PLACES_IS_PUBLIC で出し分け） */
+const ACTIVITY_BASE: ActivityItem[] = [
   {
     id: "event",
     title: "イベント",
@@ -90,6 +89,28 @@ export const ACTIVITY_ITEMS: ActivityItem[] = [
     ].join("\n"),
   },
 ];
+
+const PLACES_ACTIVITY: ActivityItem = {
+  id: "places",
+  title: PLACES_PAGE.title,
+  image: PLACES_PAGE.diagram,
+  alt: "日本地図のイメージ",
+  imageFit: "contain",
+  href: "/places",
+  buttonLabel: "マップを見る",
+  body: [
+    "凸凹を抱えたまま関われる場は、思いのほかたくさんあります。",
+    "地図やキーワードから、あなたにちょうどいい「福祉」を見つけてみてください。",
+  ].join("\n"),
+};
+
+export const ACTIVITY_ITEMS: ActivityItem[] = PLACES_IS_PUBLIC
+  ? [
+      ACTIVITY_BASE[0],
+      PLACES_ACTIVITY,
+      ACTIVITY_BASE[1],
+    ]
+  : ACTIVITY_BASE;
 
 export const REPRESENTATIVE = {
   image: representativeImg,

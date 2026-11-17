@@ -5,6 +5,7 @@ import {
   REGION_GROUPS,
   countByPrefecture,
   countOnline,
+  toMapPoints,
 } from "../../data/places";
 import type { Location } from "../../lib/microcms";
 import bubbleImg from "../../assets/bubbles/bubble-2.png";
@@ -20,23 +21,7 @@ const onlineCount = countOnline(locations);
 const regionsWithData = REGION_GROUPS.filter((region) =>
   region.prefectures.some((p) => (prefCounts.get(p) ?? 0) > 0),
 );
-
-/** 地図ピン用（緯度経度があるものだけ） */
-const mapPoints = locations
-  .filter(
-    (loc) =>
-      Number.isFinite(loc.lat) &&
-      Number.isFinite(loc.lng) &&
-      !(loc.lat === 0 && loc.lng === 0),
-  )
-  .map((loc) => ({
-    id: loc.id,
-    name: loc.locationName,
-    lat: loc.lat,
-    lng: loc.lng,
-    prefectures: loc.prefectures ?? [],
-    tags: [...(loc.field ?? []), ...(loc.genre ?? [])],
-  }));
+const mapPoints = toMapPoints(locations);
 ---
 
 <section

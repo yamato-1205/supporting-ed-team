@@ -1,16 +1,9 @@
 ---
 import bannerImg from "../assets/brand/banner.png";
 import HamburgerMenu from "./HamburgerMenu.astro";
-import { pickNavLinks } from "../data/navigation";
+import { HEADER_NAV_IDS, pickNavLinks } from "../data/navigation";
 
-const navLinks = pickNavLinks([
-  "activity",
-  "about",
-  "news",
-  "results",
-  "overview",
-  "support",
-]);
+const navLinks = pickNavLinks(HEADER_NAV_IDS);
 ---
 
 <header class="fixed top-0 inset-x-0 z-50 bg-white border-b border-gray-100">

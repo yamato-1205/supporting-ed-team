@@ -3,6 +3,7 @@ import SnsButton from "../SnsButton.astro";
 import MultilineText from "../MultilineText.astro";
 import {
   PLACES_PAGE,
+  PLACE_FILTER_CHIP_CLASS,
   googleMapsEmbedUrl,
   googleMapsLink,
   getLocationSnsLinks,
@@ -53,8 +54,7 @@ const panelId = `place-panel-${id}`;
 const snsLinks = getLocationSnsLinks({ twitter, instagram, facebook });
 const hasTopLinks = Boolean(hp || snsLinks.length > 0);
 
-const chipClass =
-  "place-filter-chip rounded-full border border-[var(--color-primary)]/35 bg-white px-2.5 py-0.5 text-small text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white";
+const chipClass = PLACE_FILTER_CHIP_CLASS;
 ---
 
 <article

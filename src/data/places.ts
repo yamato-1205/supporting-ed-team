@@ -1,12 +1,23 @@
 /**
  * 「福祉」マップページの静的テキスト・都道府県定義。
  * コンテンツ本体は microCMS の location エンドポイント。
+ * 公開範囲は places-visibility.ts の PLACES_IS_PUBLIC。
  */
 import japanMapImg from "../assets/places/japan-map.png";
 import xIcon from "../assets/icons/x.png";
 import igIcon from "../assets/icons/instagram.png";
 import fbIcon from "../assets/icons/facebook.png";
 import type { Location } from "../lib/microcms";
+import type { PlacesMapPoint } from "../lib/places/types";
+
+export type { PlacesMapPoint } from "../lib/places/types";
+
+/** 一覧・カード共通の絞り込みチップ見た目 */
+export const PLACE_FILTER_CHIP_CLASS =
+  "place-filter-chip rounded-full border border-[var(--color-primary)]/35 bg-white px-2.5 py-0.5 text-small text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white";
+
+export const PLACE_FILTER_CHIP_CLASS_LG =
+  "place-filter-chip rounded-full border border-[var(--color-primary)]/35 bg-white px-3.5 py-1.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white";
 
 export type LocationSnsLink = {
   id: "twitter" | "instagram" | "facebook";
@@ -132,6 +143,23 @@ export function countByPrefecture(locations: Location[]): Map<string, number> {
     }
   }
   return counts;
+}
+
+/** 緯度経度がある「福祉」だけ地図ピン用に変換 */
+export function toMapPoints(locations: Location[]): PlacesMapPoint[] {
+  return locations
+    .filter(
+      (loc) =>
+        Number.isFinite(loc.lat) &&
+        Number.isFinite(loc.lng) &&
+        !(loc.lat === 0 && loc.lng === 0),
+    )
+    .map((loc) => ({
+      id: loc.id,
+      name: loc.locationName,
+      lat: loc.lat,
+      lng: loc.lng,
+    }));
 }
 
 /** オンラインタグを持つ「福祉」数 */

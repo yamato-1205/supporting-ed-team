@@ -1,22 +1,32 @@
 # 伝言: 「福祉」マップ
 
-日付: 2026-11-16  
-状態: **メンバー確認用に `/places` のみ公開（TOP・ナビ非掲載）**
+日付: 2026-11-17  
+状態: **メンバー確認用（`PLACES_IS_PUBLIC = false`）**
 
-## いまの公開範囲
+## 正式公開（ワンフラグ）
+
+`src/data/places-visibility.ts` の `PLACES_IS_PUBLIC` を `true` にするだけ。
+
+連動するもの:
+
+- TOP 活動内容カード
+- ヘッダー / フッター / ハンバーガーのナビ
+- `/places` の noindex 解除
+- robots.txt の Disallow 解除
+- sitemap 掲載
+
+## いまの公開範囲（false 時）
 
 - `/places` … 直リンクで閲覧可（`noindex` + robots Disallow）
-- TOP 活動内容・ヘッダー／フッターナビ … **リンクなし**
-- メンバーには URL を共有して確認してもらう
+- TOP・ナビ … リンクなし
 
 ## 地図
 
-- Leaflet + OpenFreeMap Positron（初期 CARTO 相当・キー不要・無料）
-- 右下に OpenFreeMap / OSM クレジット
+- Leaflet + OpenFreeMap Positron（キー不要・無料）
+- ロジック: `src/lib/places/map-client.ts` / `filter-client.ts`
 - 日本付近にパン制限
 
-## TOP 導線を出すとき
+## 別件メモ（未着手）
 
-1. `src/data/home.ts` に活動内容カードを戻す
-2. `Header` / `NAV_GROUPS` に `places` を追加
-3. `places.astro` の `noindex` 解除、robots / sitemap から除外を外す
+オリジナル日本地図で都道府県・有名市町村レベルの大雑把な分布表示は可能。
+既存の `japan-map.png` ＋都道府県重心のドット／SVG クリック領域で十分。ピン精密配置は不要。

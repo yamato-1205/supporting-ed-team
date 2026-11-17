@@ -2,6 +2,7 @@
 import { defineConfig, envField } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import { PLACES_IS_PUBLIC } from "./src/data/places-visibility.ts";
 
 const site = (process.env.PUBLIC_SITE_URL || "https://supporting-ed-team.pages.dev").replace(
   /\/$/,
@@ -13,8 +14,11 @@ export default defineConfig({
   site,
   integrations: [
     sitemap({
-      filter: (page) =>
-        !page.includes("/places") && !page.includes("/contact/thanks"),
+      filter: (page) => {
+        if (page.includes("/contact/thanks")) return false;
+        if (!PLACES_IS_PUBLIC && page.includes("/places")) return false;
+        return true;
+      },
     }),
   ],
   env: {

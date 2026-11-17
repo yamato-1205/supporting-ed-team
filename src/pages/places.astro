@@ -9,6 +9,7 @@ import PlacesMapScript from "../components/places/PlacesMapScript.astro";
 import { client } from "../lib/microcms";
 import type { Location } from "../lib/microcms";
 import { PLACES_PAGE, countByPrefecture } from "../data/places";
+import { PLACES_IS_PUBLIC } from "../data/places-visibility";
 import bubbleWide from "../assets/bubbles/bubble-wide.png";
 import bubbleSoft from "../assets/bubbles/bubble-3.png";
 import { PAGE_META } from "../data/site";
@@ -28,8 +29,12 @@ const prefCount = countByPrefecture(locations).size;
 const meta = PAGE_META.places;
 ---
 
-<!-- メンバー確認中: ナビ・TOP非掲載。検索にも出さない -->
-<Layout noindex title={meta.title} description={meta.description}>
+<!-- PLACES_IS_PUBLIC=false のあいだは noindex（直リンク確認用） -->
+<Layout
+  noindex={!PLACES_IS_PUBLIC}
+  title={meta.title}
+  description={meta.description}
+>
   <div
     id="places"
     class="relative z-10 pt-[calc(var(--header-height)+2rem)] pb-12 md:pt-[calc(var(--header-height)+2.5rem)] md:pb-16"

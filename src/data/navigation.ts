@@ -1,3 +1,5 @@
+import { PLACES_IS_PUBLIC } from "./places-visibility";
+
 export type NavLink = {
   id: string;
   label: string;
@@ -20,17 +22,25 @@ export const NAV_LINKS: NavLink[] = [
   { id: "about", label: "代表の思い", href: "/#about" },
   { id: "news", label: "お知らせ", href: "/#news" },
   { id: "results", label: "活動実績", href: "/#results" },
-  /** TOP導線OKになったら Header / NAV_GROUPS に足す */
   { id: "places", label: "「福祉」マップ", href: "/places" },
   { id: "overview", label: "団体概要", href: "/overview" },
   { id: "support", label: "応援する", href: "/support" },
 ];
 
+/** ヘッダーに出す id（PLACES_IS_PUBLIC で places を含む） */
+export const HEADER_NAV_IDS: string[] = [
+  "activity",
+  "about",
+  "news",
+  "results",
+  ...(PLACES_IS_PUBLIC ? (["places"] as const) : []),
+  "overview",
+  "support",
+];
+
 /**
  * フッター・ハンバーガー共通の階層ナビ。
  * ページ構成やアンカーを変えるときはここだけ編集する。
- *
- * 注: 「福祉」マップ（/places）はメンバー確認中のためナビ非掲載（直リンクのみ）。
  */
 export const NAV_GROUPS: NavGroup[] = [
   {
@@ -41,6 +51,9 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "代表の思い", href: "/#about" },
       { label: "お知らせ", href: "/#news" },
       { label: "活動実績", href: "/#results" },
+      ...(PLACES_IS_PUBLIC
+        ? [{ label: "「福祉」マップ", href: "/places" }]
+        : []),
     ],
   },
   {

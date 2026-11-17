@@ -1,7 +1,11 @@
 ---
 import LocationCard from "./LocationCard.astro";
 import HeadingUnderline from "../HeadingUnderline.astro";
-import { PLACES_PAGE, countByTag } from "../../data/places";
+import {
+  PLACES_PAGE,
+  PLACE_FILTER_CHIP_CLASS_LG,
+  countByTag,
+} from "../../data/places";
 import { fetchNoteLinkMeta } from "../../lib/note";
 import type { Location } from "../../lib/microcms";
 
@@ -16,8 +20,7 @@ const noteMetas = await Promise.all(
   locations.map((loc) => (loc.note ? fetchNoteLinkMeta(loc.note) : null)),
 );
 
-const chipClass =
-  "place-filter-chip rounded-full border border-[var(--color-primary)]/35 bg-white px-3.5 py-1.5 text-small font-bold text-black/80 transition-colors hover:border-[var(--color-primary)] aria-[pressed=true]:border-[var(--color-primary)] aria-[pressed=true]:bg-[var(--color-primary)] aria-[pressed=true]:text-white";
+const chipClass = PLACE_FILTER_CHIP_CLASS_LG;
 ---
 
 <section
