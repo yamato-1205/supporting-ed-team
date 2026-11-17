@@ -1,13 +1,19 @@
 ---
 /**
- * Leaflet + 国土地理院 淡色地図。
- * 線が薄くピンが際立つ。日本語・キー不要・無料。
+ * Leaflet + OpenFreeMap（Positron）のインタラクティブ地図。
+ * 初期の CARTO Positron 相当。APIキー不要・無料。
  */
 ---
 
 <script>
   import L from "leaflet";
+  import { setWorkerUrl } from "maplibre-gl";
+  import { maplibreGL } from "@maplibre/maplibre-gl-leaflet";
+  import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
   import "leaflet/dist/leaflet.css";
+  import "maplibre-gl/dist/maplibre-gl.css";
+
+  setWorkerUrl(workerUrl);
 
   type MapPoint = {
     id: string;
@@ -25,10 +31,7 @@
   const JAPAN_ZOOM = 5;
   const DETAIL_ZOOM = 13;
   const JAPAN_BOUNDS = L.latLngBounds([24.0, 122.5], [46.2, 146.0]);
-
-  /** 淡色地図: 道路・境界が薄く、緑ピンが霞みにくい */
-  const TILE_URL =
-    "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png";
+  const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 
   function parsePoints(raw: string | undefined): MapPoint[] {
     if (!raw) return [];
@@ -89,12 +92,17 @@
       maxBoundsViscosity: 0.85,
     }).setView(JAPAN_CENTER, JAPAN_ZOOM);
 
-    L.tileLayer(TILE_URL, {
-      attribution:
-        '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">国土地理院</a>',
-      maxZoom: 18,
-      maxNativeZoom: 18,
+    // OpenFreeMap Positron: キー不要。薄い見栄え（旧 CARTO Positron 相当）
+    maplibreGL({
+      style: MAP_STYLE,
+      interactive: false,
+      attributionControl: false,
     }).addTo(map);
+
+    map.attributionControl.setPrefix("Leaflet");
+    map.attributionControl.addAttribution(
+      '<a href="https://openfreemap.org/" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> © <a href="https://openmaptiles.org/" target="_blank" rel="noopener noreferrer">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
+    );
 
     const entries: MarkerEntry[] = [];
     const byId = new Map<string, MarkerEntry>();

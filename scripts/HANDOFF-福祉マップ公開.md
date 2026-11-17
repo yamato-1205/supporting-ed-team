@@ -11,8 +11,8 @@
 
 ## 地図
 
-- Leaflet + 国土地理院 淡色地図（ピンが際立つ・日本語・キー不要）
-- 右下に「国土地理院」表示
+- Leaflet + OpenFreeMap Positron（初期 CARTO 相当・キー不要・無料）
+- 右下に OpenFreeMap / OSM クレジット
 - 日本付近にパン制限
 
 ## TOP 導線を出すとき
