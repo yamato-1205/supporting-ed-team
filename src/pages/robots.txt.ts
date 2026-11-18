@@ -6,7 +6,12 @@ export const GET: APIRoute = () => {
   const lines = ["User-agent: *", "Allow: /"];
 
   if (!PLACES_IS_PUBLIC) {
-    lines.push("Disallow: /places", "Disallow: /places/");
+    lines.push(
+      "Disallow: /places",
+      "Disallow: /places/",
+      "Disallow: /places2",
+      "Disallow: /places2/",
+    );
   }
 
   lines.push(

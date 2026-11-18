@@ -1,0 +1,112 @@
+---
+import mapSvg from "../../assets/places/japan/prefectures.svg?raw";
+import { countByPrefecture } from "../../data/places";
+import type { Location } from "../../lib/microcms";
+
+interface Props {
+  locations: Location[];
+}
+
+const { locations } = Astro.props;
+const counts = Object.fromEntries(countByPrefecture(locations));
+---
+
+<div
+  id="japan-dist"
+  class="japan-dist mx-auto w-full max-w-lg"
+  data-counts={JSON.stringify(counts)}
+>
+  <div class="mb-2 flex items-center justify-between gap-3 px-1">
+    <button
+      type="button"
+      class="text-small font-bold text-[var(--color-primary)] underline-offset-2 hover:underline"
+      data-back-national
+      hidden
+    >
+      全国へ
+    </button>
+    <p data-map-caption class="ml-auto text-small font-bold text-[var(--color-primary)]"></p>
+  </div>
+  <div class="japan-frame relative overflow-hidden rounded-2xl bg-[var(--color-background)]">
+    <div class="japan-svg" set:html={mapSvg} />
+    <div data-labels class="pointer-events-none absolute inset-0"></div>
+  </div>
+  <p class="mt-2 text-center text-[0.65rem] text-black/40">地図データ: Geolonia</p>
+</div>
+
+<script>
+  import { initDistributionMap } from "../../lib/places/distribution-client";
+
+  initDistributionMap();
+</script>
+
+<style is:global>
+  .japan-svg svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #fffbec;
+  }
+
+  .japan-svg .prefecture {
+    fill: #d7e6d6;
+    stroke: #fffbec;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    cursor: pointer;
+  }
+
+  .japan-svg .prefecture.has-count {
+    fill: #628963;
+  }
+
+  .japan-svg .prefecture.is-on {
+    fill: #3f5c40;
+  }
+
+  .japan-svg .prefecture.is-region-hot {
+    fill: #628963;
+    stroke: #628963;
+  }
+
+  .japan-svg .prefecture.is-pref-hot {
+    filter: brightness(0.92);
+  }
+
+  .japan-map-label {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-50%, -50%);
+    gap: 0.05rem;
+  }
+
+  .japan-map-label__count {
+    display: grid;
+    place-items: center;
+    min-width: 1.7rem;
+    height: 1.7rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    border: 2px solid #fffbec;
+    background: #628963;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
+  }
+
+  .japan-map-label__name {
+    border-radius: 999px;
+    background: rgb(255 251 236 / 0.92);
+    padding: 0 0.28rem;
+    color: #628963;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+</style>

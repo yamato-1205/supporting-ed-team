@@ -2,13 +2,10 @@
 import HeadingUnderline from "../HeadingUnderline.astro";
 import {
   PLACES_PAGE,
-  REGION_GROUPS,
-  countByPrefecture,
   countOnline,
   toMapPoints,
 } from "../../data/places";
 import type { Location } from "../../lib/microcms";
-import bubbleImg from "../../assets/bubbles/bubble-2.png";
 import bubbleWide from "../../assets/bubbles/bubble-wide.png";
 
 interface Props {
@@ -16,11 +13,7 @@ interface Props {
 }
 
 const { locations } = Astro.props;
-const prefCounts = countByPrefecture(locations);
 const onlineCount = countOnline(locations);
-const regionsWithData = REGION_GROUPS.filter((region) =>
-  region.prefectures.some((p) => (prefCounts.get(p) ?? 0) > 0),
-);
 const mapPoints = toMapPoints(locations);
 ---
 
@@ -55,7 +48,7 @@ const mapPoints = toMapPoints(locations);
 
   {
     onlineCount > 0 && (
-      <div class="mx-auto mb-8 flex max-w-3xl flex-col items-center gap-2">
+      <div class="mx-auto flex max-w-3xl flex-col items-center gap-2">
         <p class="text-small tracking-wide text-black/55">
           {PLACES_PAGE.onlineLead}
         </p>
@@ -83,53 +76,6 @@ const mapPoints = toMapPoints(locations);
     )
   }
 
-  <div class="space-y-6">
-    {
-      regionsWithData.map((region) => (
-        <div>
-          <p class="mb-2 text-small tracking-wide text-black/55">{region.name}</p>
-          <div class="flex flex-wrap gap-2">
-            {region.prefectures.map((pref) => {
-              const count = prefCounts.get(pref) ?? 0;
-              if (count === 0) {
-                return (
-                  <span
-                    class="inline-flex min-w-[4.25rem] items-center justify-center rounded-full border border-black/10 px-3 py-2 text-small font-normal text-black/30"
-                    title="まだ掲載がありません"
-                  >
-                    {pref.replace(/[都道府県]$/, "")}
-                  </span>
-                );
-              }
-              return (
-                <button
-                  type="button"
-                  class="place-pref-btn group relative inline-flex min-w-[4.5rem] items-center justify-center px-1 py-1"
-                  data-prefecture={pref}
-                  aria-pressed="false"
-                >
-                  <img
-                    src={bubbleImg.src}
-                    alt=""
-                    aria-hidden="true"
-                    class="h-12 w-auto opacity-90 transition-transform group-hover:scale-105 group-aria-[pressed=true]:scale-110"
-                  />
-                  <span class="absolute inset-0 flex flex-col items-center justify-center leading-tight">
-                    <span class="text-small font-bold">
-                      {pref.replace(/[都道府県]$/, "")}
-                    </span>
-                    <span class="text-[0.65rem] font-normal text-[var(--color-primary)]">
-                      {count}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ))
-    }
-  </div>
 </section>
 
 <style is:global>

@@ -3,13 +3,22 @@
  * 絞り込みクライアントのエントリ。ロジックは src/lib/places/filter-client.ts。
  */
 import { PLACES_PAGE } from "../../data/places";
-
-const openMapLabel = PLACES_PAGE.openMap;
-const closeMapLabel = PLACES_PAGE.closeMap;
 ---
 
-<script define:vars={{ openMapLabel, closeMapLabel }}>
+<div
+  id="places-filter-root"
+  hidden
+  data-open-label={PLACES_PAGE.openMap}
+  data-close-label={PLACES_PAGE.closeMap}
+>
+</div>
+
+<script>
   import { initPlacesFilter } from "../../lib/places/filter-client";
 
-  initPlacesFilter({ openMapLabel, closeMapLabel });
+  const root = document.getElementById("places-filter-root");
+  initPlacesFilter({
+    openMapLabel: root?.dataset.openLabel ?? "詳細",
+    closeMapLabel: root?.dataset.closeLabel ?? "閉じる",
+  });
 </script>

@@ -126,6 +126,11 @@ export function initPlacesFilter(labels: PlacesFilterLabels) {
     applyFilter();
   }
 
+  function setPrefecture(value: string | null) {
+    activePrefecture = value;
+    applyFilter();
+  }
+
   function toggleTag(value: string) {
     if (activeTags.has(value)) activeTags.delete(value);
     else activeTags.add(value);
@@ -183,6 +188,12 @@ export function initPlacesFilter(labels: PlacesFilterLabels) {
       toggleTag(value);
     });
   }
+
+  document.addEventListener(PLACES_EVENTS.selectPrefecture, (event) => {
+    const detail = (event as CustomEvent<{ prefecture?: string | null }>).detail;
+    const name = detail?.prefecture;
+    setPrefecture(name ? name : null);
+  });
 
   for (const btn of clearButtons) {
     btn.addEventListener("click", clearFilters);

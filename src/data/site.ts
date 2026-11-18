@@ -91,6 +91,11 @@ export const PAGE_META = {
     description:
       "さぽちむがつなぐ全国の「福祉」を、地図とキーワードから探せます。",
   },
+  places2: {
+    title: `「福祉」マップ（イラスト） | ${SITE_NAME}`,
+    description:
+      "さぽちむがつなぐ全国の「福祉」を、イラストの日本地図から探せます。",
+  },
 } as const;
 
 export type PageMetaKey = keyof typeof PAGE_META;

@@ -3,6 +3,7 @@ export const PLACES_EVENTS = {
   filterChanged: "places:filter-changed",
   focusMarker: "places:focus-marker",
   openCard: "places:open-card",
+  selectPrefecture: "places:select-prefecture",
 } as const;
 
 export type PlacesEventName =
